@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Дискретное метро</title>
+    <link rel="stylesheet" type="text/css" href="">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+    <script type="text/javascript" src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../src/Helpers.js"></script>
+    <script type="text/javascript" src="../src/Category.js"></script>
+    <script type="text/javascript" src="../src/Functor.js"></script>
+    <script type="text/javascript" src="../src/Limit.js"></script>
+    <script type="text/javascript" src="../src/Set.js"></script>
+    <script type="text/javascript" src="../src/ViewHelpers.js"></script>
+    <script type="text/javascript" src="../src/SetCategoryView.js"></script>
+
+
+  </head>
+  <body class="bg-info">
+  <H1>Дискретное метро</H1>
+  <hr class="border border-danger border-3 opacity-75"/>
+  <p1 class="fs-3 text-primary">g - первая пересадка, h - вторая пересадка</p1>
+  <hr class="border border-danger border-3 opacity-75"/>
+  <form action="POST">
+    <p>Домашняя работа по дискретной математике. Есть случайные станции метро. От них идут другие станции в две пересадки. Как и просилось в тз</p>
+    <select disabled name="" id="sel1" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+      <option selected>DOM - Красная ветка</option>
+    </select>
+    <select disabled name="" id="sel2" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+      <option>На данный момент станции случайны</option>
+    </select>
+  </form>
+
+  <button type="button" id="btnn" class="btn btn-primary">Начать</button>
+  <br>
+  <br>
+  <p>Для очищения диаграммы необходимо перезагрузить страницу</p>
+    <svg class="diagram" id="diagram01" style="width: 450px; height: 350px;" />
+
+  <script type="text/javascript">
+
+
+    document.getElementById('btnn').addEventListener('click', function (e) {
+      var setCat = new SetCategory();
+
+      var obj1234 = setCat.object(["Библиотека имени Ленина","Чистые пруды","Комсомольская", "Лубянка"]);
+      var obj123 = setCat.object(["Арбатская","Сретенский бульвар","Проспект Мира", "Пушкинская"]);
+      var objABCD = setCat.object(["Смоленская","Трубная",'Белорусская','Цветной бульвар']);
+
+
+      var g = setCat.morphism(obj1234, obj123,  {"Библиотека имени Ленина": "Арбатская", "Чистые пруды": "Сретенский бульвар", "Комсомольская": "Проспект Мира", "Лубянка": "Пушкинская"});
+      var h = setCat.morphism(obj123,  objABCD, {"Арбатская": "Смоленская", "Сретенский бульвар": "Трубная", "Проспект Мира": 'Белорусская', "Пушкинская": 'Цветной бульвар'});
+      showSetCategoryView('diagram01', setCat, {'A': obj1234, 'B': obj123, 'C': objABCD},
+              {'g': {dom: 'A', codom: 'B', morphism: g},
+                'h': {dom: 'B', codom: 'C', morphism: h},});
+    });
+  </script>
+  </body>
+</html>

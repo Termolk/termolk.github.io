@@ -1,0 +1,15 @@
+{
+  "name": "matrix",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Termolk",
+  "license": "ISC",
+  "dependencies": {
+    "mathjs": "^11.2.1",
+    "nodejs": "^0.0.0"
+  }
+}

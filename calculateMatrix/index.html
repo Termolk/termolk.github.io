@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Умножение матриц</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="node_modules/mathjs/lib/browser/math.js" type="text/javascript"></script>
+    <script src="script/whichMatrixCreate.js" type="text/javascript"></script>
+    <script src="script/multiplyMatrixForNumber.js" type="text/javascript"></script>
+    <script src="script/findDeterminantMatrix.js" type="text/javascript"></script>
+    <script src="script/findDeterminantMatrix.js" type="text/javascript"></script>
+    <script src="script/transportMatrix.js" type="text/javascript"></script>
+    <script src="script/createHtmlDivSolutionMatrix.js" type="text/javascript"></script>
+    <script src="script/createHtmlTableMatrix.js" type="text/javascript"></script>
+    <script src="script/multiplayMatrix.js" type="text/javascript"></script>
+    <script src="script/findInvMatrix.js" type="text/javascript"></script>
+</head>
+<body>
+
+
+
+
+
+
+<table>
+    <tr>
+
+        <td>
+            <div class="first matrix">
+                <table id="AMTable">
+                    <!--        Тут будет посредством js методом generateTableMatrix Первоначально будет три на три из нулей-->
+                </table>
+
+                <table>
+                    <tr>
+                        <td><select id="rowA" onchange="generateTableMatrix(rowA, columnA, 'A')">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3" selected>3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                        </select>
+
+                            <select id="columnA" onchange="generateTableMatrix(rowA, columnA, 'A')">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3" selected>3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button id="clearMatrixBtn" onclick="clearMatrix('A')">Очистить</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button onclick="transportMatrix(matrixA, 'A')">Транспонировать</button>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            <button onclick="findDeterminantMatrix(matrixA, 'A')">Определитель</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button onclick="multiplyMatrixForNumber(matrixA, 'A')">Умножить на число</button>
+                        </td>
+                        <td>
+                            <input id="multiplyMatrixForNumberA">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button onclick="findInvMatrix(matrixA, 'A')">Обратная матрица A <sup>-1</sup> </button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </td>
+
+
+
+        <td>
+            <button onclick="multiplayMatrix()">AxB</button>
+        </td>
+
+
+
+        <td>
+            <div class="first matrix">
+                <table id="BMTable">
+                    <!--        Тут будет посредством js методом generateTableMatrix Первоначально будет три на три из нулей-->
+                </table>
+
+                <table>
+                    <tr>
+                        <td><select id="rowB" onchange="generateTableMatrix(rowB, columnB, 'B')">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3" selected>3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                        </select>
+
+                            <select id="columnB" onchange="generateTableMatrix(rowB, columnB, 'B')">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3" selected>3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button onclick="clearMatrix('B')">Очистить</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button onclick="transportMatrix(matrixB, 'B')">Транспонировать</button>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            <button onclick="findDeterminantMatrix(matrixB, 'B')">Определитель</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button onclick="multiplyMatrixForNumber(matrixB, 'B')">Умножить на число</button>
+                        </td>
+                        <td>
+                            <input id="multiplyMatrixForNumberB">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button onclick="findInvMatrix(matrixB, 'B')">Обратная матрица A <sup>-1</sup> </button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </td>
+
+    </tr>
+</table>
+
+
+
+
+
+<p>Если детерминант равен нулю, то обратной матрицы не существует. Если матрица не квадратная, то транспонировать ее нельзя.</p>
+
+
+<div id="solutions">
+    <!--Для вставки динамических дивов с ответами-->
+
+
+    <!--Для генерации html таблицы что отображает матрицу-->
+
+</div>
+
+
+
+<script src="makeAMatrix.js"></script>
+</body>
+</html>
