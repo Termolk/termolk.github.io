@@ -11,20 +11,33 @@
 </head>
 <body>
 
-<h1>Мои портфолио</h1>
+<header class="bg-dark py-3">
+  <nav class="container d-flex flex-wrap justify-content-center">
+    <a class="nav-link text-white me-4" href="index.html">Проекты</a>
+    <a class="nav-link text-white me-4" href="achievement.html">Дипломы и конкурсы</a>
+    <a class="nav-link text-white me-4" href="another.html">Прочие достижения</a>
+    <a class="nav-link text-white me-4" href="about_me.html">Обо мне</a>
+  </nav>
+</header>
 
-<ul class="nav">
-  <li><a class="nav-link" href="index.html">Проекты</a></li>
-  <li><a class="nav-link" href="achievement.html">Дипломы и конкурсы</a></li>
-  <li><a class="nav-link" href="another.html">Прочие достижения</a></li>
-  <li><a class="nav-link" href="about_me.html">Обо мне</a></li>
-</ul>
+<main class="container my-5">
+  <h1 class="text-center mb-5">Мои портфолио</h1>
 
-<hr>
-<p><strong>Выпускник Федеральной Школы Радио: <a target="_blank" href="img/radio_sok.JPG">Диплом</a></strong></p>
-<hr>
-<p><strong>Победитель вузовской олимпиады по психологии: <a target="_blank" href="img/sevas_olymp_psiho.PNG">Диплом</a></strong></p>
-<hr>
-
+  <div class="card my-4">
+    <div class="card-body">
+      <h3 class="card-title">Выпускник Федеральной Школы Радио</h3>
+      <a href="img/radio_sok.JPG" target="_blank" class="btn btn-primary">Диплом</a>
+    </div>
+  </div>
+  
+  <div class="card my-4">
+    <div class="card-body">
+      <h3 class="card-title">Победитель вузовской олимпиады по психологии</h3>
+      <a href="img/sevas_olymp_psiho.PNG" target="_blank" class="btn btn-primary">Диплом</a>
+    </div>
+  </div>
+  
+  
+</main>  
 </body>
 </html>
