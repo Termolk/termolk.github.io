@@ -1,0 +1,627 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>1.8 Домены</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="934d8807-42d3-4224-8e28-a5ed1526270f" class="page sans"><header><h1 class="page-title">1.8 Домены</h1></header><div class="page-body"><h1 id="5949850a-f5b8-4502-ad5f-44e388b34406" class=""><strong>Домены</strong></h1><p id="a084d13f-75a6-46c9-aafd-64bcaa203830" class="">Представьте, как неудобно было бы общаться, если бы люди обращались друг к другу не по имени, а по числовому значению, соответствующему их дню рождения или номеру телефона. И если бы названий не было, то все равно люди наверняка попытались бы придумать их.</p><p id="de01dc52-5a16-4f71-b669-ed1671f1ecf3" class="">Когда компьютер подключается к Интернету, ему присваивается уникальный номер, который называется <strong>IP-адрес</strong>. Каждый веб-ресурс так же имеет свой IP. Например, давайте посмотрим на адрес <code>74.125.131.113</code>. Если вы вобьёте его в адресную строку, браузер откроет сайт поисковой системы Google. Если у вас нет феноменальной памяти, то запомнить длинные числовые значения, чтобы просто посетить несколько сайтов, слишком сложно и именно поэтому были изобретены доменные имена. Гораздо проще написать <code>google.com</code> вместо длинного набора цифр. <strong>Доменное имя</strong> действует как уникальное имя в Интернете и является более простым и удобным для человека способом записи IP-адресов.</p><p id="0bca2e30-f3a3-4a97-aa1f-37748aa741e9" class="">Вся информация о доменных именах хранится в распределенной базе данных <strong>DNS (Domain Name System)</strong>, которая представляет собой сеть компьютеров, разбросанных по всему миру.</p><h1 id="7f05ae08-7325-404a-8143-7b1e6ff75348" class=""><strong>Структура доменного имени</strong></h1><p id="cba639cb-afa7-456a-bf93-0a7b3500667c" class="">Домены организованы иерархически и состоят из уровней. Иерархическая структура позволяет браузеру быстро находить и открывать сайт. По умолчанию каждый домен состоит из двух уровней, но их может быть больше (три, четыре и т.д.).</p><figure id="ddf3ad72-a912-4a9b-bd54-f154738a0a31" class="image"><a href="https://ucarecdn.com/fbcc025f-17df-4fcd-9373-4162afceb59e/"><img src="https://ucarecdn.com/fbcc025f-17df-4fcd-9373-4162afceb59e/"/></a></figure><p id="991e8d08-4a70-4c02-9533-861f6e2584c9" class="">Давайте подробнее рассмотрим домены, размещенные от корневого до третьего уровня.</p><h2 id="0cce3c3d-559e-438f-9b7a-e13424c2e191" class=""><strong>Корневой домен</strong></h2><p id="21adf664-b6e3-404f-b2ed-4b7f25a27f3e" class="">Корневой домен, или домен верхнего (нулевого) уровня, отмечен точкой. В общем использовании точка не отображается как часть имени домена.</p><figure id="0501a7c8-d2cd-4c59-bbd7-31b619088f2c" class="image"><a href="https://ucarecdn.com/f4bf3c92-18bc-4a0e-a479-25242888369c/"><img src="https://ucarecdn.com/f4bf3c92-18bc-4a0e-a479-25242888369c/"/></a></figure><p id="8a70ca49-1961-440e-bafa-895501c4f088" class="">Вы можете пропустить корневой домен, поскольку он никак не влияет на доступ к сайту.</p><h2 id="e9ce18c0-b99d-4ecc-a163-7b5f3d5e3a0f" class=""><strong>Домен верхнего уровня</strong></h2><p id="d5a6d6e8-335c-4e2c-a676-2a111ae18d69" class=""><strong>Домены верхнего уровня</strong> делятся на две группы:<strong> национальные доменные имена</strong> и <strong>публичные домены</strong>.</p><p id="e029dbc2-2eb0-4534-a5bc-8ad54ab184bc" class="">Первая группа определяет регион сайта и его географическое положение: например, <code>.us</code> для Соединенных Штатов и <code>.eu</code> для Европейского союза.</p><p id="11823531-e058-44eb-80ad-5095679a538f" class="">Вторая группа отражает не географические характеристики ресурса, а скорее его принадлежность к определенной области. Например, информационный сайт будет иметь конечную точку <code>.info</code>, коммерческий сайт будет иметь <code>.com</code>, а некоммерческий сайт будет иметь <code>.org</code>.</p><figure id="eed6270b-639f-48f2-ae90-b133bf9135b5" class="image"><a href="https://ucarecdn.com/9d09a7c2-ad3c-401c-bf20-ea957a44adcd/"><img src="https://ucarecdn.com/9d09a7c2-ad3c-401c-bf20-ea957a44adcd/"/></a></figure><p id="e7d6da14-4179-4282-9eca-e1d427b420dd" class="">Есть еще несколько конкретных доменов. Домен <code>.net</code> (от <em>network</em>) изначально предназначался для организаций, занимающихся сетевыми технологиями, таких как интернет-провайдеры. Домен  <code>.edu</code> используется филиалами американских высших учебных заведений.</p><p id="7d646cba-a699-458f-a390-25a55edb39f4" class=""><em>Однако, сегодня домены  </em><code><em>.com</em></code><em>,  </em><code><em>.org</em></code><em> и </em><code><em>.net</em></code><em> используются практически без ограничений. Вы можете найти любые типы организаций, зарегистрированные под этими доменными именами. Но вот домен </em><code><em>.edu</em></code><em> так и остается весьма ограниченным в использовании.</em></p><h2 id="ed3516c4-d7db-49c8-b68a-b6c32753c1bd" class=""><strong>Домен второго уровня</strong></h2><p id="de731527-c56b-4b38-a0e2-bc26961ef9c6" class="">Домен второго уровня — это уникальный адрес веб-сайта, который люди запоминают и используют для работы в Интернете, например, Google, Facebook, Uber и т.д.</p><figure id="7f6e3167-9ca7-4299-b975-b0de75d4633d" class="image"><a href="https://ucarecdn.com/ea11f1cc-3525-41fe-96c7-20c7c861eb9a/"><img src="https://ucarecdn.com/ea11f1cc-3525-41fe-96c7-20c7c861eb9a/"/></a></figure><p id="f630ddc0-bfb7-4e85-8166-7e39b349746c" class="">Это доменное имя может быть взято при регистрации у регистраторов в интернете. Стоит помнить, что вы можете использовать этот ресурс только в течение определенного периода времени, который обычно составляет около года. Чтобы использовать эту часть имени и дальше, вы должны ежегодно продлевать домен у регистратора доменных имен.</p><h2 id="841a0931-3689-403d-8e83-eed473ffda76" class=""><strong>Домен третьего уровня</strong></h2><p id="109d6953-2f77-4908-8c12-24e787707f1f" class="">Имена третьего уровня доступны для регистрации ресурсов с компаниями доменных имен второго уровня. Владелец домена этого типа может одновременно создавать несколько ресурсов на сайте с общим именем домена. Например, если сайт называется <code>google.com</code>, блогом новостей будет <code>news.google.com.</code></p><figure id="e44325f2-c661-450a-a78b-e35c983ea8e2" class="image"><a href="https://ucarecdn.com/989ff9b9-ddc7-4f27-8761-8e701e8738ff/"><img src="https://ucarecdn.com/989ff9b9-ddc7-4f27-8761-8e701e8738ff/"/></a></figure><p id="890934fc-5a41-4053-b17d-0e7a1da433bc" class=""><em>Не все организации используют домены третьего уровня, поскольку это не единственный способ организовать работу ресурса.</em></p><p id="a59abe0c-2732-4bef-8edf-fda9cad8687b" class="">В этом топике мы не будем рассматривать более глубокие доменные уровни (4-й, 5-й и т.д.), однако, они также могут повстречаться вам в Интернете. Мы надеемся, что представленной информации достаточно для понимания темы и успешного прохождения практики.</p><figure id="f9ae59e1-bb29-486b-b08e-0348df7cb0ca"><div class="source"><a href="https://docs.google.com/forms/d/1qXA54g1UQW77-NB2RclcVfsddwpEspOrWCVDDBkMe4Q">https://docs.google.com/forms/d/1qXA54g1UQW77-NB2RclcVfsddwpEspOrWCVDDBkMe4Q</a></div></figure></div></article></body></html>

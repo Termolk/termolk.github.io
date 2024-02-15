@@ -1,0 +1,640 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>1.20 Flask – Знакомство и запуск сервера</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="d162cb7e-140d-47ef-8f81-a013e78e9392" class="page sans"><header><h1 class="page-title">1.20 Flask – Знакомство и запуск сервера</h1></header><div class="page-body"><h1 id="e02eead9-352e-4021-bbbc-9403875e2740" class=""><strong>Flask – Знакомство и запуск сервера</strong></h1><p id="ba7ac6fe-9668-4bd5-9825-0c1a575ad0af" class="">Мы изучили основы клиент-серверной архитектуры, протокола HTTP и узнали про теги HTML.</p><p id="58cd0650-804c-4519-960f-3db25a666c23" class="">Flask использует все эти технологии: Ваше Flask приложение запускается на сервере. Возвращает на запрос клиента HTML. Этот HTML — результат выполнения кода, который вы написали.</p><figure id="e9080011-058b-47b0-ab78-448eccf4f702" class="image"><a href="https://ucarecdn.com/a2fd8531-c042-46d5-a64a-05d587568b56/"><img src="https://ucarecdn.com/a2fd8531-c042-46d5-a64a-05d587568b56/"/></a></figure><p id="50867597-dd7d-4d77-bfe7-1e47b92b2255" class="">В этом уроке мы познакомимся с принципами работы сервера, узнаем о фреймворках и напишем первые строчки кода для работы с микрофреймворком Flask, на котором будет построено наше приложение.</p><h1 id="5d30c7b9-a238-42b9-83d1-a15fbd7131fa" class=""><strong>Логика работы веб-сервера</strong></h1><p id="fa22394e-6d3b-4fd2-af7a-e508917bdc50" class="">С помощью языка Python мы умеем генерировать строки, а с помощью простого HTTP сервера умеем передавать содержимое текстового или html файла. Прежде, чем переходить от этого к созданию динамических веб сайтов, определимся, что мы от них хотим.Типичный пример такого сайта – интернет-магазин.Рассмотрим, как он должен работать:</p><blockquote id="461d466b-1661-4eaf-9e9a-0b1b5c7d04b7" class="">1. Пользователь запрашивает site.com/фляжки, это GET запрос на опредленный порт, например, 80.</blockquote><blockquote id="256a2439-99a0-4fd2-a17e-908fc9e91abc" class="">2. Сервер замечает обращение на порт, передает запрос скрипту Python, например app.py который этот порт слушает.</blockquote><blockquote id="deafe2b9-c430-4bda-b782-3265e43175d6" class="">3. app.py получает из адресной строки параметр &quot;фляжки&quot; и обращается к базе данных за списком фляжек.</blockquote><blockquote id="612fdcd7-2877-4ea7-b9a4-5172dfb995dd" class="">4. Получив данные, скрипт обрабатывает их, например, добавляет скидку, проверяет наличие итд.</blockquote><blockquote id="2112f9f1-7b6c-44eb-9e6d-261e95f5f0a2" class="">5. Когда все готово, скрипт на основе данных строит HTML документ, создавая длинную строку.</blockquote><blockquote id="25eb0b43-f33c-4033-8d35-8a82aa3dff75" class="">6. Эту строку сервер отдает клиенту в формате html, в качестве ответа на запрос.</blockquote><blockquote id="74739b81-b4cb-4003-91b3-106ce17db4c9" class="">7. Браузер пользователя отрисовывает страничку.</blockquote><p id="48bc2c07-0fac-498d-a473-947089fa0945" class="">Допустим теперь, что пользователь хочет найти определенную модель фляжки, например &quot;турист&quot;:</p><blockquote id="2148e75f-736a-4ee3-8108-312e8ace8a86" class="">1. Пользователь запрашивает /site.com/search?s=фляжка_турист.</blockquote><blockquote id="ee072b8d-86eb-41ba-8375-1f0c96f186fe" class="">2. Сервер замечает обращение на порт, передает запрос скрипту Python, например app.py который этот порт слушает.</blockquote><blockquote id="d63720ec-c76c-4e8c-94a5-01450ec59bb3" class="">3. app.py получает из адресной строки параметр &quot;s&quot; – строка поиска и ищет по базе данных все подходящее.</blockquote><blockquote id="61b2e819-5dc8-4201-b9d2-7235343be3a3" class="">4. Найдя товары он обрабатывает их.</blockquote><blockquote id="7c4efe30-e3f2-4014-987d-14c070eaf7b6" class="">5. Когда все готово, скрипт на основе данных строит HTML документ, создавая длинную строку.</blockquote><blockquote id="92a23421-41ee-4c0c-a206-5da34c1ca265" class="">6. Эту строку сервер отдает клиенту в формате html, в качестве ответа на запрос.</blockquote><blockquote id="d9013d81-1eec-4dad-884f-dedce98e4ed2" class="">7. Браузер пользователя отрисовывает страничку.</blockquote><p id="e1bcca6f-716d-4e1b-8821-4e9e07e1f3b9" class="">Допустим теперь, что мы работаем над другим проектом и занимаемся сервисом для поиска попутчиков.</p><p id="835acb65-ba0e-44f3-9622-bf4e7bdc1133" class="">Пользователи приходят к нам и хотят найти, кто когда и куда поедет. Логика будет такой:</p><blockquote id="7d0861a8-820f-4b5f-bdd2-f567a7c7da79" class="">1. Пользователь запрашивает /site.com/search?from=Москва&amp;to=Владимир&amp;when=today.</blockquote><blockquote id="f1740880-0492-40ca-8338-09480bd641dc" class="">2. Сервер замечает обращение на порт, передает запрос скрипту Python, например app.py который этот порт слушает.</blockquote><blockquote id="566d9ffb-d856-48dc-b4f7-be4319991eaa" class="">3. app.py получает из адресной строки параметры &quot;from&quot;  &quot;to&quot; &quot;when&quot;  и создает запрос базе данных.</blockquote><blockquote id="7bb44720-eb1e-4998-9d65-32be6339ff66" class="">4. База данных возвращает подходящие поездки, скрипт сортирует их по релевантности.</blockquote><blockquote id="da32be48-d575-49d0-a157-cd9697741584" class="">5. Когда все готово, скрипт на основе данных строит HTML документ, создавая длинную строку.</blockquote><blockquote id="25470cd9-7ea6-403a-87e4-1b8e90e60873" class="">6. Эту строку сервер отдает клиенту в формате html, в качестве ответа на запрос.</blockquote><blockquote id="18b63574-d11d-4d13-ab4a-a2c6b93926b1" class="">7. Браузер пользователя отрисовывает страничку.</blockquote><p id="711f0b3f-4ac0-459d-9f5a-a3301b6019c8" class="">Как можно заметить, общий принцип для разных проектов достаточно схож:</p><p id="429e5b4c-b724-46dc-98d0-790311cbc00f" class="">– Сервер слушает порт и передает данные скрипту на Python.</p><p id="57d6ea3a-1570-40b4-8a53-ced9d444e66e" class="">– Скрипт на Python смотрит, что пользователь запросил в адресной строке.</p><p id="495fcde6-85ed-4584-a371-b9003c4af438" class="">– Скрипт на Python выполняет разные алгоритмы для разных запросов.</p><p id="0c077546-a3ad-4137-bc3c-2f282f04b054" class="">– Скрипт на Python формирует HTML строку.</p><p id="8243ec88-c369-4b81-84b9-a85ce9d0010b" class="">– Сервер передает HTML, CSS, JS, графические файлы пользователю.</p><p id="8e29e197-c0c4-4803-b8be-7419b0a55021" class="">– Браузер пользователя отрисовывает страничку.</p><p id="6e9dfa38-f2cf-45ea-9d50-a93e2cb8335c" class="">Как и всегда в таких случаях, типичные операции можно автоматизировать, сформировав заготовки и готовые инструменты. Логично предположить, что создаются готовые решения и приемы их использования.</p><h1 id="41f768be-1198-4c08-b43f-733921a37cad" class=""><strong>Фреймворки и микрофреймворки</strong></h1><p id="d91742ee-f08f-4204-ad5a-e768b20266db" class="">Программы можно сравнить со снежинками: они одновременно уникальны и схожи одна с другой. Такие сходства могут быть использованы в интересах разработчика. В программировании обычной практикой является повторное использование кода, упакованного в библиотеки, чтобы упростить разработку. Такие библиотеки существуют для большинства языков программирования; они предоставляют хорошую документацию и надежный код, который могут использовать повторно сотни и тысячи разработчиков.</p><p id="64a4de2b-fc5d-4d19-bbc6-b6830bdb622e" class="">Крупные приложения, такие как интернет-магазины, онлайн-банки или социальные сети, часто нуждаются в одних и тех же типичных компонентах и функциях, таких как авторизация пользователей, взаимодействие с базой данных, отправка уведомлений и так далее. Чтобы использовать их повторно, разработчики создают специальный вид программного обеспечения, называемый фреймворками.</p><p id="e1d09859-18f1-4512-80f1-d585c7581f33" class="">Фреймворк (от framework «остов, каркас, структура») — это универсальное программное обеспечение многократного использования, которое облегчает разработку типовых приложений или их частей. Он состоит из шаблонов структурированного кода и предоставляет общие функциональные возможности, которые могут быть легко расширены для нужд конкретного приложения.</p><p id="e1d04245-fcbc-447b-acc3-a5ff255a961e" class="">Flask называют микрофреймворком.</p><p id="f60d569e-271f-417c-8e2e-57cf69a23e53" class="">Приставка &quot;микро-&quot; означает, что таких модулей немного, в них можно разобраться быстро и фреймворк не содержит сотни модулей на все случаи жизни. В больших фреймворках, например, Django, есть модули для работы с базой данных, формами, пользователями, администрированием и правами доступа. Во Flask есть сервер, роуты, шаблонизация,  работа с сессиями и авторизацией.</p><p id="d990df77-a530-469e-b8a7-7c61ff0ad38e" class="">Поскольку это микрофреймфорк, потребуются минимальные усилия, чтобы разобраться и запустить простой сервис.</p><h1 id="17199050-d478-42b7-88ef-f42840fd8755" class=""><strong>Кто разрабатывает фреймворки?</strong></h1><p id="b963f63f-122f-4052-95cd-dc326b260eb2" class="">Создатели фреймворков – программисты, которые придумывают новый способ организовать архитектуру приложения и готовы вкладывать силы и время, чтобы поделиться им. Фреймворки часто появляются, как результат изобретений при работе над большим проектом. Например, фреймворк Ruby on Rails был создан <a href="https://en.wikipedia.org/wiki/David_Heinemeier_Hansson">David Heinemeier Hansson</a> на основе его работы в компании <a href="https://ru.wikipedia.org/wiki/37signals">37signals</a>.</p><p id="e4b21cc7-c614-490a-975f-3ab16a4c3c9a" class="">Популярный и мощный Python фреймворк Django был создан осенью 2003 года, когда веб-программисты из газеты Lawrence Journal-World, Adrian Holovaty and Simon Willison, начали использовать Python для создания приложений. <a href="https://ru.wikipedia.org/wiki/Django">https://ru.wikipedia.org/wiki/Django</a> .</p><p id="ede6bd1e-b38e-4031-b591-37a55ff123ef" class="">Крупные компании также иногда выпускают и поддерживают фреймворки. В качестве двух примеров можно назвать Angular от Google <a href="https://ru.wikipedia.org/wiki/AngularJS">https://ru.wikipedia.org/wiki/AngularJS</a> и React от Facebook <a href="https://ru.wikipedia.org/wiki/React">https://ru.wikipedia.org/wiki/React</a>. А вот фреймворк Vue.js создан независимой командой.</p><p id="9b9e77d9-5da5-4a09-9ed3-232a56b84eae" class="">А бывает и так, что компания, разработавшая новый язык программирования, выпускает к нему фреймворк. Например, фреймворк Ktor для Kotlin разработан командой из JetBrains <a href="https://ktor.io/index.html">https://ktor.io/index.html</a> .</p><p id="4a0328c8-4cc4-4e71-8fbe-42e2d15619fe" class="">Автор фреймворка Flask – <a href="https://ru.wikipedia.org/wiki/%D0%A0%D0%BE%D0%BD%D0%B0%D1%85%D0%B5%D1%80,_%D0%90%D1%80%D0%BC%D0%B8%D0%BD">Armin Ronacher</a>. По словам автора, изначально идея создания такого фреймворка была первоапрельской шуткой. Сейчас Flask – один из самых популярных фреймворков для Python.</p><figure id="bbc4958b-0917-4f22-b909-27b2a64af48f" class="image"><a href="https://ucarecdn.com/e2f075a1-de23-4ff7-8641-8d14770416e9/"><img src="https://ucarecdn.com/e2f075a1-de23-4ff7-8641-8d14770416e9/"/></a></figure><p id="cd2c2a6f-5d6a-41fc-a29f-1b286ac05b41" class="">Пора научиться работать с Flask и написать первое приложение!</p><h1 id="a94b46d6-66da-4346-bec4-c610862b4f61" class=""><strong>Знакомство с Flask и запуск сервера</strong></h1><p id="3f86a994-325f-4310-a983-1bd55daefbe9" class="">Поскольку Flask не часть стандартного Python, нам потребуется его установить.</p><p id="d2529868-9946-46cb-a65e-56ab0437e9d9" class="">Это можно сделать с помощью PIP:</p><pre id="a4e8f140-0eaa-4186-8503-2ffa1a539b93" class="code code-wrap"><code>pip install Flask
+
+или
+
+pip3 install Flask
+</code></pre><p id="8cedc15c-249f-47c9-bfa8-324bf7f67e29" class="">Используйте консоль Pycharm, чтобы выполнить этот код. Консоль находится слева внизу:</p><figure id="dd501c7a-7281-460f-9981-8ae2d30dc1c6" class="image"><a href="https://ucarecdn.com/b9aa6868-a845-4ec6-9682-9fca675f796d/"><img src="https://ucarecdn.com/b9aa6868-a845-4ec6-9682-9fca675f796d/"/></a></figure><p id="f06724df-9852-40e1-8144-8bf621676853" class="">Введите команду установки в консоль и вы увидите сообщения:</p><figure id="1db866a0-2424-449d-9796-a42fb4db69d5" class="image"><a href="https://ucarecdn.com/bb6dcdb6-9533-45ec-9d54-7091e7fc296b/"><img src="https://ucarecdn.com/bb6dcdb6-9533-45ec-9d54-7091e7fc296b/"/></a></figure><p id="b5d64957-1131-4fbe-be2e-3d68f26098f8" class="">Отлично, Flask установлен!</p><h1 id="0b8b103b-0811-439d-949a-f39ba6358123" class=""><strong>Начинаем писать код</strong></h1><p id="73a0620c-0ce7-4f9b-a3b8-d515f180ce69" class="">Чтобы познакомиться с Flask, cоздадим приложение которое будет при обращении к корню сайта (site.com/ или localhost/) возвращать &#x27;Hello, World!&#x27; и протестируем его! Для этого:</p><ol id="2bbbf795-1958-4966-9373-fa68d185b095" class="numbered-list" start="1"><li>Создадим папку и перетащим ее в Pycharm или создадим новый проект в Pycharm.</li></ol><ol id="69b29516-8a26-44f3-9fac-ea84dcb1ab56" class="numbered-list" start="2"><li>Создадим в корне файл <a href="http://app.py/">app.py</a> (или <a href="http://main.py/">main.py</a>, название не важно).</li></ol><ol id="623fd8d2-3e39-4ca2-a67a-bdafa46ac694" class="numbered-list" start="3"><li>Скопируем код приложения, которое подключает фласк, выполняет функцию &quot;hello&quot; при обращении к роуту &quot;/&quot; и слушает адрес 0.0.0.0, порт 8000 локального компьютера.</li></ol><ol id="bb4f03a1-4779-4f7f-923b-a955ac647477" class="numbered-list" start="4"><li>Запустим наш Python файл <a href="http://app.py/">app.py</a> .</li></ol><ol id="4116a851-5c12-45ca-9061-74f0d9ae13cf" class="numbered-list" start="5"><li>Обратимся к нужному порту локального хоста из браузера.</li></ol><p id="3223e63e-bdd1-4a1b-a577-9226d00b6d00" class="">Итак, создайте папку, в ней файл app.py, в него скопируйте код и запустите!</p><pre id="0ddfbff6-1b14-4caf-b6d1-c1e424c295d0" class="code code-wrap"><code>from flask import Flask    # сперва подключим модуль
+
+app = Flask(__name__)      # объявим экземпляр фласка
+
+@app.route(&#x27;/&#x27;)            # объявим путь /def hello():               # объявим функцию для пути /return &#x27;Hello, World!&#x27;   # выведем текст, который будет при обращении на /
+
+app.run(&#x27;0.0.0.0&#x27;,8000)    # запустим сервер на 8000 порту!</code></pre><p id="813cbf93-6c7c-4037-a1d0-cd4f8dc2c807" class="">Если все хорошо, вы увидите сообщение:</p><figure id="48cfb435-5939-4118-aed7-cad1bf1a657b" class="image"><a href="https://ucarecdn.com/ceddc04f-22f7-4989-afb0-895378c65830/"><img src="https://ucarecdn.com/ceddc04f-22f7-4989-afb0-895378c65830/"/></a></figure><p id="af29b7d9-d5cd-4246-94d6-e03a94d043b5" class="">Flask запустится и начнет работать.</p><p id="e7db765a-3370-41b7-8c94-7b589650eac0" class="">Перейдите в браузере по ссылке, чтобы увидеть результат (для пользователей <strong>UNIX</strong>-систем):</p><pre id="7288b942-6ef4-446a-a32b-ff8bf02d37a7" class="code code-wrap"><code>http://0.0.0.0:8000/</code></pre><p id="7576436f-e2e9-460b-8b06-00c711952fa0" class="">Для пользователей <strong>Windows</strong> в адресной строке браузера надо указать:</p><pre id="44b475d8-9ec9-4b06-9d60-95052a662f2f" class="code code-wrap"><code>http://localhost:8000</code></pre><p id="f2b16007-5ca7-4af0-aced-971b5ec69e4c" class="">Вы увидите что то вроде:</p><figure id="cdc46770-05ac-44b5-8440-6bba2c171d82" class="image"><a href="https://ucarecdn.com/f0bf86da-6b7f-4be8-8165-289f86bc210a/"><img src="https://ucarecdn.com/f0bf86da-6b7f-4be8-8165-289f86bc210a/"/></a></figure><p id="6852bd15-97f2-4519-9ab6-d6f586048db1" class="">Отлично! Осталось усложнить логику,  добавить разметку с помощью HTML в наш проект и создать много разных страниц!</p><p id="bd24acb7-94bd-42cb-8e16-9d5936e35982" class=""><strong>Про ошибки в коде</strong></p><p id="b03afce7-bfaf-4954-8c9c-2ee275e5b8f6" class="">Если вы допустили ошибку в коде, сервер не запустится. Например, рука дрогнула и мы стерли двоеточие при объявлении функции. Мы получим сообщение <strong>SyntaxError: invalid syntax</strong> .</p><figure id="b7834314-a5f4-41f3-881c-db1f827bd354" class="image"><a href="https://ucarecdn.com/12d6ed19-889e-4ecd-b757-81796ad0d42c/"><img src="https://ucarecdn.com/12d6ed19-889e-4ecd-b757-81796ad0d42c/"/></a></figure><p id="3b63f0d2-7389-4cdf-a3f5-d1f19b230a24" class="">
+</p><p id="acdbd0cb-6db5-47a6-916d-9360f359abf5" class="">Это обычные ошибки Python и вы знаете, что с ними делать.</p><p id="5a9412c3-ab09-40aa-b04f-b4da78eeac7b" class="">
+</p></div></article></body></html>

@@ -1,0 +1,646 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>1.14 Командная строка – работа с файлами</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="805019b7-e69e-40fc-aa8a-ee074c8f8997" class="page sans"><header><h1 class="page-title">1.14 Командная строка – работа с файлами</h1></header><div class="page-body"><p id="619fdd70-3171-4687-8b82-10db17ef2c17" class="">Вы уже знаете, как выполнять некоторые базовые действия с каталогами, например, переходить от одного каталога к другому или создавать/удалять каталоги через графический интерфейс. Вы также можете сделать это через командную строку. В этом разделе мы рассмотрим этот процесс подробно.</p><p id="0f9270f4-a085-4c8a-a6c1-bc46a62bb2ba" class="">Мы рассмотрим довольно много примеров. Обратите внимание, что в этих примерах  <code>$</code> символом является <strong>приглашение командной строки</strong> — специальный символ, указывающий, что компьютер готов принимать команды. В Windows он обычно выглядит следующим образом:  <code><em>&gt;</em></code>.</p><h2 id="c7472a4e-9423-45d4-a750-95bb95bdd335" class=""><strong>Распечатать рабочий каталог</strong></h2><p id="82e3fe80-4a85-4446-8ac6-5f6e645fa2ae" class="">В UNIX-подобных системах  <code>pwd</code> ( <strong>Print Working Directory</strong> ) команда печатает информацию о каталоге, в котором вы находитесь в настоящее время. Например:</p><pre id="672aadeb-23c6-4fb7-9f75-6a27e4ca0f6a" class="code code-wrap"><code>$ pwd
+/Users/username</code></pre><p id="957b4d0d-fa6f-49e8-a617-ec178aef7f12" class="">В Windows это делается с помощью  <code>cd</code> команды без аргументов, хотя особой необходимости в такой команде нет.</p><pre id="73cdd0c5-07fb-431c-8f53-8866701ac879" class="code code-wrap"><code>C:\Users&gt;cd
+C:\Users</code></pre><p id="c7763a36-eef5-49e3-b344-a1e5cdff5d30" class="">Попробуйте запустить ее: откройте интерфейс командной строки, введите <code>pwd</code> или  <code>cd</code> , а затем нажмите Enter. Он напечатает ваш  <strong>домашний каталог</strong> — тот, с которого вы начинаете, когда открываете новое окно CLI. Обычно это выглядит примерно так: <code><em>Macintosh HD/Users/username</em></code>  или  <code><em>C:\Users\username</em></code><em>.</em></p><p id="a5c24046-b08f-4739-858e-6e8e9669737b" class="">Ну что, прогуляемся? Давайте попробуем пройтись от одного каталога к другому.</p><h2 id="46de265e-1542-406c-8fab-5e4441fd5f8d" class=""><strong>Смена каталога</strong></h2><p id="3f8afc91-d5cc-4508-8538-e5eaf3887e1b" class="">Команда <code>cd</code> (<strong>Change Directory</strong>/<strong>Изменить каталог</strong>) (доступна как в Windows, так и в UNIX-подобных системах) позволяет вам изменить каталог, в котором вы находитесь:</p><p id="7ea813b0-84ae-4bf6-9749-843fd672dd5c" class="">UNIX:</p><pre id="f2316774-4bb7-4765-9dea-586d7f40503e" class="code code-wrap"><code>$ cd Documents
+$ pwd
+/Users/username/Documents</code></pre><p id="8a4f78a9-979a-47f3-a4f2-9dc380ac8fc6" class="">Windows:</p><pre id="5c24a5cf-2312-476d-9fb1-907f2f9ea314" class="code code-wrap"><code>C:\Users&gt;cd C:\Program Files
+
+C:\Program Files&gt;</code></pre><ul id="9b3905fe-c142-41c3-8dab-b528f7d898c6" class="bulleted-list"><li>Чтобы быстро вернуться в свой домашний каталог, используйте <code>cd</code><em> </em>без аргументов или <code>cd ~</code>в UNIX-подобных системах, и <code>cd \</code><em> </em>в Windows.</li></ul><ul id="ace66703-7f06-44ca-a64a-964a62c62e53" class="bulleted-list"><li>Чтобы вернуться в предыдущий каталог в UNIX-подобной системе используйте <code>cd -</code> и <code>cd ..</code> для возврата в <strong>родительский каталог</strong> (каталог на один уровень выше текущего каталога; в нашем примере <em>username</em> является родительским каталогом для <em>Documents</em>, а <em>Users</em> является родительским каталогом для <em>username</em>).</li></ul><ul id="22567e27-efd0-4f5e-a328-37db65c58b77" class="bulleted-list"><li>С помощью <code>cd</code> команды вы можете пройтись по всей директории. Для разделения разных каталогов на вашем пути используйте косую черту. Например, команда <code>cd Documents/my_dir</code> переводит вас в <em>Documents, </em> а затем сразу в <em>my_dir</em>.</li></ul><p id="8068ba16-1234-4104-b695-f29234176bbf" class=""><strong>Не забывайте, что UNIX-подобные системы используют косую черту —  </strong><em><strong>/</strong></em><strong>, а Windows  бэкслэш — \</strong><em><strong> </strong></em><strong>!</strong></p><h2 id="d5cb1be1-6827-445c-98d1-16033148693c" class=""><strong>Список содержимого</strong></h2><p id="9f901133-f21f-4876-96e6-266ff6de902e" class=""><code>ls</code> на UNIX или <code>dir</code> на Windows, печатает текущее содержимое каталога:</p><pre id="fe41b808-5b75-44aa-86bc-dd972614ae1d" class="code code-wrap"><code>$ ls
+stuff old_files text.txt photo_1.jpg photo_2.jpg</code></pre><h2 id="3efb9eca-7769-49ac-b3a3-330501a6fb7e" class=""><strong>Создание и удаление файлов и каталогов</strong></h2><p id="f660b193-3174-4290-819d-3166b163bfb7" class="">Чтобы создать новый пустой каталог, используйте команду <code>mkdir</code><strong> </strong>( <strong>Make Directory</strong> ), указав имя нового каталога после команды:</p><pre id="92b493fa-a671-4dd1-99ba-6a3f05c3ee61" class="code code-wrap"><code>$ mkdir new_dir
+$ ls
+stuff old_files new_dir text.txt photo_1.jpg photo_2.jpg</code></pre><p id="95b9c045-7cd7-454d-a043-eded354029b9" class="">Чтобы безвозвратно удалить файлы или каталоги в UNIX-подобных системах, используйте команды <code>rm</code> ( <strong>Remove </strong>/ <strong>Удалить</strong> ) и  <code>rmdir</code> ( <strong>Remove Directory</strong> / <strong>Удалить каталог</strong>) соответственно. У Windows есть команда <code>del</code>, которая удаляет все.</p><pre id="db665a0e-e014-416f-8261-97e07056dfae" class="code code-wrap"><code>$ rmdir new_dir
+$ ls
+stuff old_files text.txt photo_1.jpg photo_2.jpg
+$ rm photo_1.jpg photo_2.jpg
+$ ls
+stuff old_files text.txt</code></pre><p id="f3102a07-6e34-4a63-b1fb-6a9b72387578" class=""><em>Команды </em><code><em>mkdir</em></code><em><strong> </strong></em><em>и </em><code><em>rmdir</em></code><em> работают как в UNIX-подобных системах, так и на Windows.</em></p><h2 id="8bf75b76-4ee8-43d1-a124-14f833475715" class=""><strong>Копирование и перемещение</strong></h2><p id="d82f4f82-4628-4adf-a30c-3f15d8f42b66" class="">Чтобы скопировать или переместить файлы или каталоги, используйте команды <code>cp</code> и <code>mv</code>  ( <em><strong>копирование</strong></em> и <em><strong>перемещение</strong></em>  в Windows). Они принимают два или более имен файлов или каталогов в качестве аргументов. Последний аргумент считается местом назначения копирования или перемещения, а все аргументы перед ним считаются источниками. Другими словами, все файлы и каталоги до последнего копируются или перемещаются в последний каталог.</p><p id="90bb20f3-4ea7-40a9-9fbb-860d1933113f" class=""><code>сp</code> и <code>copy</code> также можно использовать для копирования одного (но только одного!) <em>Файла</em> в другой, например:</p><p id="6aebe41a-1ecb-40b3-92eb-67dc9048a2ff" class=""><code>cp source_file.txt target_file.txt</code><em></em></p><p id="a1fa1b03-1523-499b-842f-9e92ff202f1d" class="">В Windows <code><em>copy</em></code><em>,</em> используемая только с одним именем файла в качестве аргумента, напечатает содержимое этого файла.</p><h2 id="2d8662ae-1c9e-448c-b68a-cd4513453097" class=""><strong>Чтение файлов</strong></h2><p id="7dbe5293-3df2-4847-8e51-2ecbba06c72f" class="">Теперь вы можете легко перемещаться по файловой системе через интерфейс командной строки. Но как насчет файлов? Можем ли мы читать файлы или записывать их из командной строки?</p><p id="fd8c0440-781f-42d3-a101-e73a35568bf7" class="">Чтобы прочитать содержимое файла, используйте  команду <code><strong>cat</strong></code>(что странно расшифровывается как  <em><strong>conCATenate</strong></em> ) в UNIX-подобных системах и <code><strong>type</strong></code><em><strong> </strong></em>в Windows. Также для Windows вызов <code><strong>copy</strong></code><strong> </strong>с одним именем файла в качестве аргумента также приведет к печати содержимого файла.</p><pre id="82c87330-588a-40a3-a43e-94ebddea4ea1" class="code code-wrap"><code>$ cat text.txt
+Twas brillig, and the slithy toves
+Did gyre and gimble in the wabe:
+All mimsy were the borogoves,
+And the mome raths outgrabe.</code></pre><h2 id="fbc737c7-0718-4d4d-975e-fbb00df964d8" class=""><strong>Создание новых файлов</strong></h2><p id="c0ae8b11-e280-41e6-9a29-e90e24e9cc04" class="">В UNIX-подобных системах есть две команды, позволяющие создавать один или несколько файлов:</p><ul id="b51309f3-a829-4211-9710-deeabb595209" class="bulleted-list"><li><code><strong>touch</strong></code> просто создает пустой файл или файлы с заданным именем</li></ul><ul id="d8a7527c-7731-49c3-a718-f57d494f400e" class="bulleted-list"><li><code><strong>mkfile</strong></code> (<strong>Make File</strong>) создает один или несколько файлов заданного размера (в байтах), заполненными нулями; например, <code><em>mkfile 8 new_file.txt</em></code> создаст 8-байтовый файл с именем <em>new_file.txt</em>.</li></ul><p id="9b4941b9-386e-4ea3-bc95-8068f051329b" class="">В Windows может также использоваться <code><em><strong>echo</strong></em></code><code><em> &gt; filename</em></code><code> ;</code> однако он позволяет создавать только один файл за раз. <em>Обратите внимание, что в Windows PowerShell вам нужно нажать </em><code><em>F6</em></code><em> + </em><code><em>Enter</em></code><em> после этого, чтобы выйти.</em></p><p id="42b0294d-64ac-4495-8fb1-7828d94d40aa" class=""><em><strong>Предупреждение: не забудьте указать расширение при создании файла с помощью командной строки, иначе у него не будет расширения!</strong></em></p><p id="ebb0980d-e1bf-4f58-b003-effc200fc504" class="">В отличие от большинства графических текстовых редакторов, которые позволяют пользователям записывать что-либо в файл перед его сохранением, эти утилиты создают файл и немедленно сохраняют его, не позволяя пользователю изменять его содержимое.</p><h2 id="72de9228-b684-41f3-9519-99e349645a61" class=""><strong>Редактирование файлов</strong></h2><p id="c27bb2fd-a152-419f-be64-0ad8596a5420" class="">Существует способ записи в файл через командную строку. Простая команда с именем <code><strong>echo</strong></code> (доступная как в UNIX, так и в Windows) может использоваться для записи нового содержимого в конец файла (<code>echo &quot;</code><code><em>некоторый новый контент&quot;</em></code><code><em> &gt;&gt; &lt;имя файла&gt;</em></code>) или для полного переопределения существующего файла новым содержимым (<code>echo </code><code><em>&quot;некоторый новый контент&quot; &gt;  &lt;имя файла&gt;</em></code><code> </code>). Эти варианты лучше, чем ничего, но все еще не очень полезны. Есть ли способ отредактировать файл через командную строку таким же образом или лучше просто отредактировать его в Google Docs?</p><p id="ec0ebeba-b74f-4b2d-b34f-49d46ac79208" class="">На самом деле, есть. Все операционные системы имеют встроенные <strong>консольные текстовые редакторы,</strong> которые позволяют записывать в файл из командной строки. Как в Windows, так и в UNIX-подобных системах <strong>Vim</strong> доступен с помощью команды <code><strong>vim</strong></code>(или <code><strong>vi</strong></code> ), а <strong>Emacs </strong>— с  помощью команды <code><strong>emacs</strong></code>. UNIX-подобные системы также имеют <strong>Nano</strong>, доступ к которому можно получить с помощью команды <code><strong>nano</strong></code> . Чтобы глубже понять эти текстовые редакторы, не стесняйтесь посмотреть FAQ и документы для <a href="https://www.vim.org/docs.php">Vim</a>, <a href="http://www.gnu.org/software/emacs/documentation.html">Emacs</a> и <a href="https://www.nano-editor.org/docs.php">Nano</a>.</p><p id="84d8bd04-0d6b-4ba7-83b5-452f1aaa6856" class="">Мы не будем вас обманывать: они довольно сложные, и о каждом написаны целые книги.</p><p id="137fe150-2db8-4628-89af-264e0e5bb9f9" class="">Консольные текстовые редакторы также сильно отличаются от текстовых редакторов с графическим интерфейсом и даже могут показаться нелогичными, поскольку они берут свое начало со времен, когда графические интерфейсы не существовали вообще или были редкостью.</p><p id="12a302cf-8169-448e-bd83-58b96452e2ff" class="">Но подробности мы любезно оставим вам на добровольное изучение, если вы хотите докопаться до сути.</p><p id="5edd1fd0-948f-4176-99f4-6bd329ef88bc" class="">
+</p></div></article></body></html>

@@ -1,0 +1,727 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>3.13 WTF Forms – валидация и вывод ошибок</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="af6ac7b5-3aff-42b6-8756-834f6f7a5b93" class="page sans"><header><h1 class="page-title">3.13 WTF Forms – валидация и вывод ошибок</h1></header><div class="page-body"><p id="a03b5e5d-8832-4008-aa20-d9ee60307753" class="">Не все пользователи ведут себя хорошо. Чтобы в ваших данных не встречались прочерки, пустые значения, значения &quot;щщщ&quot; в поле &quot;цена товара&quot; или &quot;qwerty&quot; в поле для электронной почты, вам пригодится помощь валидации.</p><figure id="dcfd756e-9d1d-4cb7-94c2-259069b1a552" class="image"><a href="https://ucarecdn.com/22688ed3-be90-4ddb-b791-be7853078522/"><img src="https://ucarecdn.com/22688ed3-be90-4ddb-b791-be7853078522/"/></a></figure><p id="7c21a8e2-c304-4bd8-9de9-61856415e9f0" class="">(с) <a href="https://stepik.org/%C2%A0https://dribbble.com/shots/1691822-Form-with-validation">Russell Kerr</a></p><p id="4ea14508-e5e5-4d55-ab93-6d103fd48b82" class=""><strong>В этом топике вы научитесь</strong></p><p id="483efe12-3f83-4c34-a74c-2ff7ce3d526d" class="">– использовать стандартные валидаторы,</p><p id="5e5da0ed-3557-4a81-80a4-951fe4e723b3" class="">– отображать разные страницы в зависимости от того, успешно ли были провалидированы данные,</p><p id="8e531ef7-2996-4904-92bc-bf16953b0fd3" class="">– выводить ошибки валидации в шаблоне.</p><h2 id="62ba2787-a5fa-4bed-bd70-57f3f338cb5e" class="">Н<strong>астройки валидации для полей</strong></h2><p id="adc694a0-d44b-4c87-8e9d-f5cbc9a0dfa6" class="">Чтобы заработала валидация, нам понадобится:</p><p id="9eafcb65-175c-459a-ba66-8d785c51fc43" class="">1. Установить валидатор емейлов, это отдельный пакет.</p><pre id="d0855f06-c67a-4ea0-834c-0ae19099904c" class="code code-wrap"><code>pip install email_validator
+</code></pre><p id="21d95590-b040-4c13-9427-0ea68a60ac52" class="">2. Сперва подключить нужные валидаторы из wtforms.validators (полный список на след. шаге) :</p><pre id="58019b83-f9ae-47b5-976b-c13a51c64e85" class="code code-wrap"><code>from wtforms.validators import InputRequired, Email</code></pre><p id="31087973-795d-42c2-82e5-e1eede9862d0" class="">3. Затем указать валидатор после названия поля, например &quot;поле требуется&quot; и &quot;почта&quot;:</p><p id="d2e7f10d-76e8-4973-b202-3ff7330e5272" class="">(обратите внимание,  валидатор это функция)</p><pre id="66af3e01-9058-49f9-b7a3-c7ac783c5a7d" class="code code-wrap"><code>class MyForm(FlaskForm):
+    name = StringField(&#x27;name&#x27;, [InputRequired()])
+    mail = StringField(&#x27;mail&#x27;, [Email()])</code></pre><p id="9f089010-60f5-439d-941e-e851483781ca" class="">4. Затем использовать валидатор  form.validate() после получения формы:</p><pre id="5eef9060-4a5c-4629-9a27-f5f7c0192073" class="code code-wrap"><code>form = MyForm()
+if form.validate():
+    return &quot;Форма в порядке&quot;return &quot;Форма не в порядке&quot;</code></pre><p id="a266e909-2a7d-49fd-9ead-8b25eb4f82f0" class="">Это самый простой способ, в реальных проектах мы добавляем ошибки валидации, выводим их в шаблонах и используем более разнообразные валидаторы.</p><p id="06129785-2b1c-4d28-9e16-7db95d07e5f4" class=""><strong>Полный листинг кода:</strong></p><p id="d11bebca-5ddd-422c-a2dd-f586fbb2553b" class=""><strong>app.py</strong></p><pre id="016bdbfa-668a-40a0-859a-da20738af809" class="code code-wrap"><code>from flask import Flask, request, render_template
+from wtforms.validators import InputRequired, Email
+from flask_wtf import FlaskForm
+from wtforms import StringField
+
+
+app = Flask(__name__)
+app.secret_key = &quot;randomstring&quot;class MyForm(FlaskForm):
+    name = StringField(&#x27;name&#x27;, [InputRequired()])
+    mail = StringField(&#x27;mail&#x27;, [Email()])
+
+
+@app.route(&#x27;/&#x27;)def render_index():
+    form = MyForm()
+    return render_template(&quot;form.html&quot;, form=form)
+
+
+@app.route(&#x27;/send/&#x27;, methods=[&quot;POST&quot;])def render_send():
+    form = MyForm()
+    if form.validate():
+        return &quot;Форма в порядке&quot;return &quot;Форма не в порядке&quot;
+
+
+app.run(port=8060, debug=True)
+</code></pre><p id="53664c6b-00d6-436b-b60b-cdf5fb77cc56" class=""><strong>form.html</strong></p><pre id="d57011b5-7bf5-4ac7-ab5d-e461f017516d" class="code code-wrap"><code>&lt;form action=&quot;/send/&quot; method=&quot;POST&quot;&gt;
+    &lt;h2&gt;Форма заказа&lt;/h2&gt;
+     Имя: {{ form.name }}
+     Почта: {{ form.mail }}
+     {{ form.hidden_tag() }}
+    &lt;input type=&quot;submit&quot;&gt;
+&lt;/form&gt;</code></pre><h2 id="ec2a9471-585a-4b28-9b04-a6dc8844df07" class=""><strong>Типы валидации:</strong></h2><p id="047b2a1b-e642-47f8-acde-3eff1d75bcf8" class="">Фласк предлагает несколько стандартных, но, если очень хочется, можно написать свою функцию-валидатор.</p><p id="8e589606-e3a6-4065-9395-2bf572d66e27" class=""><strong>InputRequired – требуется заполнить это поле</strong></p><pre id="fcd55263-b0ca-4205-a664-d9aa696ca26f" class="code code-wrap"><code>class MyForm(FlaskForm):
+    my_string = StringField(&quot;Поле ввода&quot;, [InputRequired()])</code></pre><p id="4d9b0515-89dd-4afc-834f-060739b2669f" class=""><strong>Length(min=-1, max=-1) – проверяет максимальную и минимальную длину cтроки</strong></p><pre id="ed7d0f9a-71ca-40e0-ac46-90142c1f3085" class="code code-wrap"><code>class MyForm(FlaskForm):
+    my_string = StringField(&quot;Поле ввода&quot;, [Length(min=3)])</code></pre><pre id="227a939f-b4d0-4c91-ab0e-ce473d76837e" class="code code-wrap"><code>class MyForm(FlaskForm):
+    my_string = StringField(&quot;Поле ввода&quot;, [Length(max=10)])</code></pre><pre id="d7a94f69-235f-4e7b-ad3d-c06585b89ac0" class="code code-wrap"><code>class MyForm(FlaskForm):
+    my_string = StringField(&quot;Поле ввода&quot;, [Length(min=5,max=6)])</code></pre><p id="1ea0e821-23cd-430d-a190-ce94c1f50fbe" class=""><strong>NumberRange(min=-1, max=-1) – проверяет максимальное и минимальное значение числа</strong></p><pre id="9d4b953e-8184-4950-bf2d-c880b47200ac" class="code code-wrap"><code>class MyForm(FlaskForm):
+    my_value = IntegerField(&quot;Ваш возраст&quot;, [NumberRange(min=7, max=99)])</code></pre><p id="4b250f5f-c2e2-4bea-9b61-cc28baa9cbef" class=""><strong>Email(message=None) – проверяет, что введенное значение – почта</strong></p><pre id="bd812988-134e-4da6-a301-8fa4243f60cf" class="code code-wrap"><code>class MyForm(FlaskForm):
+    my_mail = StringField(&quot;Ваша почта&quot;, [Email()])</code></pre><p id="c0d3a0df-1ab8-4959-90f4-bea4c29c5c0f" class=""><strong>AnyOf([...]) – проверяет, что введенное значение входит в перечисленные допустимые</strong></p><pre id="ac24660a-0559-4c51-946f-40f276eb6464" class="code code-wrap"><code>class MyForm(FlaskForm):
+    my_grade = IntegerField(&quot;Ваша оценка&quot;, [AnyOf([5,4,3,2])])</code></pre><p id="b4417f5a-399f-4656-8592-bbe338f3721a" class=""><strong>Если мы хотим проверить несколько условий, мы просто передаем их в списке.</strong><strong>Вот так:</strong></p><pre id="c34cc38d-2176-44a1-b168-fb1c6b7ddf28" class="code code-wrap"><code>my_mail = StringField(&quot;Ваша почта&quot;, [Email(),Length(max=7)])</code></pre><p id="dbb62bcf-6f99-490e-80f4-cd1ca8219809" class="">Больше валидаторов можно найти в документации:  <a href="https://wtforms.readthedocs.io/en/stable/validators.html">https://wtforms.readthedocs.io/en/stable/validators.html</a></p><h2 id="c0201f3b-e03b-46df-93c4-10ca287ccdf7" class=""><strong>Другой способ написания:</strong></h2><p id="71259759-6f40-4ac6-ab80-0072e881da80" class="">В официальной документации используется вариант записи, при котором все валидаторы не импортируются сразу, а указываются через validators.&lt;названиевалидатора&gt;. Первый позволяет держать код формы более лаконичным, второй держать пространство имен чистым и не подключать все валидаторы явно. Вы можете использовать такой, который нравится вам больше!</p><pre id="c6d19db7-3ff0-4876-8dee-74c861ad9635" class="code code-wrap"><code>from wtforms import Form, BooleanField, StringField, PasswordField, validator
+
+class RegistrationForm(Form):
+    username = StringField(&#x27;Username&#x27;, [validators.Length(min=4, max=25)])
+    password = PasswordField(&#x27;Password&#x27;, [validators.DataRequired()]</code></pre><h2 id="53543cc6-fa59-4ff1-a430-66d5b873bcff" class=""><strong>Текст ошибки для пользователя</strong></h2><p id="7687ca22-f4c9-413d-b339-d4a9951cac03" class="">Чтобы пользователь увидел ошибку, вызывая функцию-валидатор, нужно указать текст ошибки:</p><pre id="b3e7f4b4-6fd6-4ae0-be56-d58969386e05" class="code code-wrap"><code>my_string = StringField(&quot;Поле ввода&quot;, [InputRequired(message=&quot;Введите что-нибудь&quot;)])</code></pre><pre id="f886c898-12f1-4f4d-9e31-9a7c1abe904f" class="code code-wrap"><code>my_string = StringField(&quot;Поле ввода&quot;, [Length(min=3, message=&quot;Слишком короткая строка&quot;)])</code></pre><pre id="aa45f25c-3ab3-4bf7-89cc-84f4f11888a8" class="code code-wrap"><code>my_mail = StringField(&quot;Ваша почта&quot;, [Email(message=&quot;Это не похоже на почту, попробуйте еще раз!&quot;)])</code></pre><h2 id="ac65d2c0-d0b4-42d5-b608-671f38d5ae5c" class=""><strong>Выполнение валидации в представлении</strong></h2><p id="d2a1ad20-3600-433c-958a-b8bc703d0fa5" class="">Когда параметры валидации определены, а форма отправлена, для запуска валидации мы используем метод экземпляра формы <code>form.validate_on_submit()</code> .</p><p id="54124195-18f0-4865-bfc1-136bcc265eeb" class="">Предположим, наша форма выглядит так:</p><pre id="81342525-6c52-494a-9c07-9937068ac3aa" class="code code-wrap"><code>&lt;form method==&quot;POST&quot; action=&quot;/submit&quot;&gt;
+...
+&lt;/form&gt;</code></pre><p id="aec19e27-22f0-48a2-9907-c4f32b00712c" class="">Тогда самая простая валидация будет такой:</p><pre id="3f1d7a94-3771-4c3b-a1fc-9e54ffb119c5" class="code code-wrap"><code>@app.route(&#x27;/submit&#x27;, methods=(&#x27;POST&#x27;))
+def submit():
+    form = MyForm()
+    if form.validate_on_submit():
+        return &quot;Форма получена, ошибок нет!&quot;else:return &quot;Форма получена, есть ошибки!&quot;</code></pre><h3 id="71602959-b957-4fc0-9c11-e34dcbfedda3" class=""><strong>Использование переадресации при удачной валидации</strong></h3><p id="28af838e-1705-432f-81ce-7088c471d83b" class="">Когда форма заполнена, но данные не приняты, мы видим снова форму и предложение исправить свои ошибки.</p><p id="92ac7cda-e9f1-424c-afe0-2799d6a2e48e" class="">Когда данные приняты, мы обычно видим новую страничку. Вот пример из официальной документации:</p><pre id="0744500a-bba2-4fe0-b9f8-cfbe287b87e0" class="code code-wrap"><code>@app.route(&#x27;/submit/&#x27;, methods=[&#x27;POST&#x27;])def submit():
+    form = MyForm()
+    if form.validate_on_submit():
+        return redirect(&#x27;/success&#x27;)
+    return render_template(&#x27;submit.html&#x27;, form=form)</code></pre><p id="b311fe2f-cbbf-4852-867e-8681b5163bae" class="">Главная задача валидации решена – мы не примем данные и не покажем следующий экран, пока пользователь не исправится.</p><p id="9fa345b5-b857-493a-a14a-1c9ee080fecb" class="">Правда, на этом этапе ему еще непонятно, что именно нужно исправить.</p><p id="3da3f92b-3147-4016-a117-cb8588f9fd3b" class="">Пока наша форма ведет себя достаточно токсично:</p><blockquote id="06f2cfad-56bf-49ca-9385-d7428f0b9a08" class="">Пользователь:  Я принес тебе данные!</blockquote><blockquote id="680c3f27-3c81-408e-ba53-f11486feefee" class="">Форма: Мне не нравится. Ты опять принес плохие данные! Тебе стоило бы лучше над ними поработать!</blockquote><blockquote id="dbd9f446-a0a6-4ead-bc8d-4678d248e325" class="">Пользователь: Ага. а что именно не так?</blockquote><blockquote id="0ec4dc5a-419f-409a-8ffe-6b753aed7c04" class="">Форма: Все не так! Ты сам догадаться не можешь?!</blockquote><p id="425735c1-22d4-4cf1-ab00-4327717edf59" class="">Дальше мы научим ее давать развернутую обратную связь!</p><h2 id="97ca343a-79d8-432c-bc06-77a0d5834c0c" class=""><strong>Вывод сообщений об ошибках</strong></h2><p id="d8d1c8e7-909e-4bf6-8e22-45d5425a040b" class="">После валидации, каждое поле формы содержит список ошибок, которые можно отобразить в шаблоне, используя простой цикл, как показано ниже. Обратите внимание, ошибки к каждому полю формы хранятся в соответствующем ему объекте. Например, вот вывод всех ошибок для поля <code>name</code>:</p><pre id="3b8b0f95-5180-4db5-9e39-1d3cba6051de" class="code code-wrap"><code>&lt;form method=&quot;POST&quot; action=&quot;/myform&quot;&gt;
+
+    {% for err in form.name.errors %}
+        &lt;p&gt;{{ err }}&lt;/p&gt;
+    {% endfor %}
+
+    {{ form.name }}
+
+&lt;/form&gt;</code></pre><p id="9f259717-f4f7-48c7-861d-90932cece557" class="">Если мы хотим добавить вывод ошибок для каждого поля, мы можем сделать так:</p><pre id="a88b856c-397e-4235-bee7-933154e88b55" class="code code-wrap"><code>&lt;form method=&quot;POST&quot; action=&quot;/myform&quot;&gt;
+
+    {% for err in form.name.errors %}
+        &lt;p class=&quot;error&quot;&gt;{{ err }}&lt;/p&gt;
+    {% endfor %}
+
+    {{ form.name }}
+
+
+    {% for err in form.phone.errors %}
+        &lt;p class=&quot;error&quot;&gt;{{ err }}&lt;/p&gt;
+    {% endfor %}
+
+    {{ form.phone }}
+
+
+    {% for err in form.address.errors %}
+        &lt;p class=&quot;error&quot;&gt;{{ err }}&lt;/p&gt;
+    {% endfor %}
+
+    {{ form.address }}
+
+
+
+&lt;/form&gt;</code></pre><h3 id="2ec1fabf-8388-470a-aeaf-063527b79bf6" class=""><strong>Единый вывод ошибок</strong></h3><p id="68de4e49-a3bb-4ece-bd6f-9310f3c728f7" class="">Если вы предпочитаете вывести все ошибки вместе, вот вариант для вас:</p><pre id="8322ba39-5b7f-4276-984b-34dbecb02b1e" class="code code-wrap"><code>{% if form.errors %}
+    &lt;ul class=&quot;errors&quot;&gt;
+        {% for field_name, field_errors in form.errors|dictsort if field_errors %}
+            {% for error in field_errors %}
+                &lt;li&gt;{{ form[field_name].label }}: {{ error }}&lt;/li&gt;
+            {% endfor %}
+        {% endfor %}
+    &lt;/ul&gt;
+{% endif %}</code></pre><h2 id="975c0783-fdde-4ed0-b82a-6d142818e8fa" class=""><strong>Резюме</strong></h2><p id="fb80f0b6-0602-4555-a1e0-c01ad2f7c234" class="">Чтобы пользователи не портили данные,  пригодится помощь валидации.</p><p id="ccc11026-be0e-4241-aed0-7d23a57ce75d" class="">Стандартные валидаторы:</p><p id="9f541f74-0525-4f8d-9674-ebaf67928a09" class=""><strong>Проверка, что значение заполнено:</strong></p><pre id="8f49152a-eaa9-4c51-acaa-1a8643f81045" class="code code-wrap"><code>my_string = StringField(&quot;Поле ввода&quot;, [InputRequired()])</code></pre><p id="a27c1213-a704-424e-a54f-853953c0388d" class=""><strong>Проверка длины строки:</strong></p><pre id="5a55896a-e797-434f-bbb1-9ba370b1c210" class="code code-wrap"><code>my_string = StringField(&quot;Поле ввода&quot;, [Length(min=5,max=6)])</code></pre><p id="600fb337-80c8-40f2-aaf3-b7187a604321" class=""><strong>Проверка значения числа:</strong></p><pre id="84c5876a-455f-4cab-b907-e596b672286e" class="code code-wrap"><code>my_value = IntegerField(&quot;Ваш возраст&quot;, [NumberRange(min=7, max=99)])</code></pre><p id="887114bc-34a6-462f-b02f-c797be0f2333" class=""><strong>Проверка, что значение является почтой:</strong></p><pre id="e331b14b-4e4a-40d6-90e1-ade683b73b29" class="code code-wrap"><code>my_mail = StringField(&quot;Ваша почта&quot;, [Email()])</code></pre><p id="516b88fa-f843-4e0d-8d07-c6a95ad47d7c" class=""><strong>Проверка, что значение входит в допустимые:</strong></p><pre id="59cd49e3-d71a-4b88-9551-904a6bdb9b8f" class="code code-wrap"><code>my_grade = IntegerField(&quot;Ваша оценка&quot;, [AnyOf([5,4,3,2])])</code></pre><p id="3266e5fd-1a41-4065-be77-cc41bde1554e" class=""><strong>Несколько проверок для одного поля:</strong></p><pre id="b2df5ea4-9532-4dd2-b821-2464c5c0ea27" class="code code-wrap"><code>my_mail = StringField(&quot;Ваша почта&quot;, [Email(),Length(max=7)])</code></pre><p id="b2de7ec1-c9e5-49de-b2c8-6ef8c720897f" class=""><strong>Сообщение об ошибках:</strong></p><pre id="155e0fa6-6298-429f-b244-37dd04ca1350" class="code code-wrap"><code>my_mail = StringField(&quot;Ваша почта&quot;, [Email(message=&quot;Это не похоже на почту, попробуйте еще раз!&quot;)])</code></pre><p id="564e48c9-c968-42e9-b952-27108a20b193" class=""><strong>Выполнение валидации:</strong></p><pre id="e8e304af-d20e-404b-94a7-5f1bb01cccee" class="code code-wrap"><code>if form.validate_on_submit():
+    return &quot;Форма получена, ошибок нет!&quot;else:
+    return &quot;Форма получена, есть ошибки!&quot;</code></pre><p id="6410e158-a653-437f-8259-40f63b375171" class=""><strong>Вывод ошибок в форме:</strong></p><pre id="7a0a85ef-9334-4766-9412-7c0bf13b7ae6" class="code code-wrap"><code>{% for err in form.name.errors %}
+    &lt;p&gt;{{ err }}&lt;/p&gt;
+{% endfor %}</code></pre></div></article></body></html>

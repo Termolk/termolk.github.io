@@ -1,0 +1,668 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>1.15 Виртуальное окружение. Знакомство с environment</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="ca116d94-b07f-4386-81ed-9207323f32a7" class="page sans"><header><h1 class="page-title">1.15 Виртуальное окружение. Знакомство с environment</h1></header><div class="page-body"><p id="467cc6b5-dee1-4aa5-896e-45e8800dc674" class="">Ваше приложение, как и любое другое приложение, работает в связи с компонентами окружающей его системы.</p><p id="71f753f0-2f38-4152-b964-22c5f4e38b79" class="">Чтобы создать для приложений на разных платформах одинаковые условия и не давать приложениям мешать друг другу, существуют виртуальные окружения.</p><h3 id="bb4af23d-5b1d-443b-9e44-06139a7177db" class=""><strong>Зачем это вообще нужно?</strong></h3><p id="aa613b24-5344-41f6-a5b1-8b4869470f7e" class="">Чтобы приложение работало одинаково на компьютерах разработчика и заказчика или пользователя, оно должно быть в одинаковых условиях. Или другими словами — в одинаковом окружении.</p><p id="43754db1-227c-4ccb-8d70-80846afbf0cb" class="">В этом топике вы:</p><p id="c0818878-cda7-4143-a067-b1e330e93762" class="">– Познакомитесь с концептами виртуального окружения.</p><p id="a4424573-e529-4f72-9c7f-56af6fe1e360" class="">– Научитесь создавать виртуальное окружение для своих проектов.</p><p id="0fc20df3-b497-4719-aac0-778476324e60" class="">– Научитесь устанавливать свой набор зависимостей для каждого окружения.</p><h2 id="ee3168a2-4779-4df8-82da-63eb949a45c5" class=""><strong>Проблемы окружения приложений на Python</strong></h2><p id="c74263dd-2886-463c-b896-aa302ad28e55" class="">В системе для интерпретатора Python может быть установлена глобально только одна версия пакета. Это порождает ряд проблем.</p><h3 id="a66f4073-800d-458a-8390-5ed89c396347" class=""><strong>1. Проблема обратной совместимости</strong></h3><p id="041775db-2756-44b9-8348-8ecf4b58c911" class="">Некоторые операционные системы, например, Linux и MacOs используют содержащиеся в них предустановленные интерпретаторы Python. Обновив или изменив самостоятельно версию какого-то установленного глобально пакета мы можем непреднамеренно сломать работу утилит и приложений из дистрибутива операционной системы.</p><p id="6911d026-ebdc-435b-a148-89dfa5f9fee7" class="">Чем опасно обновление пакетов или версий интерпретатора? В новой версии пакета могут измениться названия функций или методов объектов и число и/или порядок передаваемых в них параметров. В следующей версии интерпретатора могут появиться новые ключевые слова, которые совпадают с именами переменных уже существующих приложений.</p><p id="3453780b-4e24-4101-a040-6c98bef2089f" class="">Эта же проблема затрагивает и процесс разработки. Обычно программист работает со множеством проектов, так как приходится поддерживать созданные ранее и не редко даже унаследованные от других: когда-то веб приложения создавались для одной версии фреймворка, а сегодня уже вышла новая, но переписывать все долго и дорого, поэтому проект и дальше поддерживается  для старой.</p><h3 id="e5b18242-1667-4327-88e3-441fec0da23c" class=""><strong>2. Проблема коллективной разработки</strong></h3><p id="6e337676-3617-4d81-afd5-d4dca38b28fd" class="">Если разработчик работает над проектом не один, а с командой, ему нужно передавать и получать  список зависимостей, а также обновлять их на своем компьютере таким образом, чтобы не нарушалась работа других его проектов. Значит нам  нужен механизм, который вместе с обменом проектами быстро устанавливал бы локально и все необходимые для них пакеты, при этом не мешая работе других проектов.</p><h3 id="6da330cd-885d-4618-b766-b7e6211271ba" class=""><strong>Виртуальное окружение как решение</strong></h3><p id="96dc240e-232d-40d9-8c82-02d7e5c7f2d8" class="">Если вы сталкивались с этой проблемой, то уже задумывались, что для каждого проекта нужна своя &quot;песочница&quot;, которая изолирует зависимости. Такая «песочница» придумана и называется «виртуальным окружением» или «виртуальной средой». Но прежде, чем мы научимся работать в виртуальном, нужно разобраться с реальным окружением.</p><h2 id="1e09036f-0e8b-452d-8864-b4b2af2fa87d" class=""><strong>Виртуальное окружение</strong></h2><p id="4700abf0-6bf3-49e3-b7f7-a96701315652" class="">Идея виртуального окружения родилась раньше, чем была реализована стандартными средствами Python. Попыток было несколько, но в основу PEP 405 легла утилита virtualenv Яна Бикинга. Были проанализированы возникающие при работе с ней проблемы. После этого в работу интерпретатора Python версии 3.3 добавили их решения. Так был создан встроенный в Python модуль venv, а утилита virtualenv теперь дополнительно использует в своей работе и его.</p><p id="203fc5a4-5d27-4cb5-bc75-235ac88ff3da" class="">Как работает виртуальное окружение? Ничего сверхъестественного. В отдельной папке создаётся <strong>неполная копия</strong> выбранной установки Python. Эта копия является просто набором файлов (например, интерпретатора или ссылки на него), утилит для работы с собой и нескольких пакетов (в том числе pip). Стандартные пакеты при этом не копируются.</p><p id="816220b3-128f-4534-95df-573db9f7cbcb" class="">Чтобы начать работать с виртуальным окружением его нужно активировать. Активация меняет для сессии командной строки системную переменную PATH, добавляя папку копии интерпретатора в неё первой. Поэтому при вызове команды python находится первой его копия из виртуального окружения. Далее сам интерпретатор по понятному ему правилу создает список путей поиска пакетов от места его запуска. При этом он учитывает место расположения стандартных пакетов своей первоначальной установки, что решает проблему доступа к ним. Папка сторонних пакетов добавляется из виртуального окружения. Теперь мы можем работать с её содержимым, используя стандартную утилиту pip.</p><p id="c2c9e036-2055-4038-9091-ff7c11987c73" class="">После окончания работы в виртуальном окружении команда деактивации позволяет убрать из PATH путь к интерпретатору виртуального окружения. Стандартный интерпретатор Python опять становится доступен в сессии командной строки.</p><p id="8f132173-be40-4fa0-a007-cc60e1cf3e9b" class="">Вот основные этапы работы с виртуальным окружением:</p><ol id="c0909bd6-43d6-41d2-b4ff-d8c8588e15bd" class="numbered-list" start="1"><li><strong>Создаём </strong>через утилиту новое виртуальное окружение в отдельной папке для выбранной версии интерпретатора Python.</li></ol><ol id="54dd3d5b-1492-4fbe-8b8c-6c3bc9cf78fb" class="numbered-list" start="2"><li><strong>Активируем </strong>ранее созданное виртуальное окружение для работы.</li></ol><ol id="71416d13-6f5d-4a88-8d1d-c59d78c61ace" class="numbered-list" start="3"><li><strong>Работаем </strong>в виртуальном окружении, а именно управляем пакетами, используя pip, и запускаем выполнение кода.</li></ol><ol id="2bf3c28b-a1cc-459c-a6dd-d8d56f4fdc84" class="numbered-list" start="4"><li><strong>Деактивируем </strong>после окончания работы виртуальное окружение.</li></ol><ol id="3791dfb0-8f24-4022-8c8b-3cfa99ac6145" class="numbered-list" start="5"><li><strong>Удаляем </strong>папку с виртуальным окружением, если оно нам больше не нужно.</li></ol><p id="d8123e96-c16b-4751-81eb-848ceb59060c" class=""><em><strong>Среда разработки PyCharm при создании нового проекта автоматически создает для него виртуальное окружение. Это удобно и избавляет вас от использования большинства команд из этого топика. Тем не менее, мы считаем работу с виртуальным окружением в «ручном режиме</strong></em><em><strong>»</strong></em><em><strong> </strong></em><em><strong>полезным навыком.</strong></em></p><p id="8c0e1b6f-996c-4b9a-a047-c1e067e14d28" class="">Давайте пройдем каждый этап по отдельности со стандартной реализацией виртуального окружения Python через модуль venv.</p><h2 id="f0ecba76-3418-40f3-b2b0-822a08fdf9e6" class=""><strong>Виртуальное окружение с venv</strong></h2><p id="4aa1e87b-fb2d-47cd-9ee5-ed6766a7cedf" class="">Стандартный модуль venv, был добавлен в версии Python 3.3. И первая ошибка, которая возникает — это попытка его использовать с версией Python 2.x, пусть даже если она была выпущена после Python 3.3.</p><p id="5621e6dc-05b1-4331-b4f6-b99bd6efbd37" class="">Руководство по работе с venv  <a href="https://docs.python.org/3/tutorial/venv.html">https://docs.python.org/3/tutorial/venv.html</a></p><h2 id="5cc2f268-6118-4059-8390-49df220c11ad" class=""><strong>Создание виртуального окружения</strong></h2><p id="3ec9a254-ab2a-458d-abb3-b4053482a640" class="">Для создания виртуального окружения достаточно дать команду в формате:</p><pre id="9749cc9b-a8c4-4998-bb0c-a8f908bd9ffe" class="code code-wrap"><code>python3 -m venv &lt;путь к папке виртуального окружения&gt;
+</code></pre><p id="930833fc-bc49-40fc-a6c1-e8f59635962d" class="">Обычно папку для виртуального окружения называют env или venv.</p><p id="f9278a8e-b703-4e2d-8207-6779d0d16025" class="">В описании команды выше явно указан интерпретатор версии 3.x. Под Windows и некоторыми другими операционными системами это будет просто python.</p><p id="84d14eaa-528c-4510-85a1-6225bea2852e" class="">Если на Linux получена ошибка об отсутствии пакета venv, то его нужно установить, например, под Debian так:</p><pre id="aa76e7f4-8922-4faf-8b9f-7a742132d3f0" class="code code-wrap"><code>sudo apt-get install python3-venv
+</code></pre><p id="01a584a7-b1c6-48fd-8131-da06600d78bc" class="">Создадим виртуальное окружение в папке проекта. Для этого перейдём в корень любого проекта на Python &gt;= 3.3 и дадим команду:</p><pre id="a3aa8c26-4d6c-4a20-adbc-6d5c833f8fb7" class="code code-wrap"><code>$ python3 -m venv env</code></pre><p id="d3c8a4c0-af59-4d17-911c-a89a258a4d5d" class="">После её выполнения создастся папка env с виртуальным окружением. Вот пример структуры такой папки для Windows (скрыты файлы пакетов и папки кэширования Python):</p><pre id="d83ecb06-2386-4e3d-8ea0-bc227d8be9a6" class="code code-wrap"><code>└───env
+    │   pyvenv.cfg
+    │
+    ├───Include
+    ├───Lib
+    │   └───site-packages
+    │       │
+    │       ├───pip
+    │       ├───pip-19.2.3.dist-info
+    │       ├───pkg_resources
+    │       ├───setuptools
+    │       ├───setuptools-41.2.0.dist-info
+    │
+    └───Scripts
+            activate
+            activate.bat
+            Activate.ps1
+            deactivate.bat
+            easy_install-3.7.exe
+            easy_install.exe
+            pip.exe
+            pip3.7.exe
+            pip3.exe
+            python.exe
+            pythonw.exe</code></pre><p id="ed3b6fcd-5f9c-40b6-a78b-862a1362abaa" class="">В Linux и macOS папки Lib и Scripts изменятся на lib и bin.</p><h2 id="155a177a-6e34-4cdc-97ee-18fa8a8ad6ae" class=""><strong>Активация</strong></h2><p id="53b1323d-5dd6-4af4-ae7b-cd9ca322e8f1" class="">Чтобы активировать окружение под Linux и macOS нам нужно дать команду:</p><pre id="6b46ad05-7d60-4731-bbdd-fcc3a096e12f" class="code code-wrap"><code>$ source env/bin/activate</code></pre><p id="dfe11ed2-9657-4a78-9f3f-1e5368165a3d" class="">Для активации виртуального окружения под Windows команда выглядит иначе:</p><pre id="45897839-b0f3-4e60-9cb0-b41a81cc61d8" class="code code-wrap"><code>&gt; env\\Scripts\\activate</code></pre><p id="bc8d6944-a5a8-4e4b-af15-a0ac051d4028" class="">Просто под Windows мы вызываем скрипт активации напрямую.</p><p id="1709d148-4094-4c48-9a2e-b42cf9b16e53" class="">После активации приглашение консоли изменится. В его начале в круглых скобках будет отображаться имя папки с виртуальным окружением, например, возможный вариант для Linux:</p><pre id="3cc6f1b6-0f76-4e74-8a37-329d239c056c" class="code code-wrap"><code>(env) user@user:~/venv_test/proj3$
+</code></pre><p id="f6878f0c-6e0c-4d49-9f68-5ffba4677493" class="">При размещении виртуального окружения в папке проекта стоит позаботиться о его исключении из репозитория системы управления версиями. Для этого, например, при использовании Git нужно добавить папку в файл .gitignore. Это делается для того, чтобы не засорять проект разными вариантами виртуального окружения.</p><pre id="6e21e5bf-7331-46da-b9f7-23585202c5af" class="code code-wrap"><code>$ python3 -m venv /home/user/envs/project1_env
+</code></pre><p id="99b5ab6d-f31b-4bba-9aa9-61197572997d" class="">Виртуальное окружение благополучно создалось. Давайте активируем его:</p><pre id="d7a00f2d-ca68-4530-b667-3079ae77e1b3" class="code code-wrap"><code>$ source /home/user/envs/project1_env/bin/activate
+</code></pre><p id="47ec1de9-b6b2-4057-88a3-1ed1108f035a" class="">Виртуальное окружение активировано.</p><h2 id="fd6c12e5-f171-433e-bda4-098491ebd258" class=""><strong>Деактивация</strong></h2><p id="0c8c2b7c-3290-4b20-9489-9a0c5d72ef18" class="">Чтобы переключиться с одного окружения на другое нам нужно выполнить команду деактивации и команду активации другого виртуального окружения, например, так:</p><pre id="4d9bf476-a564-45ad-bc13-0762e9203ef3" class="code code-wrap"><code>$ deactivate$ source /home/user/envs/project1_env2/bin/activate</code></pre><p id="2e5498e3-7a5a-4c71-b79c-5eddd565e88d" class="">Команда deactivate всегда выполняется из контекста текущего виртуального окружения. По этой причине для неё не нужно указывать полный путь.</p><p id="7ee6a4eb-8e25-40ef-a0c3-1b3901c1c903" class="">Ранее мы работали с интерпретаторами доступными через стандартные вызовы python. Если в системе установлена другая версия интерпретатора, которая не добавлена в переменную PATH, то для создания виртуального окружения нужно явно задать путь до исполняемого файла интерпретатора. Например, у нас Windows и ранее мы установили Python версии 3.7.6. Сегодня мы решили ознакомиться с особенностями Python версии 3.8.2, так как нужно расти в качестве разработчика. Для этого скачали и установили новую версию в папку C:\Python38, но при этом не добавили в PATH (не установили соответствующую галочку в программе установки). Для создания виртуального окружения для Python 3.8.2 нам придется дать в папке проекта команду с указанием полного пути до интерпретатора, например:</p><pre id="2830c146-1fd6-492d-8391-22ba29028e9a" class="code code-wrap"><code>&gt; C:\\Python38\\python -m venv env</code></pre><p id="d4f1ee9f-c4e3-438b-8893-735b65601209" class="">После выполнения команды мы получим виртуальное окружение для Python 3.8.2. Активация же будет происходить стандартно для Windows:</p><pre id="b93bc612-4621-4ef9-ae91-9476216eceba" class="code code-wrap"><code>&gt; env\\Scripts\\activate</code></pre><h2 id="bf79c0a2-a829-4727-a87d-1a8bdc5b38fd" class=""><strong>Виртуальное окружение с virtualenv</strong></h2><p id="9131f934-8e3c-47bb-862e-fbb363b7c009" class="">Зачем нам нужно уметь работать с утилитой virtualenv? Ведь мы уже научились работать со стандартным модулем Python venv. Просто он очень распространён и поддерживает большее число вариантов и версий интерпретатора Python, например, PyPy и CPython.</p><p id="7097daa3-348b-4a40-a4d5-bcbf2d431305" class="">Для начала пакет нужно установить. Установку можно выполнить командой:</p><pre id="ce4fce6b-7744-4931-b9c4-7406607d6811" class="code code-wrap"><code># Для python 3
+python3 -m pip install virtualenv
+
+# Для единственного python
+python -m pip install virtualenv
+</code></pre><p id="037f59e5-d196-4aad-a557-07f7b8bdf2ab" class="">Создание виртуального окружения с утилитой virtualenv отличается от стандартного. Например, создание в текущей папке виртуального окружения для интерпретатора, доступного через команду python3, с названием папки окружения env:</p><pre id="fd6237a2-550a-4cee-839b-be6ebcd8d7da" class="code code-wrap"><code>virtualenv -p python3 env
+</code></pre><p id="adef3f68-2b4e-427e-a3ae-a2a2d59c2d5e" class="">Активация и деактивация такая же, как у стандартной утилиты Python. Например, для Linux и macOS:</p><pre id="dec5a560-8610-41e1-afa9-1667dd668f15" class="code code-wrap"><code>$ source env/bin/activate
+
+(env) $ deactivate
+</code></pre><p id="352040fe-466b-4670-aac3-d54cec1b1321" class="">Для операционной системы Windows:</p><pre id="5cd0609b-6628-4507-9ee7-223e4d76ca32" class="code code-wrap"><code>&gt; env\\Scripts\\activate
+
+(env) &gt; deactivate
+</code></pre><p id="5ac02e9a-9cbc-456b-b372-3ef42ee2a911" class="">С созданием, активацией и деактивацией виртуального окружения разобрались. А как обмениваться и поднимать чужое виртуальное окружение?</p><h2 id="ea009a6c-2290-449f-8d26-ac1dbe53ae72" class=""><strong>Перенос виртуального окружения</strong></h2><p id="b3e96a9a-84c9-41d5-be03-0d1908012059" class="">Само виртуальное окружение никуда переносить не нужно. Требуется возможность формирования и развертывания пакетных зависимостей. Для формирования и развертывания пакетных зависимостей используется утилита pip.</p><p id="e1f50397-2982-4118-babd-c7bee9a85633" class="">Просмотреть список зависимостей мы можем командой:</p><pre id="856dda3b-93aa-4063-a723-73a2b3ff4696" class="code code-wrap"><code>pip freeze</code></pre><p id="ba0cf1fb-abb8-4b8a-8b09-05cbce6118d3" class="">Чтобы его сохранить, нужно перенаправить вывод команды в файл:</p><pre id="0b36dd70-1b99-4bc0-844e-61367566d7e7" class="code code-wrap"><code>pip freeze &gt; requirements.txt</code></pre><p id="07c659b8-c083-44e8-b36c-3f6b2b730a68" class="">Имя файла хранения зависимостей requirements.txt выбрано не зря. Оно является стандартной договоренностью и используется некоторыми утилитами автоматически.</p><p id="6bd0c2d9-a257-4440-9e10-e2d79693460a" class="">Установка пакетов из файла зависимостей в новом виртуальном окружении также выполняется одной командой:</p><pre id="cd88ee66-b7f1-493f-8d78-568e0dd5479c" class="code code-wrap"><code>pip install -r requirements.txt</code></pre></div></article></body></html>

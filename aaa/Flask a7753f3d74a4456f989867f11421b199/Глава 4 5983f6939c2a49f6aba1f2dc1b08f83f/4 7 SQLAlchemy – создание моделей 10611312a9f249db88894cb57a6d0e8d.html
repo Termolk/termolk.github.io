@@ -1,0 +1,684 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>4.7 SQLAlchemy – создание моделей</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="10611312-a9f2-49db-8889-4cb57a6d0e8d" class="page sans"><header><h1 class="page-title">4.7 SQLAlchemy – создание моделей</h1></header><div class="page-body"><p id="8d8bce62-1c5f-44af-986a-1eaefcd17878" class="">SQLAlchemy – один из самых популярных и удобных инструментов для работы с  реляционными системами управления базами данных РСУБД.  Alchemy позволяет описывать работу как код на языке программирования, а не как код на отдельном языке. В то же время SQLAlchemy позволяет писать чистые (raw) SQL запросы.</p><p id="4d580e9e-966c-4809-8a76-16e624f61e5e" class="">Flask-SQLAlchemy это плагин к Flask, который связывает SQLAlchemy с Flask. Это не обязательный инструмент, вполне можно использовать SQLAlchemy с Flask без плагинов, но с плагинами удобнее.</p><p id="85613b90-cd3d-4a6c-a8c5-829d9cf1e827" class="">Документация находится тут: <a href="https://flask-sqlalchemy.palletsprojects.com/en/2.x/models/">https://flask-sqlalchemy.palletsprojects.com/en/2.x/models/</a></p><p id="b803da14-b9a2-4cb5-a6cc-513e2af9c294" class="">Документация на русском по чистой Алхимии: <a href="https://ru.wikibooks.org/wiki/SQLAlchemy">https://ru.wikibooks.org/wiki/SQLAlchemy</a> (без фласка)</p><p id="d44b4766-6772-41d6-a75c-e21df7229076" class="">Полезные инструменты для алхимии (английский) <a href="https://github.com/dahlia/awesome-sqlalchemy">https://github.com/dahlia/awesome-sqlalchemy</a></p><h2 id="4ec0860a-1629-4e57-b8e3-d787120e6575" class=""><strong>В этом топике мы научимся</strong></h2><p id="9eb9f380-4c9a-4970-8c17-c9fa775a1417" class="">– Устанавливать и настраивать библиотеку SQLAlchemy.</p><p id="ca7b92d0-f58b-46f2-8233-f1f1a27aa5fd" class="">– Создавать модели с полями разных типов.</p><p id="802ef4d6-ad8a-4d11-881a-97a00d4f1117" class="">– Задавать разные ограничения для полей модели.</p><p id="09e8372a-29ad-4ac8-b1bf-ffb2875056a2" class="">– Запускать создание таблиц в бд по описанным моделям.</p><h2 id="d80fa8a3-6c41-42bc-bce4-98b8d0d29df5" class=""><strong>Установка и конфиги</strong></h2><p id="573f6617-7994-4c76-b45f-85743a586834" class="">Для начала поставим Flask и SQLAlchemy:</p><p id="b369c016-f782-4ffa-aa5c-7d0bea70fcc2" class=""><code>pip install Flask Flask-SQLAlchemy</code></p><p id="8aaec38d-58fd-4fe9-b07a-601000b06825" class="">Минимально для работы с SQLAlchemy нам нужно указать ссылку (URI) на нужную нам базу данных.</p><p id="b27c78cc-d75a-4b4a-9b04-7a500b4459f6" class="">Примеры ссылок для разных БД:</p><p id="81752889-197d-4b3e-9dc8-84b81df0b511" class=""><code>postgresql://scott:tiger@localhost/mydatabase</code></p><p id="6a5d43e8-ea79-4ff1-a83c-7319916b33cf" class=""><code>mysql://scott:tiger@localhost/mydatabase</code></p><p id="65e1b281-f8e2-48f0-9047-6d6e15f1938c" class=""><code>sqlite:///mydatabase.db</code></p><p id="d900e017-fb27-4145-a961-ca01c48be91c" class="">Как видим, обязательно нужно указать имя БД.</p><p id="5b42a76e-e084-42ec-a2ca-158040505264" class="">Поскольку sqlite это один файл на диске, для работы достаточно указать путь к файлу с базой.Если базы на момент обращения нет она будет создана автоматически.Остальные РСУБД реализовывают клиент-серверную модель. В них может быть несколько пользователей, и несколько баз данных на одном сервере. Потому для подключения к ним нужно указывать hostname, логин, пароль, и имя конкретной базы данных.</p><p id="65cfa43a-0d3b-4c97-94d6-c9a545ac64c0" class="">Мы будем использовать sqlite, потому нам достаточно указать путь к файлу.</p><p id="35e395ce-ec1e-4b57-896a-96b3b6e332f2" class="">Укажем относительный путь, чтобы файл нашей БД был в том месте где мы запустим наш сервер Flask.</p><p id="0735cf93-89ba-4569-a911-6ff0a87ae467" class="">Затем создадим объект db.</p><pre id="e62a3469-4c3f-46d3-a91c-ee4d8651b0bf" class="code code-wrap"><code>from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+
+app = Flask(__name__)
+app.config[&#x27;SQLALCHEMY_DATABASE_URI&#x27;] = &#x27;sqlite:///test.db&#x27;
+db = SQLAlchemy(app)</code></pre><p id="49fb8051-c618-4eba-80ee-261e4bf4475a" class="">Если приложение ругается на отсутствие конфига &quot;Track Modifications&quot; – добавьте его!</p><p id="13188045-9820-4ba8-8174-273c1cc05b12" class="">Это наследие из старой версии SQLAlchemy и нужно для совместимости.</p><pre id="8ee34577-8f4e-4311-9cda-55aea408dc14" class="code code-wrap"><code>app.config[&#x27;SQLALCHEMY_TRACK_MODIFICATIONS&#x27;] = False</code></pre><h2 id="2380403c-8213-43cf-b379-036e421629b0" class=""><strong>Создание моделей</strong></h2><p id="1520412c-9cdd-485e-b6d1-69e2f431a992" class="">SQLAlchemy предоставляет нам концепцию моделей, классов которые описывают таблицы в нашей РСУБД.</p><p id="8234dbd8-4682-45af-b5b2-766e733c3c87" class="">Для примера опишем класс пользователя, у каждого пользователя будет имя и электронная почта.</p><p id="d010db97-7ac3-445d-8567-5051e2ea9281" class="">Этот класс мы создадим не с нуля, а унаследуем от db.Model, что и обеспечит нам все нужное поведение.</p><pre id="06870b72-950b-4cdf-a686-a4e66f65b2b7" class="code code-wrap"><code>class User(db.Model):
+
+    id = db.Column(db.Integer)
+    name = db.Column(db.String)
+    email = db.Column(db.String)</code></pre><p id="e7c3954d-4dbb-4487-bd1e-7092ce082a52" class="">Кстати, если мы оставим модель в таком виде, то получим в базе данных таблицу user.</p><p id="29737473-57d0-4409-a037-6ef015e18d86" class="">Если нам хотелось бы видеть таблицу users или flask_users или new_new users, нам поможет __tablename__</p><pre id="17b9dcb3-bf7c-47a8-a298-ffb94e06b175" class="code code-wrap"><code>class User(db.Model):
+    __tablename__ = &quot;users&quot;
+    id = db.Column(db.Integer)
+    name = db.Column(db.String)
+    email = db.Column(db.String)</code></pre><p id="dcc93bb5-2830-4334-b4cb-8b6e706819fe" class="">Также SQLAlchemy обязывает нас для любой модели всегда указывать какое поле будет primary_key. Primary key, он же первичный ключ, это очень важный элемент любого дизайна реляционной базы данных. Нужен он для того чтобы мы могли однозначно ссылаться на конкретную запись в таблице.</p><p id="23f02f79-0a2f-4b0f-883a-34ccafd28dc4" class="">Проводя аналогию с реальным миром это номер телефона, позволяет любому участнику сети позвонить на конкретный телефон. Обычно РСУБД предоставляют инструмент для генерации искусственных возрастающих значений. В примере поле id это первичный ключ (благодаря указанию primary_key=True) и будет возрастающим числом уникальным для каждой записи. Об этом позаботится наша база данных и SQLAlchemy.</p><pre id="8fc6852f-8da2-406b-921a-f11bd3a9a6c1" class="code code-wrap"><code>class User(db.Model):
+    __tablename__ = &#x27;users&#x27;
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+    email = db.Column(db.String)</code></pre><p id="13d7936b-bd32-4b09-a736-e6e8a807805b" class="">Каждой модели соответствует одна таблица в базе данных. Обычно ее название указывается явно и является множественным числом от названия класса с маленькой буквы.</p><p id="0da68cb6-b63c-4a65-ad42-097b2905ad3c" class="">Student – studentsHouse – housesUser – users</p><p id="a16940e1-262d-4eed-aaf7-9be636f1713a" class="">Добавим эту информацию!</p><pre id="bb30a59d-ae7f-4c80-ba40-9eb2fdbcd55c" class="code code-wrap"><code>class User(db.Model):
+    __tablename__ = &#x27;users&#x27;
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+    email = db.Column(db.String)</code></pre><p id="d24ea1c9-7d7c-4988-a17c-27a94124cbb3" class="">Отлично, мы описали минимальную модель.</p><p id="f324d896-b438-4b06-8b25-784edfd7caf4" class=""><strong>Полный листинг кода app.py</strong></p><pre id="22eb5adf-4e09-4109-bb12-6e94235cbb2f" class="code code-wrap"><code>from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+
+app = Flask(__name__)
+app.config[&#x27;SQLALCHEMY_DATABASE_URI&#x27;] = &#x27;sqlite:///test.db&#x27;
+db = SQLAlchemy(app)
+
+
+class User(db.Model):
+    __tablename__ = &#x27;users&#x27;
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+    email = db.Column(db.String)
+
+
+db.create_all()</code></pre><p id="56fb74c0-184f-4c36-be7a-1dbdfe6fa8dc" class="">Запустите файл.</p><p id="e55f423b-f467-4903-9d2f-a90462f5dc81" class="">Теперь посмотрите в директорию из которой вы запускали, там появился файл с именем <code>test.db</code> Поскольку файл бинарный, открыть его так просто не получится, нужно будет использовать специальную программу которая понимает формат sqlite баз данных.</p><p id="99f4846e-832f-42ea-bb0d-3025f92ace42" class="">В реляционных базах данных каждая таблица это набор полей разных типов данных, каждое поле имеет имя. В примере мы используем db.Integer и db.String, это число и строка соответственно. SQLAlchemy достаточно умная чтобы генерировать запрос который будет учитывать особенности конкретной РСУБД.</p><p id="09450f4d-64f8-4f26-b4d6-803428a81e5c" class="">В нашем примере мы запустили создание таблицы командой db.create_all() В реальном мире же обычно используют специальные инструменты для изменения структуры базы (миграций), например, <a href="https://alembic.sqlalchemy.org/en/latest/">https://alembic.sqlalchemy.org/en/latest/</a></p><p id="20a8ade1-bb9a-46ac-a47e-6f1e855feb0e" class="">Топик про миграции встретится в этом курсе позже.</p><h2 id="64e3ebdf-c564-4d68-b49e-6caeaef9651c" class=""><strong>Типы полей в модели</strong></h2><p id="5c6b53f7-2c0a-4af1-a35b-dbf355cb6759" class="">В реляционных базах данных мы обязаны указывать правильные типы данных у полей. Это позволяет БД одновременно контролировать корректность данных (нельзя записать строку в числовое поле) и оптимизировать хранение данных. Например для хранения даты БД достаточно хранить число и знать что это число на самом деле дата. Подобное знание помогает БД быть быстрой.</p><p id="eec2bfa3-36fb-4fb3-81d1-1ecdf76a0f66" class=""><em>Напомним: В реляционных базах данных каждая таблица это набор полей разных типов данных, каждое поле имеет имя.</em></p><p id="4a4ce19a-df37-4702-b083-474b1927062d" class="">У каждой базы данных (SQLite, MySQL, Postgres) есть свои типы полей, но благодаря стандартизации мы можем полагаться на то что базовые типы у нас будут. SQLAlchemy же предоставляет набор абстракций для большинства распространённых типов данных. SQLAlchemy достаточно умная и генерирует запрос, который учитывает особенности конкретной РСУБД.</p><h3 id="43f2af59-7161-4458-be68-2f1f73aef5f8" class=""><strong>Числовые поля</strong></h3><p id="c695b248-3471-4aef-89a3-f0af98969d5c" class="">Integer</p><pre id="9802881c-5e22-479e-b0ca-58181d7c9093" class="code code-wrap"><code>score = db.Column(db.Integer)</code></pre><p id="8cf3a904-2129-460e-8e57-1baeb03bb0e0" class="">Float.</p><pre id="a85008ea-1326-478c-b943-55a572b51ce0" class="code code-wrap"><code>score = db.Column(db.Float)</code></pre><h3 id="c3d4aad5-c26f-435b-bc8d-3d8b31c72f86" class=""><strong>Текстовые поля</strong></h3><p id="694358cb-6dd1-4763-99f2-dcc3c90f0b88" class="">Строковое поле</p><pre id="8cda49e2-b357-4168-9cb3-691eb72aca70" class="code code-wrap"><code>username = db.Column(db.String)</code></pre><p id="580614ec-c930-4698-bda7-46e806e15f45" class="">Текстовое поле</p><pre id="319b07b5-7a9b-463b-b63f-186b84478e99" class="code code-wrap"><code>bio = db.Column(db.Text)</code></pre><h3 id="123d9e22-b130-4003-9492-80605b8bf0f4" class=""><strong>Логическое поле</strong></h3><p id="4319c917-dea9-4424-a47b-edb628640bfc" class="">Boolean</p><pre id="aa056983-328c-4149-bf63-08592ff4e1d2" class="code code-wrap"><code>is_admin = db.Column(db.Boolean)</code></pre><h3 id="ee97f2c7-f53c-44c2-9872-9600081f73a2" class=""><strong>Дата и время</strong></h3><p id="5c6dde42-a61a-4a68-b22c-bd78927550a9" class="">DateTime</p><pre id="79847f65-299e-495b-9c66-4baf866d4969" class="code code-wrap"><code>meeting_time = db.Column(db.DateTime)</code></pre><h3 id="f8f40870-596e-4aed-9a09-0f21074adecc" class=""><strong>Реже используемые типы:</strong></h3><p id="b4a7df0b-b857-495d-8e8e-9692f6524397" class="">BigInteger</p><pre id="2b56e592-1f6d-468c-ac4f-dda9b7f961ed" class="code code-wrap"><code>score = db.Column(db.BigInteger)</code></pre><p id="fd0acde5-0b3e-48d8-a9d8-079697d04c8c" class="">SmallInteger</p><pre id="f662bbde-f25e-4788-8b44-e953263a29b5" class="code code-wrap"><code>score = db.Column(db.SmallInteger)</code></pre><p id="5b3af6f9-6439-4e08-a848-4f69f4fb0e27" class="">Numeric</p><pre id="0bc6b62f-d160-46d9-af17-a10043ac0351" class="code code-wrap"><code>score = db.Column(db.Numeric)</code></pre><p id="436a9fa0-b933-49fd-866e-6ffcc79cf2e8" class="">Date</p><pre id="3ba33637-a849-4360-a3a2-70d5d6438fcf" class="code code-wrap"><code>birthday = db.Column(db.Date)</code></pre><p id="6c7cbd0f-f734-4e8e-91e9-0d4e24a46b61" class="">Time</p><pre id="a5bd9982-dd2b-4055-98b8-7c03650c375e" class="code code-wrap"><code>sunset = db.Column(db.Time)</code></pre><p id="19325d86-36fe-4367-bb97-31e27e351c94" class="">Размер полей и специфические ограничения зависит от конкретной базы данных.</p><h2 id="80946e61-bc66-4fe8-8bc5-d9af64a197e7" class=""><strong>Constraints (ограничения)</strong></h2><p id="8cb168bd-72ce-49c4-a365-d05d4b36ebe6" class="">Реляционные базы данных позволяют задавать правила, которые база данных будет соблюдать, обеспечивая правильность данных и отсутствие конфликтов.</p><p id="6581f349-16df-450e-bb73-bc370319ea60" class="">Существует несколько форм этих правил (constraints):</p><p id="637be8e1-10c6-4879-8dc3-b883d105aea8" class=""><strong>Primary key constraint</strong></p><p id="1b180ca3-2e3b-473f-8d66-57c186a39d4c" class="">Набор полей, уникально определяющих запись в таблице, обычно это id.</p><p id="2f9a77c2-3c32-4cc7-9604-4096363ac645" class=""><code>primary_key=True</code></p><p id="adfad90c-6c3f-4fe4-9bdb-90f8b7877856" class=""><strong>Unique constraint</strong></p><p id="06db596c-cc98-43fc-b4bc-7483d15b4125" class="">Условие проверяющее что каждая строка в таблице имеет разные значения в указанном поле или наборе полей.</p><p id="677a7b1d-d8bd-498c-ad21-c91f76b8d143" class=""><code>unique = True</code></p><p id="a2d0f774-b809-4083-96d3-e14a4951d8e8" class=""><strong>Nullable constraint</strong></p><p id="76967967-5da8-45da-ab86-620a740de968" class="">Проверка на то что поле не может быть пустым настолько часто используется, что SQLAlchemy предоставляет для неё сокращённую форму записи:</p><p id="6ced072a-2efb-4382-a877-f70282bd29a0" class=""><code>nullable=False</code></p><p id="45145d44-7556-44ec-a1ad-f98318f1ba08" class=""><strong>Check constraint</strong></p><p id="1962041b-23a9-4b16-9aa2-02f5681981dd" class="">Логическое условие проверяющееся при добавлении или обновлении записи в таблице. Применяется к каждой записи в таблице.</p><p id="65998531-d0ee-4c99-b575-f249a626fda5" class=""><code>CheckConstraint(&quot;email LIKE &#x27;%@%&#x27;&quot;)</code></p><p id="211d6369-2218-4068-9a44-3c819b00d4c3" class="">Немного больше информации по теме: <a href="https://overiq.com/sqlalchemy-101/defining-schema-in-sqlalchemy-core">https://overiq.com/sqlalchemy-101/defining-schema-in-sqlalchemy-core</a>.</p><h2 id="e9935dd7-5a31-4107-865b-92b61d279c8f" class=""><strong>Создание базы данных после объявления моделей</strong></h2><p id="3bc6fd90-f397-4260-b3f0-02b230a18631" class="">Когда база данных описана, вам нужно создать ее.</p><pre id="018b6981-de16-4b84-89f5-8c3c293983e0" class="code code-wrap"><code>db.create_all()</code></pre><p id="abc78bcd-cd6c-48f1-837b-64cd0e59d481" class="">Выполнение этой команды после объявления моделей создаст таблицы, если они еще не были созданы.</p><p id="ced45172-aa80-4f87-8405-49c62320e8f0" class="">Например, так:</p><pre id="4ce7006f-f961-4b52-85ec-614ab07ba127" class="code code-wrap"><code>class User(db.Model):
+    id = db.Column(db.Integer)
+    name = db.Column(db.String)
+    email = db.Column(db.String)
+
+db.create_all()</code></pre><p id="c6a4e714-9716-4648-8932-e71327a2ba29" class="">Вы можете написать его внутри кода и он будет выполняться каждый раз при запуске приложения, но в реальных проектах так не рекомендуется делать.</p><p id="fa0ed994-b076-4ab1-a215-5966373507b1" class="">Альтернативный способ – использовать консоль Python, если вас беспокоит, что каждый раз будет выполняться проверка и лишний запрос к БД:</p><pre id="24bc2dbf-ca90-48fe-b28f-1beca7006ce2" class="code code-wrap"><code>from temp import db,User
+db.create_all()</code></pre><p id="33c56211-76b1-4baf-a40b-92ea028557c5" class="">В дальнейшем мы изучим работу с миграциями и вы научитесь инициализировать базу не используя db.create_all()</p><p id="cf952970-a06c-4fe2-ade4-6989700bb7d1" class=""><strong>Полный листинг кода:</strong></p><pre id="013ef4f9-5038-4a75-8b1c-a8fe2f4b0da0" class="code code-wrap"><code>from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+
+app = Flask(__name__)
+app.secret_key = &quot;randomstring&quot;# Это создаст базу в оперативной памяти, которая очистится после завершения программы.app.config[&#x27;SQLALCHEMY_DATABASE_URI&#x27;] = &quot;sqlite:///:memory:&quot;app.config[&#x27;SQLALCHEMY_TRACK_MODIFICATIONS&#x27;] = Falsedb = SQLAlchemy(app)
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+    email = db.Column(db.String)
+
+db.create_all()</code></pre><h2 id="2f520be6-c62d-4ffa-aef7-914e34654a80" class=""><strong>Резюме</strong></h2><h3 id="a94e42d5-1fcb-42ec-a81e-860063945ae5" class=""><strong>Установка</strong></h3><p id="0bc213b9-fafe-488c-9ea4-0a864dc5c9bf" class="">Для начала поставим Flask и SQLAlchemy:</p><p id="38fc0ee7-264c-4a50-9cc8-73effdc35460" class=""><code>pip install Flask Flask-SQLAlchemy</code></p><p id="97cf9e0b-ca9c-49b6-9b23-16b5559fe75c" class="">Минимально для работы с SQLAlchemy нам нужно указать ссылку (URI) на нужную нам базу данных.</p><p id="cebb1b55-f98a-431a-beda-9cdc2e3e1130" class="">Примеры ссылок для разных БД:</p><p id="ac5316ef-5abb-4b5e-8c5c-77e55501bd92" class=""><code>postgresql://scott:tiger@localhost/mydatabase</code></p><p id="f52f38d9-be89-420e-9662-b26534ac0c17" class=""><code>mysql://scott:tiger@localhost/mydatabase</code></p><p id="34fad6a6-e86c-4013-9673-2e3470414391" class=""><code>sqlite:///mydatabase.db</code></p><p id="9abe96bf-799f-4ebf-b37c-aec98a5696e1" class=""><strong>Создание моделей</strong></p><pre id="33bf1cf8-9a37-4c25-8ca0-e7b63f91e6ff" class="code code-wrap"><code>class User(db.Model):
+
+    id = db.Column(db.Integer)
+    name = db.Column(db.String)
+    email = db.Column(db.String)</code></pre><p id="62807040-3fb5-46bb-9eca-28e3207bce6e" class=""><strong>Constraints (ограничения)</strong></p><p id="0ea68d37-65da-4435-9061-22b3756e9418" class="">Primary key constraint  <code>primary_key=True</code>Unique constraint <code>unique = True</code>Nullable constraint <code>nullable=False</code>Check constraint  <code>CheckConstraint(&quot;email LIKE &#x27;%@%&#x27;&quot;)</code></p><p id="44832a4b-26a9-442d-9b3f-a12aeb54b1a3" class=""><strong>Типы полей в модели</strong></p><h3 id="993387b5-5121-42b9-9d6f-5338ba44a936" class=""><strong>Числовые поля</strong></h3><p id="296ddeb3-bc3c-4361-b2c4-812ba378360f" class=""><strong>Integer </strong><code>score = db.Column(db.Integer)</code></p><p id="e1145675-6c94-4c23-816a-805cc5a14c60" class=""><strong>Float </strong><code>score = db.Column(db.Float)</code></p><h3 id="ee2fd722-5b4f-41df-9c89-32fd747acf21" class=""><strong>Текстовые поля</strong></h3><p id="ad3ff902-2546-4529-9d96-7b768a6488ac" class="">Строковое поле <code>username = db.Column(db.String)</code></p><p id="5a043cb2-aa4c-403a-b229-fb4e481adf43" class="">Текстовое поле <code>bio = db.Column(db.Text)</code></p><h3 id="58b6dcd3-aa8b-4647-81d6-9717c547fc6b" class=""><strong>Логическое поле</strong></h3><p id="c0c3c9d9-2d97-4916-a022-eff82e81af34" class="">Boolean <code>is_admin = db.Column(db.Boolean)</code></p><h3 id="eb7d4515-856e-4778-9170-fd189bea8d68" class=""><strong>Дата и время</strong></h3><p id="08217f61-b4b6-481b-853a-6a88e0c72072" class="">DateTime <code>meeting_time = db.Column(db.DateTime)</code></p><h3 id="5f03ae01-1298-4d89-bd8e-3a58cb81e9c2" class=""><strong>Создание базы данных</strong></h3><p id="8931aa82-4991-45a3-a6b2-c0a13b58b010" class=""><code>db.create_all()</code></p></div></article></body></html>

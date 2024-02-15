@@ -1,0 +1,818 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>5.4 Flask: Аутентификация и авторизация</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="78b34001-1422-4f34-9038-88e708ea6289" class="page sans"><header><h1 class="page-title">5.4 Flask: Аутентификация и авторизация</h1></header><div class="page-body"><p id="a4618674-1f43-4827-bb01-1769052387ba" class="">
+</p><p id="a4004e4d-9044-4dd2-af2b-e50c03e16fc9" class="">В веб приложениях нам постоянно приходится отслеживать кто с ними работает. Социальная сеть, личный кабинет банка или онлайн-игра перед предоставлением доступа сначала идентифицируют пользователя и только потом предоставляют права. Так аутентификация и авторизация работают вместе.</p><h3 id="25d41dfe-6ba6-4d9c-bb93-370c194faff1" class=""><strong>Вы научитесь:</strong></h3><p id="a8e26192-c157-4759-957e-8c16d871e756" class="">Различать аутентификацию и авторизацию.</p><p id="003ea6c3-0e37-4dff-8f60-1055441dbe54" class="">Делать аутентификацию по логину и паролю.</p><p id="6f0f858d-da1f-4e5b-a55b-f6bd1988124f" class="">Авторизовать идентифицированного пользователя на приватных страницах.</p><h2 id="96bdff58-8a9d-4ad4-8a3b-7c651e74e668" class=""><strong>Теория</strong></h2><p id="96b09a88-da53-4e65-9485-17767fdb1590" class="">Чтобы разрешить или запретить пользователю открывать страницу или создавать сообщения нужны два механизма. Вот последовательность их работы:</p><ol id="6cd8e7b8-8fba-4ec0-8d2c-0c5391d3f407" class="numbered-list" start="1"><li>Пользователь неизвестен. У него минимальные права. Мы предлагаем ему представиться, например, ввести логин и пароль.</li></ol><ol id="ceaaf323-750c-4c4f-99be-2e8ead138865" class="numbered-list" start="2"><li>Идентифицируем пользователя по предоставленным логину и паролю.</li></ol><ol id="7a662f0d-c3ca-4139-9cc2-e56bf6b42630" class="numbered-list" start="3"><li>Если нам известен такой пользователь, то выдаем пользователю на время взаимодействия уникальный идентификатор.</li></ol><ol id="dd3bcd82-43b2-4ff3-95f0-f2f739819454" class="numbered-list" start="4"><li>При каждом новом запросе пользователь передает нам идентификатор, а система разрешает или запрещает доступ.</li></ol><p id="bcd9f029-071a-4a0b-86bd-2d3368fe474f" class="">Первый механизм - идентификация пользователя - называется аутентификацией, а второй, отвечающий за выдачу прав на действия, авторизацией.</p><blockquote id="8391d141-4b2d-4325-b76f-6f58306caa01" class="">Часто,  например, на фриланс-биржах и при неформальном общении - используется только один термин. Дело в том, что слово &quot;аутентификация&quot; сложно для произношения и написания, а потому его могут пропустить и говорить об авторизации, когда требуются оба механизма. Не стоит сильно этим заморачиваться. Ещё одна причина для большей популярности термина авторизация в том, что авторизация работает часто сразу. Приложение на одной странице может предоставлять разный доступ для гостя и идентифицированного пользователя. Это и является работой авторизации.</blockquote><blockquote id="0fbe2f04-c678-4d27-b582-08e483c12f07" class="">Вообще, существует понятие трех больших А (AAA - Authentication, Authorization, Accounting - Аутентификация, Авторизация, Учет). Понятие  &quot;учет&quot; связано с учетом потребляемых пользователем ресурсов, например, доступное количество запросов к веб API, скачанных гигабайт или денег на игровом счете. В честь третьего понятия записи о каждом пользователе называют учетными записями (учетками) или аккаунтами.</blockquote><p id="02b5ccc8-f702-4e11-bb42-e82ad87a2df6" class="">В веб приложениях аутентификация осуществляется через форму логина, а авторизация - через механизм сессий, с которым вы ознакомились ранее.</p><h2 id="3c915e52-bf67-4694-8e74-af5242a5a34b" class=""><strong>Простая аутентификация по жестко установленным логину и паролю</strong></h2><p id="b04f8571-fb66-4e01-8636-149868f151f1" class="">Сейчас мы напишем веб приложение с простой авторизацией для одного пользователя. Информацию для доступа будем хранить в настройках Flask:</p><pre id="d0f69f0e-efea-4511-959e-9b4293f75259" class="code code-wrap"><code>from flask import Flask
+
+# Создаем приложение Flask
+app = Flask(__name__)
+# Настраиваем приложение Flask# - Секретный код для сессий
+app.config[&quot;SECRET_KEY&quot;] = &quot;secret_key&quot;# - Имя пользователя и пароль
+app.config[&quot;USERNAME&quot;] = &quot;test&quot;
+app.config[&quot;PASSWORD&quot;] = &quot;test&quot;</code></pre><blockquote id="70418a1f-7c7c-4527-9716-73192fd39043" class="">Прежде, чем мы продолжим, хотим предупредить: НИКОГДА не храните секретную информацию в настройках. Передавайте её либо через переменные окружения, либо храните в хранилище с ограниченным доступом, например, базе данных.</blockquote><p id="797ef886-5ca8-49d3-a797-3ad08a9f2bb7" class="">Пусть наша система будет состоять из двух страниц: секретной и публичной страницы аутентификации.</p><p id="55ad49a4-cbd5-4a6f-904e-46d98662cfda" class="">И давайте сразу ограничим доступ к приватной странице (сделаем авторизацию):</p><pre id="5aa12c3a-95c9-4f76-80c9-3e385ee2d6d4" class="code code-wrap"><code>from flask import session, redirect, render_template
+
+@app.route(&#x27;/&#x27;)def home():# Авторизуем# - Если значение сессии is_auth не определено или равно Falseif not session.get(&#x27;is_auth&#x27;):
+
+        # - Делаем редирект на роут логинаreturn redirect(&#x27;/login&#x27;)
+
+    # Авторизованному пользователю показываем страницуreturn render_template(&quot;page_home.html&quot;)
+</code></pre><p id="25c5bd25-c82e-4a7a-a4c2-0f7a872de492" class="">Авторизация готова! Но теперь нам нужно реализовать часть связанную с аутентификацией. Что нам понадобится? Нам понадобится форма и функция, обрабатывающая два запроса. Один запрос на отображение формы (GET запрос) и второй - реализующий аутентификацию (POST запрос).</p><p id="8dec4ea0-4e4e-4d99-aa00-1b3b097cb862" class="">Воспользуемся шаблонизатором для отображения формы (файл page_login.html):</p><pre id="d0968e88-7f39-4eae-8898-49dc92fbf557" class="code code-wrap"><code>&lt;form action=&quot;/login&quot; method=&quot;post&quot;&gt;
+  Имя: &lt;input type=&quot;text&quot; name=&quot;username&quot; value=&quot;&quot;&gt;
+  Пароль: &lt;input type=&quot;password&quot; name=&quot;password&quot;&gt;&lt;button type=&quot;submit&quot;&gt;Войти&lt;/button&gt;&lt;/form&gt;</code></pre><p id="8e1ebcfb-0923-4bc8-92eb-9434d0f8a1c9" class="">А так выглядит полный код авторизации:</p><pre id="a4d6dee4-c518-41cf-baf3-15fde070098b" class="code code-wrap"><code>from flask import Flask, session, redirect, request, render_template
+
+# Создаем приложение Flask
+app = Flask(__name__)
+# Настраиваем приложение Flask# - Секретный код для сессий
+app.config[&quot;SECRET_KEY&quot;] = &quot;secret_key&quot;# - Имя пользователя и пароль
+app.config[&quot;USERNAME&quot;] = &quot;test&quot;
+app.config[&quot;PASSWORD&quot;] = &quot;test&quot;# Мы обрабатываем по данному URL и GET, и POST запрос@app.route(&quot;/login&quot;, methods=[&quot;GET&quot;, &quot;POST&quot;])def login():# Если пользователь авторизованif session.get(&quot;is_auth&quot;):
+        # то редиректим его на приватную страницуreturn redirect(&quot;/&quot;)
+
+    # Переменная для хранения ошибок авторизации
+    error_msg = &quot;&quot;  # Пока ошибок нет# Пришел запрос на аутентификациюif request.method == &quot;POST&quot;:
+
+        # Получаем отправленные данные
+        username = request.form.get(&quot;username&quot;)
+        password = request.form.get(&quot;password&quot;)
+
+        # Проверяем полученные данныеif ((username and password) and username == app.config[&quot;USERNAME&quot;] and password == app.config[&quot;PASSWORD&quot;]):
+
+            # Устанавливаем в сессии признак, что пользователь аутентифицирован
+            session[&quot;is_auth&quot;] = True# Редиректим пользователя на приватную страницуreturn redirect(&quot;/&quot;)
+
+        else:
+
+            error_msg = &quot;Неверное имя или пароль&quot;# Отображаем форму аутентификацииreturn render_template(&quot;page_login.html&quot;)
+
+app.run(debug=True, host=&#x27;0.0.0.0&#x27;, port=8080)</code></pre><h2 id="11279394-1879-4231-9f0c-a9aa31887ed9" class=""><strong>Разлогинивание</strong></h2><p id="88a19ec5-2dc5-4043-afcb-fd15f2cd2503" class="">Теперь у нас есть веб приложение с авторизацией! Но что-то мы все же забыли. Мы забыли добавить выход из приложения. Что нужно для выхода? Удалить из сессии параметр is_auth. Сделаем это мы на отдельном роуте:</p><pre id="f900194a-ae18-4961-ac39-db44f0286a74" class="code code-wrap"><code>@app.route(&#x27;/logout/&#x27;, methods=[&quot;POST&quot;])
+def logout():
+    if session.get(&quot;is_auth&quot;):
+        session.pop(&quot;is_auth&quot;)
+    return redirect(&quot;/login&quot;)
+</code></pre><p id="6d8013cc-e053-42fd-bc24-0e88e0b59fbf" class="">А на приватную страницу добавим форму выхода:</p><pre id="3f8cc923-b27e-451b-9844-1001cbb4aaa9" class="code code-wrap"><code>&lt;form action=&quot;/logout/&quot; method=&quot;post&quot;&gt;&lt;button type=&quot;submit&quot;&gt;Выйти&lt;/button&gt;&lt;/form&gt;</code></pre><p id="2a63e68f-f5b9-4c80-a325-0c0317afbef1" class="">У нас получилось простое приложение с авторизацией. Оно не идеально, например:</p><ul id="0a95cfc2-b508-4d0f-b00b-3d92aa2f30e7" class="bulleted-list"><li>Нам нужно вставлять код авторизации во все новые страницы, которые мы захотим добавить.</li></ul><ul id="e13ee38e-1b72-4c32-972b-5a39b6c31695" class="bulleted-list"><li>Верификация запроса аутентификации тоже не идеальна.</li></ul><ul id="51bdbe0e-9495-4c97-bd6b-6bcd1114c66c" class="bulleted-list"><li>Мы работаем с одним пользователем.</li></ul><ul id="a2579039-6775-4263-9006-e43b4f16a5da" class="bulleted-list"><li>Нового пользователя нельзя добавить в любой момент.</li></ul><ul id="8b57b047-13e6-4ff0-bfc8-361d16b46896" class="bulleted-list"><li>Наше приложение не безопасно. Пароль хранится в открытом виде в теле самого приложения.</li></ul><p id="efea78b3-b9db-45b0-ba08-f2f3645d478a" class="">С этими проблемами мы разберемся в следующих уроках.</p><h2 id="22dc1464-3e38-40c0-b467-c4929bd5331f" class=""><strong>Простая аутентификация из базы данных</strong></h2><p id="cfcd6b29-c7b8-4f44-b8ea-87281496d556" class="">Мы научились простой аутентификации и авторизации пользователя. Но что если нам нужно дать доступ к веб приложению нескольким пользователям? Для хранения их аккаунтов нам понадобится база данных (БД).</p><h3 id="443a22d1-b79f-42ed-a6e9-199f20e5e3c8" class=""><strong>Подготовка базы данных</strong></h3><p id="9c5c80bc-b2ef-488a-a3db-52dee740c488" class="">Настроим Flask-SQLAlchemy для работы с SQLite и создадим модель пользователя.</p><p id="8b5dbd0e-1775-4684-86ce-841c3d6b94ad" class="">Файл БД test.db будет храниться в папке с приложением. Вот код приложения:</p><pre id="c1d2a64d-cca5-438a-a956-b9ee4d6972f3" class="code code-wrap"><code>db = SQLAlchemy(app)
+
+# Описываем модель пользователяclass User(db.Model):
+
+  __tablename__ = &#x27;users&#x27;
+  id = db.Column(db.Integer, primary_key=True)
+  username = db.Column(db.String(32), nullable=False, unique=True)
+  password = db.Column(db.String(32), nullable=False)
+</code></pre><p id="c7a508a8-4c87-4b85-89a0-30c4cd58a132" class="">Добавим нового пользователя. Запустим Python и выполняем команды:</p><pre id="520642b6-4a89-4ef2-b1ba-b9ad06591e0e" class="code code-wrap"><code>user = User(username = &quot;test&quot; ,password = &quot;test&quot;)
+db.session.add(user)
+db.session.commit()
+</code></pre><p id="38a76bd7-f644-4ddb-a5a7-cbf1658e3d68" class="">Сначала мы импортировали соединение с базой данных и класс пользователя.Далее мы создали нового пользователя с именем &quot;test&quot; и паролем &quot;test&quot; и сохранили его.</p><h2 id="17004459-a080-44a3-9d06-ec70a5751495" class=""><strong>Создаем аутентификацию и авторизацию</strong></h2><p id="80c327f7-86ac-4c28-8180-b467486435be" class="">Дополним код приложения аутентификацией и авторизацией.</p><p id="dbcf61e4-2105-4425-8e7f-a8bdce196db3" class="">Для этого правим приложение с простыми аутентификацией и авторизацией, созданное ранее:</p><pre id="1cbc9c3b-c471-454b-982a-9c0bb15c8d5d" class="code code-wrap"><code>@app.route(&quot;/login&quot;, methods=[&quot;GET&quot;, &quot;POST&quot;])
+def login():
+
+    if request.method == &quot;POST&quot;:
+
+        username = request.form.get(&quot;username&quot;)
+        password = request.form.get(&quot;password&quot;)
+
+        # Ищем пользователя по имени
+        user = User.query.filter_by(username=username).first()
+
+        # Пользователь найден и пароль идентиченif user and user.password == password:
+
+            # Сохраняем идентификатор пользователя в сессии
+            session[&quot;user_id&quot;] = user.id            return &quot;Вы зашли успешно&quot;else:
+            # Пользователь не найден или не верный пароль            return &quot;Неверное имя или пароль&quot;# Если форма еще не отправлена:    return render_template(&quot;page_login.html&quot;, error_msg=error_msg)
+</code></pre><p id="0f634ac0-53e1-4224-a77e-d21caa3e3f7b" class="">Выше в коде мы заменили имя значения сессии &quot;is_auth&quot; на &quot;user_id&quot; и сохранили в него идентификатор пользователя.Зачем? Теперь мы знаем какой именно пользователь сделал запрос.</p><p id="221f41e7-459e-4ffe-beed-fe265396cafb" class="">Использование идентификатора пользователя ещё один из простых способов авторизации (ранее мы рассмотрели просто проверку прохождения аутентификации - &quot;залогинен&quot; или нет). Теперь мы можем при создании постов, комментариев или чего-то ещё сохранять идентификатор создавшего их пользователя как владельца и потом, на основе этой минимальной информации, авторизовать запросы пользователя на действия с ними.</p><p id="dcf5a9ca-eab1-4eba-a014-b6d1af470998" class="">Изменим имя параметра сессии не только в одной функции, а везде, где мы к нему обращались:</p><pre id="17785702-52f9-4827-817f-11698c2d6a84" class="code code-wrap"><code>@app.route(&#x27;/&#x27;)
+def home():
+    if not session.get(&#x27;user_id&#x27;):
+        return redirect(&#x27;/login&#x27;)
+    return render_template(&quot;page_home.html&quot;)
+
+@app.route(&#x27;/logout&#x27;, methods=[&quot;POST&quot;])
+def logout():
+    if session.get(&quot;user_id&quot;):
+        session.pop(&quot;user_id&quot;)
+    return redirect(&quot;/login&quot;)
+</code></pre><p id="1becabec-fba1-4c21-b744-a859f0183aae" class="">Проверим работу приложения. Да, все замечательно!</p><h2 id="b4d94535-40ec-4529-a5a2-c1b2c8a2ba90" class=""><strong>Совместное использование с WTF</strong></h2><p id="f6b5f4e2-0f52-47b6-8799-96c793d3575e" class="">Чтобы улучшить работу с формами мы не станем изобретать велосипед.</p><p id="135a6900-2ddf-49f4-9f91-de8d7f54c415" class="">Опишем формы регистрации (файл <a href="http://app.py/">app.py</a>):</p><pre id="b6730f1e-4966-4224-98ab-141372bc6560" class="code code-wrap"><code>from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField
+from wtforms.validators import DataRequired, Length, EqualTo
+
+# Форма аутентификацииclass LoginForm(FlaskForm):# Добавляем поле имени пользователя
+    username = StringField(&quot;Имя:&quot;, validators=[DataRequired()])
+
+    # Добавляем поле пароля
+    password = PasswordField(&quot;Пароль:&quot;, validators=[DataRequired()])
+
+
+</code></pre><p id="d269f130-86d9-4231-9553-9b6af2d2f4ef" class="">Пакет Flask-WTF позволяет не только декларировать типы полей формы, назначать их проверку (validation) и отображать в шаблоне. Он также поддерживает защиту форм от CSRF атак. Это очень важно!</p><p id="e18e5199-af3f-4d03-80c5-39c8658e8b58" class="">Изменим функцию аутентификации с использованием формы LoginForm (файл <a href="http://app.py/">app.py</a>):</p><pre id="a9a699e1-268f-4bf2-99d7-a2a4ca00cf96" class="code code-wrap"><code>@app.route(&quot;/login&quot;, methods=[&quot;GET&quot;, &quot;POST&quot;])
+def login():
+    if session.get(&quot;user_id&quot;):
+        return redirect(&quot;/&quot;)
+
+    # Создаем форму
+    form = LoginForm()
+
+    if request.method == &quot;POST&quot;:
+
+        # Если форма не валиднаif not form.validate_on_submit():
+
+            # показываем форму и не забываем передать форму в шаблон            return render_template(&quot;page_login.html&quot;, form=form)
+
+        #Информацию о пользователе берем из базы по введенной почте
+        user = User.query.filter(User.name == form.username.data).first()
+
+        # Данные берем из формыif not user or user.password != form.password.data:
+
+            # Добавляем ошибку для поля формы
+            form.username.errors.append(&quot;Неверное имя или пароль&quot;)
+
+        else:
+            session[&quot;user_id&quot;] = user.id            return redirect(&quot;/&quot;)
+
+    return render_template(&quot;page_login.html&quot;, form=form)
+</code></pre><p id="5ad3d0ce-ccdc-4519-b43b-3a0454f2bffa" class="">Выше в коде видно, что мы убрали переменную error_msg и ошибки добавляем прямо в форму.Это сделало наш код более понятным.</p><p id="c7e42c67-5db7-4464-9041-cc3e7bd9de06" class="">Теперь поправим шаблоны для вывода форм и ошибок их проверки. Форма аутентификации (файл templates/page_login.html):</p><pre id="ed5bffeb-42ff-4f12-8d2f-d6332452d616" class="code code-wrap"><code>&lt;h1&gt;Авторизация&lt;/h1&gt;
+
+{% for field in form.errors %}
+    {% for error in form.errors[field] %}
+    &lt;div style=&quot;color:red;&quot;&gt;
+        {{error}}
+    &lt;/div&gt;
+    {% endfor %}
+{% endfor %}
+
+&lt;form action=&quot;/login&quot; method=&quot;post&quot;&gt;
+
+    {{ form.hidden_tag() }}
+
+    {{ form.username.label }}
+    {{ form.username() }}
+
+    {{ form.password.label }}
+    {{ form.password() }}
+
+    &lt;button type=&quot;submit&quot;&gt;Войти&lt;/button&gt;&lt;/form&gt;</code></pre><p id="0681ad6b-3b44-4385-89df-5532eb7481cf" class="">Тестируем наше приложение. Оно стало лучше обрабатывать ошибки пользователя.</p><pre id="e6dbfb67-e66a-4396-989c-f6e18ca783d6" class="code code-wrap"><code>from flask import Flask, session, request, render_template, redirect
+from flask_sqlalchemy import SQLAlchemy
+
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField
+from wtforms.validators import DataRequired, Length, EqualTo
+
+app = Flask(__name__)
+app.config[&#x27;SQLALCHEMY_DATABASE_URI&#x27;] = &#x27;sqlite:///data/test6.db&#x27;app.config[&#x27;SQLALCHEMY_TRACK_MODIFICATIONS&#x27;] = True
+app.config[&#x27;SECRET_KEY&#x27;] = &quot;Woo-Hoo&quot;db = SQLAlchemy(app)
+
+class User(db.Model):
+    __tablename__ = &quot;users&quot;
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    password =  db.Column(db.String, nullable=False)
+
+db.create_all()
+
+class LoginForm(FlaskForm):
+    username = StringField(&quot;Имя:&quot;, validators=[DataRequired()])
+    password = PasswordField(&quot;Пароль:&quot;, validators=[DataRequired()])
+
+
+
+@app.route(&quot;/login&quot;, methods=[&quot;GET&quot;, &quot;POST&quot;])
+def login():
+    if session.get(&quot;user_id&quot;):
+        return redirect(&quot;/&quot;)
+
+    form = LoginForm()
+
+    if request.method == &quot;POST&quot;:
+        if not form.validate_on_submit():
+            return render_template(&quot;forms/page_login.html&quot;, form=form)
+
+        user = User.query.filter(User.name == form.username.data).first()
+
+        if not user or user.password != form.password.data:
+
+            form.username.errors.append(&quot;Неверное имя или пароль&quot;)
+
+        else:
+            session[&quot;user_id&quot;] = user.id
+            return redirect(&quot;/&quot;)
+
+    return render_template(&quot;forms/page_login.html&quot;, form=form)
+
+app.run(debug=True, port=8999)</code></pre><h2 id="40892d9b-bb34-4757-977f-727203e2b020" class=""><strong>Резюме</strong></h2><p id="9ac1dc57-7529-43e3-b312-7e64d5bb3568" class="">Аутентификация идентифицирует пользователя.</p><p id="85bd4a0e-71ab-4c3a-a8f5-95644c5ff627" class="">Авторизация выдает права на основе информации о пользователе.</p><p id="b2ce47e3-873e-492f-9a4e-382112378678" class="">Простая аутентификация осуществляется по логину и паролю. Логин идентифицирует какой именно пользователь обратился. Пароль же подтверждает, что пользователь именно тот.</p><p id="9c73ff5f-4f6d-4770-829b-4461a5b3ed2c" class="">Для хранения идентификационной информации в большинстве веб приложений используются сессии. На основе этой информации осуществляется авторизация.</p><p id="c7195075-e408-4f19-b8c0-4e71cf656a23" class="">Авторизация может быть основана на признаке аутентификации, по идентификатору пользователя и роли.</p></div></article></body></html>

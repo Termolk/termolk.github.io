@@ -1,0 +1,748 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>2.8 Jinja – циклы по словарям и вложенные циклы</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="eb522014-afca-4a8e-9aaf-116bc00ffe8b" class="page sans"><header><h1 class="page-title">2.8 Jinja – циклы по словарям и вложенные циклы</h1></header><div class="page-body"><p id="a25f8b2a-f136-4a49-a21f-2992ae138a97" class="">Вы уже могли заметить, что логика работы со словарями и циклами в Jinja очень похожа на работу с циклами в Python. Тем не менее, поскольку синтаксис отличается, мы решили сделать этот топик для тех, кому нужно привыкнуть к новому синтаксису и для тех, кто недостаточно работал с циклами в Python.</p><p id="41f402e6-2839-4795-8e81-7981f517a8d8" class=""><strong>Вы научитесь:</strong></p><p id="87f8be13-89ef-4046-9bd5-ffa0086e9e9f" class="">– использовать в шаблонизаторе словари, используя данные как из ключей, так и из значений;– использовать в шаблонизаторе структуры с глубокой вложенностью.</p><p id="57e4b83e-1282-4bd9-9d04-91f39f543dbf" class="">В этом топике мы будем решать задачки, связанные с работой фитнесс-центра.Околоспортивные приложения – популярное сегодня направление на стыке онлайна и оффлайна.</p><p id="1a3cb554-1f0e-4ee8-8d49-5220e963eb01" class="">Надеемся, вам понравится.</p><p id="2fd1a756-521c-4373-bbc2-b0e86ade65fb" class=""><strong>Этот топик добавлен 12 марта. Он будет рад вашим комментариями и предложениям, как мы можем его улучшить.</strong></p><h2 id="ce466cc0-daeb-4422-bf3a-66a5f7f0ae5f" class=""><strong>Итерация по значениям</strong></h2><p id="e61ba33c-17f5-4901-983b-809618d220a7" class="">Вывод из списка – относительно простая операция, но словарь немного более сложная структура.Часто встречается задача вывести значения из словаря типа {&quot;key&quot;: &quot;value&quot;, &quot;key&quot;: &quot;value&quot;}.</p><p id="1727afee-a332-4bb9-9462-58c66393aa14" class="">В качестве примера возьмем расписание групповых занятий.</p><p id="0d20c5a8-a643-4f8d-9fd8-0a0efab2d2a1" class="">Предположим, оно хранится в таком виде:</p><pre id="47916a67-273d-4f60-a451-bbab886b19a1" class="code code-wrap"><code>{
+  &quot;6:30&quot;:&quot;HOT FLOW RETREAT&quot;,
+  &quot;7:30&quot;:&quot;BODYJAM&quot;,
+  &quot;8:30&quot;:&quot;AERIAL FLOW YOGA LEVEL 1&quot;,
+  &quot;9:30&quot;:&quot;HARDCORE MAXX&quot;,
+  &quot;10:30&quot;:&quot;BODYCOMBAT&quot;,
+  &quot;11:30&quot;:&quot;HOT FLOW YOGA&quot;,
+  &quot;12:30&quot;:&quot;ZUMBA&quot;,
+  &quot;13:30&quot;:&quot;RPM&quot;,
+  &quot;14:30&quot;:&quot;ACTIVATE&quot;,
+  &quot;15:30&quot;:&quot;BIKE TOUR&quot;,
+}</code></pre><p id="e8fcfd70-05ed-4918-ade0-557aa7270129" class="">Чтобы вывести список значений, нам нужно запустить цикл по значениям словаря, предварительно превратив их в список.</p><p id="11ce21bc-a097-4809-8d60-ee108f9705cb" class="">Чтобы получить из словаря список, в который попадут значения, можно использовать стандартный Python метод <strong>.values</strong> .</p><p id="9fe229c5-37a7-4ade-8409-fc29f2d4e5bc" class=""><a href="https://docs.python.org/3/library/stdtypes.html#dict.values">https://docs.python.org/3/library/stdtypes.html#dict.values</a></p><p id="c41fccb2-241e-40db-9b62-713acfbae195" class="">Вот так:</p><pre id="59227a10-9653-45c0-a8a5-363587f78a0b" class="code code-wrap"><code>{% for activity in timetable.values() %}
+   &lt;p&gt;{{ activity }}&lt;/p&gt;
+{% endfor %}
+</code></pre><p id="eb2d18cb-9c1f-4059-9566-48663c570b20" class="">Такой код вернет нам:</p><pre id="16a356df-48d0-4511-b6c3-f6f97942ebd9" class="code code-wrap"><code>HOT FLOW RETREAT
+BODYJAM
+AERIAL FLOW YOGA LEVEL 1
+HARDCORE MAXX
+BODYCOMBAT
+HOT FLOW YOGA
+ZUMBA
+RPM
+ACTIVATE
+BIKE TOUR</code></pre><h2 id="ab45908a-57fc-49f9-9716-4e645aef7ef4" class=""><strong>Итерация по ключам</strong></h2><p id="80250f56-e4e7-4185-811d-78d8c43cfff6" class="">В нашем примере мы только что вывели значения из словаря.</p><p id="013b5f1d-db0a-4f24-9fb2-cf93999cd5c0" class="">Это важная информация, но ключи тоже бывают важны и мы хотим получить именно их список из  {&quot;key&quot;: &quot;value&quot;, &quot;key&quot;: &quot;value&quot;} и вывести его в шаблоне.</p><p id="471d1f10-5c4a-42c8-b805-44f74c60c1f9" class="">В нашем примере, предположим, мы хотим получить информацию о том, в какое время есть тренировки. Наши данные все еще хранятся в таком виде:</p><pre id="4608e731-5927-43ae-869a-9bba4512708e" class="code code-wrap"><code>{
+  &quot;6:30&quot;:&quot;HOT FLOW RETREAT&quot;,
+  &quot;7:30&quot;:&quot;BODYJAM&quot;,
+  &quot;8:30&quot;:&quot;AERIAL FLOW YOGA LEVEL 1&quot;,
+  &quot;9:30&quot;:&quot;HARDCORE MAXX&quot;,
+  &quot;10:30&quot;:&quot;BODYCOMBAT&quot;,
+  &quot;11:30&quot;:&quot;HOT FLOW YOGA&quot;,
+  &quot;12:30&quot;:&quot;ZUMBA&quot;,
+  &quot;13:30&quot;:&quot;RPM&quot;,
+  &quot;14:30&quot;:&quot;ACTIVATE&quot;,
+  &quot;15:30&quot;:&quot;BIKE TOUR&quot;,
+}</code></pre><p id="c300bf80-aaf6-4bbb-9b44-3d20a8fc23b9" class="">Чтобы получить из словаря список, в который попадут значения, можно использовать стандартный Python метод <strong>.keys </strong>.</p><p id="2aa7c6ba-75b4-42f3-b57a-082ebc98b3ff" class=""><a href="https://www.geeksforgeeks.org/python-dictionary-keys-method/">https://www.geeksforgeeks.org/python-dictionary-keys-method/</a></p><p id="0950668f-e4bb-4c01-acd1-23adf3980e20" class="">Вот так:</p><pre id="92daa4db-87cb-4aca-8f25-4849a99f92e7" class="code code-wrap"><code>{% for timing in timetable.keys() %}
+   &lt;p&gt;{{ timing }}&lt;/p&gt;
+{% endfor %}
+</code></pre><p id="bc69147a-2854-44b7-a743-6a83ef2e936f" class="">Такой код вернет нам:</p><pre id="0affa20a-235b-4a3f-91c6-7b8bbc81fef3" class="code code-wrap"><code>6:30
+7:30
+8:30
+9:30
+10:30
+11:30
+12:30
+13:30
+14:30
+15:30</code></pre><p id="632a11f0-d3d6-4ec6-9451-9602edbef745" class="">Однако, более часто встречается случай, когда нам нужно вывести одновременно и ключ и значение – мы изучим решение для этого после решения задачи.</p><h2 id="94ea1029-c933-4908-bd35-b03fefbd3a35" class=""><strong>Итерация по ключам и значениям</strong></h2><p id="a830f9ed-5462-4322-8cee-c251fa09849b" class="">Самый частый пример использования словаря – когда нам нужно вывести и ключи, и значения.Для этого мы используем итерацию по .items() – при использовании в цикле каждую итерацию мы будем получать новую пару (key, value).</p><p id="560e4e5c-1b44-45a2-8cb8-1bf5829423a9" class="">В нашем примере, предположим, мы хотим получить информацию о том, в какое время есть тренировки. Наши данные все еще хранятся в таком виде:</p><pre id="706c49fc-4aa0-4f83-9826-6168780c6971" class="code code-wrap"><code>{
+  &quot;6:30&quot;:&quot;HOT FLOW RETREAT&quot;,
+  &quot;7:30&quot;:&quot;BODYJAM&quot;,
+  &quot;8:30&quot;:&quot;AERIAL FLOW YOGA LEVEL 1&quot;,
+  &quot;9:30&quot;:&quot;HARDCORE MAXX&quot;,
+  &quot;10:30&quot;:&quot;BODYCOMBAT&quot;,
+  &quot;11:30&quot;:&quot;HOT FLOW YOGA&quot;,
+  &quot;12:30&quot;:&quot;ZUMBA&quot;,
+  &quot;13:30&quot;:&quot;RPM&quot;,
+  &quot;14:30&quot;:&quot;ACTIVATE&quot;,
+  &quot;15:30&quot;:&quot;BIKE TOUR&quot;,
+}</code></pre><p id="a4bd0735-68eb-4811-8226-52162c5957f0" class="">Чтобы итерироваться по ключам и значениям одновременно, мы используем <strong>.items()</strong> .</p><pre id="12c4eafe-8d69-48c8-9e18-abd7a67f94d9" class="code code-wrap"><code>{% for timing, activity in timetable.items() %}
+   &lt;p&gt;{{ timing }}: {{ activity }}&lt;/p&gt;
+{% endfor %}
+</code></pre><p id="f0bbc1e0-86a5-48de-bcc7-3acf096fcfcc" class="">В результате мы получим:</p><pre id="1a89e56f-eb86-4918-9aa6-c5d750646a91" class="code code-wrap"><code>6:30: HOT FLOW RETREAT
+7:30: BODYJAM
+8:30: AERIAL FLOW YOGA LEVEL 1
+9:30: HARDCORE MAXX
+10:30: BODYCOMBAT
+11:30: HOT FLOW YOGA
+12:30: ZUMBA
+13:30: RPM
+14:30: ACTIVATE
+15:30: BIKE TOUR</code></pre><h2 id="88e88a98-231e-4755-a58b-1306d7f871e9" class=""><strong>Итерация по вложенным циклам</strong></h2><p id="d66761d3-ca19-401e-94b1-7fa7df138e8c" class="">Структуры данных могут иметь большую вложенность, особенно при использовании отношений (relations) c которыми вы познакомитесь в четвертой главе. Это значит, что одним из значений в словаре, по которому мы итерируемся, может быть другой словарь, по которому мы тоже будем итерироваться.</p><p id="95f94f16-2e0a-46b9-b501-aa6276cc663d" class="">Вот, например:</p><pre id="089fc23c-c847-4fe9-bcee-61304940b673" class="code code-wrap"><code>clubs = {
+    &quot;clubs&quot;: {
+        &quot;Club 39&quot;: {
+            &quot;address&quot;: &quot;99 Corona Dr.Maplewood, NJ 07040&quot;,
+            &quot;timetable&quot;: {
+                &quot;6:30&quot;: &quot;HOT FLOW RETREAT&quot;,
+                &quot;7:30&quot;: &quot;BODYJAM&quot;,
+                &quot;8:30&quot;: &quot;AERIAL FLOW YOGA LEVEL 1&quot;,
+                &quot;9:30&quot;: &quot;HARDCORE MAXX&quot;,
+            }
+        },
+        &quot;club ION&quot;: {
+            &quot;address&quot;: &quot;331 Rocky River St. Dover, NH 03820&quot;,
+            &quot;timetable&quot;: {
+                &quot;6:30&quot;: &quot;HOT FLOW RETREAT&quot;,
+                &quot;7:30&quot;: &quot;BODYJAM&quot;,
+                &quot;8:30&quot;: &quot;AERIAL FLOW YOGA LEVEL 1&quot;,
+                &quot;9:30&quot;: &quot;HARDCORE MAXX&quot;,
+            }
+        }
+    }
+}</code></pre><p id="77daf371-5998-45c9-aa2a-9175b2f111d2" class="">Предположим, мы хотим вывести расписание по клубам.</p><p id="ab6212e0-ad29-4593-b3eb-493477b8d7d1" class="">Сперва нам нужно будет вывести список клубов, например, так:</p><pre id="758189c8-3379-4f76-9b7f-09748e5e1fcd" class="code code-wrap"><code>{% for club_title, club_data in clubs.items() %}
+   {{ club_title }} : {{ club_data.address }}
+{% endfor %}</code></pre><p id="89ef280b-f05a-476a-b9a6-796ad0e32432" class="">Такой код выведет:</p><pre id="f7bdd53c-8920-4972-88d1-018c79d96297" class="code code-wrap"><code>Club 39 : 99 Corona Dr.Maplewood, NJ 07040
+club ION : 331 Rocky River St. Dover, NH 03820</code></pre><p id="e0c1354a-2b2a-497e-88aa-d5bccbed86b6" class="">Далее, внутри первого цикла мы будем итерироваться по club_data.timetable так же, как делали это в прошлом шаге:</p><pre id="2b303e94-084d-43c3-9fbb-b6e09dd5cb12" class="code code-wrap"><code>{% for club_title, club_data in clubs.items() %}
+   {{ club_title }} : {{ club_data.address }}
+   {% for timing, activity in club_data.timetable.items() %}
+      {{ timing }}: {{ activity }}
+   {% endfor %}
+{% endfor %}</code></pre><p id="7accabc4-d7bc-46e9-8dd9-e0a0aac31e92" class="">Такой код выведет:</p><pre id="92df748a-7075-44ff-a1c2-434b1012bfe1" class="code code-wrap"><code>Club 39 : 99 Corona Dr.Maplewood, NJ 07040
+6:30: HOT FLOW RETREAT
+7:30: BODYJAM
+8:30: AERIAL FLOW YOGA LEVEL 1
+9:30: HARDCORE MAXX
+club ION : 331 Rocky River St. Dover, NH 03820
+6:30: HOT FLOW RETREAT
+7:30: BODYJAM
+8:30: AERIAL FLOW YOGA LEVEL 1
+9:30: HARDCORE MAXX</code></pre><p id="2ba56293-92c2-4b0f-81ad-0fe76743bcba" class="">Отлично! Теперь вы готовы работать с вложенными структурами!</p><h2 id="8e68d2f9-71ac-445c-967a-4b02bc31ad6e" class=""><strong>Резюме:</strong></h2><p id="2b1275fa-21ee-4732-80b2-b02fe3b137b9" class="">Чтобы итерироваться по значениям словаря, используйте .values().</p><pre id="6dddbe07-632e-4296-a33b-13869b9596f3" class="code code-wrap"><code>{% for activity in timetable.values() %}
+   &lt;p&gt;{{ activity }}&lt;/p&gt;
+{% endfor %}
+</code></pre><p id="44a7f469-6a8e-4512-8962-da66fada751f" class="">Чтобы итерироваться по ключам словаря, используйте .keys().</p><pre id="4538448f-b69f-4c58-b558-7533f99300e9" class="code code-wrap"><code>{% for timing in timetable.keys() %}
+   &lt;p&gt;{{ timing }}&lt;/p&gt;
+{% endfor %}
+</code></pre><p id="fe390d28-497f-4495-b55f-c2459f3d2ea2" class="">Чтобы итерироваться по ключам и значениям одновременно, используйте .items().</p><pre id="c99753fd-6969-4b73-a1b8-7b0b2ed2e3bb" class="code code-wrap"><code>{% for timing, activity in timetable.items() %}
+   &lt;p&gt;{{ timing }}: {{ activity }}&lt;/p&gt;
+{% endfor %}
+</code></pre><p id="bc006617-24e4-449e-bd77-acdcaf593e22" class="">Использование вложенных циклов работает так же как использование циклов в Python.</p><pre id="305acc3e-6c63-4e99-9dd0-bfa2ac57664c" class="code code-wrap"><code>{% for club in clubs%}
+  {% for timing, activity in club.timetable.items() %}
+    &lt;p&gt;{{ timing }}: {{ activity }}&lt;/p&gt;
+  {% endfor %}
+{% endfor %}</code></pre><p id="f0a1ebcf-7da6-409d-b956-c863dece1299" class="">
+</p></div></article></body></html>

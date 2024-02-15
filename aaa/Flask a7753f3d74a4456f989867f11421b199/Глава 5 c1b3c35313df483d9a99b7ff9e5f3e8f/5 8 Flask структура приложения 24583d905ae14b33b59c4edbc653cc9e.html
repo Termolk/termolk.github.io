@@ -1,0 +1,903 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>5.8 Flask: структура приложения</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="24583d90-5ae1-4b33-b59c-4edbc653cc9e" class="page sans"><header><h1 class="page-title">5.8 Flask: структура приложения</h1></header><div class="page-body"><h1 id="f2f5577b-5735-4caa-816d-8aeac09c9ff8" class=""><strong>Организация приложения Flask</strong></h1><p id="2e4456aa-b9f2-476a-b134-2d431cbf7233" class="">Организация приложения — это технический подход к решению психологических ограничений и проблем разработчика. Любой человек может удерживать в уме ограниченное количество объектов. При этом мы, люди, плохо переключаемся между разными контекстами (медленно выгружаем из ума одни объекты и загружаем другие).</p><p id="24d0f69b-e4e4-4465-9e34-3fd54b038719" class="">При этом нам, как разработчикам, нужно быстро вносить изменения в разрастающийся до сотен и тысяч строк код, не ломая сделанное. Как с этим разобраться? Хорошее решение – разобрать приложение на части и работать с каждой из них отдельно и по очереди.</p><p id="1f3202ff-1351-4954-b961-a0760c220532" class="">Разделяй и властвуй — незаменимый подход в борьбе со сложностью, а, значит, и в разработке ПО.</p><p id="3d7b3002-cb87-455d-ac09-999bb6b3637c" class="">Правильный разработчик не мечется между действиями (хаотичная смена контекста), а придерживается алгоритма для решения стоящих перед ним задач. Порой этот алгоритм может казаться избыточным, но он ведет к результату.</p><p id="f2c3e10d-3343-4462-bdbf-9c73e9a3802c" class=""><strong>В этом топике мы изучим:</strong></p><ul id="e298fe24-7d18-42b7-a996-81f3fce920e7" class="bulleted-list"><li>Как стоит разделять приложение Flask;</li></ul><ul id="96e64f33-2b7d-4b12-b1f6-dfbecd83a118" class="bulleted-list"><li>Почему это разделение - организация;</li></ul><ul id="7075b8aa-82a9-488b-af9e-f32806a8b5eb" class="bulleted-list"><li>Модульная организация приложения;</li></ul><ul id="8a1ee91c-9fea-474b-860b-3bb40d981e8a" class="bulleted-list"><li>Пакетная организация приложения;</li></ul><ul id="fdcdeb9e-c9ab-4c59-b180-2903ece52ea5" class="bulleted-list"><li>Модульная разбивка пакета.</li></ul><p id="41c55288-9532-4f3d-b361-8a2996b01e5b" class="">Мы подготовили для вас заготовку приложения: вы можете скачать ее тут:</p><p id="597f8c6f-d4de-4d9e-8af7-d0ef6a98a1d5" class=""><a href="https://stepik.org/media/attachments/course/61900/app_example.zip">https://stepik.org/media/attachments/course/61900/app_example.zip</a></p><h2 id="27d517bf-10af-4755-927f-9b513f89516d" class=""><strong>Пакетная организация</strong></h2><h3 id="ce2254ad-8848-4c48-905d-8cc125a2d259" class=""><strong>Разделение приложения на модули</strong></h3><p id="c63879d5-dc6b-4d94-bff3-278141074d8b" class="">Ранее код нашего приложения аутентификации и авторизации хранился в одном файле — модуле. Исключение: папка с шаблонами. Обычная структура модульного приложения содержит:</p><ul id="6e18c2bc-5eb0-48ed-9410-0df08daac8df" class="bulleted-list"><li>app.py — приложение;</li></ul><ul id="730ff619-f762-499a-b4af-42d5f21022fd" class="bulleted-list"><li>config.py — настройки приложения;</li></ul><ul id="1845381d-97b0-42e8-8b35-8cff616a1eeb" class="bulleted-list"><li>requirements.txt — зависимости приложения для установки командой: <strong>pip install -r requirements.txt</strong></li></ul><ul id="057df65b-b43c-440f-90cf-cc6cee6848cc" class="bulleted-list"><li>static/ — папка для статичных файлов приложения (css, js, изображений и т.д.)</li></ul><ul id="61322b66-c24a-41e8-8765-0fc49865ff12" class="bulleted-list"><li>templates/ — папка шаблонов</li></ul><p id="35616b16-c71c-4462-aefd-64417141a568" class="">Flask не против такой организации кода. Это нормально для маленького приложения. Маленького. А вот наше:</p><pre id="b975428a-d4e1-4f83-b793-e49a5856f4eb" class="code code-wrap"><code>Файл app.py
+
+***
+
+from functools import wraps
+import re
+
+from flask import Flask, abort, flash, session, redirect, request, render_template
+from flask_sqlalchemy import SQLAlchemy
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField
+from wtforms.validators import DataRequired, Length, EqualTo, ValidationError
+from werkzeug.security import generate_password_hash, check_password_hash
+
+app = Flask(__name__)
+app.config[&quot;DEBUG&quot;] = True
+app.config[&quot;SECRET_KEY&quot;] = &quot;secret_key&quot;
+app.config[&quot;SQLALCHEMY_DATABASE_URI&quot;] = &quot;sqlite:///&quot; + app.root_path + &quot;\\test.db&quot;
+app.config[&quot;SQLALCHEMY_TRACK_MODIFICATIONS&quot;] = False
+
+# ------------------------------------------------------# Подключение БД и модель пользователя
+db = SQLAlchemy(app)
+
+class User(db.Model):
+
+ 	(код модели)
+
+# ------------------------------------------------------# Валидатор пароляdef password_check(form, field):
+
+    (код валидатора)
+
+# ------------------------------------------------------# Формыclass LoginForm(FlaskForm):
+
+    (код полей формы логина)
+
+class RegistrationForm(FlaskForm):
+
+    (код полей формы регистрации)
+
+class ChangePasswordForm(FlaskForm):
+
+    (код полей формы смены пароля)
+
+# ------------------------------------------------------# Декораторы авторизацииdef login_required(f):
+
+    (код декоратора)
+
+def admin_only(f):
+
+    (код декоратора)
+
+# ------------------------------------------------------# Страница админки@app.route(&#x27;/&#x27;)@login_required def home():
+
+    (код страницы админки)
+
+# ------------------------------------------------------# Страница аутентификации@app.route(&quot;/login&quot;, methods=[&quot;GET&quot;, &quot;POST&quot;])def login():
+
+    (код страницы аутентификации)
+
+# ------------------------------------------------------# Страница выхода из админки@app.route(&#x27;/logout&#x27;, methods=[&quot;POST&quot;])@login_required def logout():
+
+    (код выхода из админки)
+
+# ------------------------------------------------------# Страница добавления пользователя@app.route(&quot;/registration&quot;, methods=[&quot;GET&quot;, &quot;POST&quot;])@admin_only@login_required def registration():
+
+    (код страницы регистрации)
+
+# ------------------------------------------------------# Страница смены пароля@app.route(&quot;/change-password&quot;, methods=[&quot;GET&quot;, &quot;POST&quot;])@login_required def change_password():
+
+    (код страницы изменения пароля)
+
+if __name__ == &quot;__main__&quot;:
+     app.run()</code></pre><p id="0fdffcf3-3b6a-466b-b189-728f91c20f05" class="">Оно уже большое, хотя не делает ничего полезного. Только как-то организует доступ. Наш код требует рефакторинг.</p><p id="1c29b713-d82e-4651-8724-0a84eca6aa32" class="">Рефакторинг - это не ругательство, а действия по улучшению качества кода без изменения его функционала. Существует целая классификация плохого кода, а вот цель одна — удобная организация для восприятия и внесения изменений. Ведь программирование — это больше правка кода.</p><p id="51ec4b17-575c-4d0d-9d35-b6abe5ae1e6a" class="">После модуля, пакет — это вторая форма организации приложения Flask. Он содержит уже не один модуль, а их логически организованную группу.</p><p id="dca7798b-0c37-432d-9b81-2db81162e1ae" class="">Давайте из нашего модульного приложения сделаем пакет. Для этого выделим код в отдельные модули. И начнем мы с настроек.</p><h3 id="35229acd-7de5-4955-aa0d-7df17e205b18" class=""><strong>Модуль настроек</strong></h3><p id="628e2de0-60ea-4658-99ed-f3a2d38348ed" class="">Фреймворк Flask предоставляет единый механизм инициализации и хранения настроек через объект приложения. Кроме того, настройки можно загрузить из внешней структуры, например, как параметры класса. Создадим модуль с настройками:</p><pre id="37e01da2-ccbd-41ae-9a29-7cc5e2b364de" class="code code-wrap"><code>Файл config.py
+
+***
+
+import os
+
+# Для указания пути к файлу БД воспользумся путем до текущего модуля# - Текущая папка
+current_path = os.path.dirname(os.path.realpath(__file__))
+# - Путь к файлу БД в данной папке
+db_path = &quot;sqlite:///&quot; + current_path + &quot;\\test.db&quot;
+
+class Config:
+    DEBUG = True
+    SECRET_KEY= &quot;secret_key&quot;
+    SQLALCHEMY_DATABASE_URI = db_path
+    SQLALCHEMY_TRACK_MODIFICATIONS = False</code></pre><p id="d9f8117a-3c2a-4b58-bfe7-b8a72069de4e" class="">Удалим настройки в модуле приложения. Импортируем класс настроек и применим:</p><pre id="9285fe67-fffa-4bff-b633-45458b46072b" class="code code-wrap"><code>Файл app.py
+
+***
+
+from config import Config
+
+app = Flask(__name__)
+app.config.from_object(Config)</code></pre><p id="1f272390-2bdb-471a-984d-6132e10c0bb7" class="">Тестируем приложение, чтобы убедиться, что не сломали.</p><h3 id="b9e4a379-cae6-4722-be12-d9655df23baa" class=""><strong>Модуль соединения с базой данных и моделей</strong></h3><p id="e18a2708-a1ad-43d9-ba67-a9d43bc8590b" class="">Выделим в отдельный модуль соединения с базой данных и модель пользователя (файл models.py):</p><pre id="6e5db277-9658-4f41-b095-7bc4620f372c" class="code code-wrap"><code>Файл models.py
+
+***
+
+from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
+
+# Настройки соединения сделаем позже в модуле приложения
+db = SQLAlchemy()
+
+class User(db.Model):
+
+    (код модели)</code></pre><p id="2fe9d55e-6d75-405f-a462-4267d7a46200" class="">Поправим наш модуль приложения. Уберём из него декларацию модели и создание приложения. Вместо этого мы импортируем подключение и класс модели пользователя из модуля:</p><pre id="67d92e79-84d9-47bd-846e-5fc5264f6990" class="code code-wrap"><code>Файл app.py
+
+***
+
+from models import db, User
+
+# Настраиваем соединение
+db.init_app(app)</code></pre><p id="309f987c-72bb-49a8-98a7-cac7f7845884" class="">После внесения изменений обязательно тестируем наше приложение.</p><h3 id="d2e78ad5-273a-49af-998e-e5e7af2dcd3d" class=""><strong>Модуль форм</strong></h3><p id="905f69fe-8abd-4d56-97f1-4a5da6d46cc9" class="">Создадим модуль и для форм. Перенесём в него формы и валидатор пароля:</p><pre id="e23b8f7c-6ff4-4879-9119-492685d8792f" class="code code-wrap"><code>Файл forms.py
+
+***
+
+import re
+
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField
+from wtforms.validators import DataRequired, Length, EqualTo, ValidationError
+
+def password_check(form, field):
+
+    (код валидатора пароля)
+
+class LoginForm(FlaskForm):
+
+    (код формы логина)
+
+class RegistrationForm(FlaskForm):
+
+    (код формы регистрации)
+
+class ChangePasswordForm(FlaskForm):
+
+    (код формы смены пароля)</code></pre><p id="b6b6f2ab-efae-4430-8ed4-c817bd21e48b" class="">Удаляем из приложения классы форм и валидатор пароля, а затем добавляем импорт форм:</p><pre id="a849afe1-bde9-40ff-8045-2b015c9e1b9a" class="code code-wrap"><code>Файл app.py
+
+***
+
+from forms import LoginForm, RegistrationForm, ChangePasswordForm</code></pre><p id="9405197e-9308-4592-9324-50120cabad94" class="">Тестируем результат изменений. Приложение работает.</p><p id="8ba23284-caa2-474c-8a12-669d43202a95" class="">Давайте посмотрим на код обновленного приложения:</p><pre id="975f3143-2488-4ff7-b94a-c99c44943063" class="code code-wrap"><code>Файл app.py
+
+***
+
+from functools import wraps
+
+from flask import Flask, abort, flash, session, redirect, request, render_template
+
+from config import Config
+from models import db, User
+from forms import LoginForm, RegistrationForm, ChangePasswordForm
+
+app = Flask(__name__)
+app.config.from_object(Config)
+
+db.init_app(app)
+
+# ------------------------------------------------------# Декораторы авторизацииdef login_required(f):
+
+    (код декоратора)
+
+def admin_only(f):
+
+    (код декоратора)
+
+# ------------------------------------------------------# Страница админки@app.route(&#x27;/&#x27;)@login_required def home():
+
+    (код страницы админки)
+
+# ------------------------------------------------------# Страница аутентификации@app.route(&quot;/login&quot;, methods=[&quot;GET&quot;, &quot;POST&quot;])def login():
+
+    (код страницы аутентификации)
+
+# ------------------------------------------------------# Страница выхода из админки@app.route(&#x27;/logout&#x27;, methods=[&quot;POST&quot;])@login_required def logout():
+
+    (код выхода из админки)
+
+# ------------------------------------------------------# Страница добавления пользователя@app.route(&quot;/registration&quot;, methods=[&quot;GET&quot;, &quot;POST&quot;])@admin_only@login_required def registration():
+
+    (код страницы регистрации)
+
+# ------------------------------------------------------# Страница смены пароля@app.route(&quot;/change-password&quot;, methods=[&quot;GET&quot;, &quot;POST&quot;])@login_required def change_password():
+
+    (код страницы смены пароля)
+
+if __name__ == &quot;__main__&quot;:
+    app.run()</code></pre><p id="a69839c4-d6e4-4d5c-ab15-d6f75b0c56d7" class="">Размер кода сократился, но можно сделать ещё одно улучшение. Наш модуль приложения содержит и обработчики запросов, и инициализацию, и запуск приложения. Это как-то неправильно. Давайте выделим обработчики в отдельный модуль.</p><h3 id="1f0f3f92-0081-422d-8a04-ab3a52fd7650" class=""><strong>Модуль представлений (Views)</strong></h3><p id="f59929e3-0ad7-45ac-a094-48db4821cce8" class="">Так сложилось, что функции обработчики запросов, обычно называемые в других фреймворках контроллерами, во Flask принято называть представлениями (views). Поддержим традицию и назовем файл модуля &quot;views.py&quot;. Вынесем в него декораторы и функции обработчики запросов (файл views.py):</p><pre id="0082b3d7-1cee-4bb3-8a41-73b6bb822d61" class="code code-wrap"><code>Файл views.py
+
+***
+
+from functools import wraps
+
+from flask import abort, flash, session, redirect, request, render_template
+
+from app import app, db
+from models import User
+from forms import LoginForm, RegistrationForm, ChangePasswordForm
+
+# ------------------------------------------------------# Декораторы авторизацииdef login_required(f):
+
+    (код декоратора)
+
+def admin_only(f):
+
+    (код декоратора)
+
+# ------------------------------------------------------# Страница админки@app.route(&#x27;/&#x27;)@login_required def home():
+
+    (код страницы админки)
+
+# ------------------------------------------------------# Страница аутентификации@app.route(&quot;/login&quot;, methods=[&quot;GET&quot;, &quot;POST&quot;])def login():
+
+    (код страницы аутентификации)
+
+# ------------------------------------------------------# Страница выхода из админки@app.route(&#x27;/logout&#x27;, methods=[&quot;POST&quot;])@login_required def logout():
+
+    (код выхода из админки)
+
+# ------------------------------------------------------# Страница добавления пользователя@app.route(&quot;/registration&quot;, methods=[&quot;GET&quot;, &quot;POST&quot;])@admin_only@login_required def registration():
+
+    (код страницы регистрации)
+
+# ------------------------------------------------------# Страница смены пароля@app.route(&quot;/change-password&quot;, methods=[&quot;GET&quot;, &quot;POST&quot;])@login_required def change_password():
+
+    (код страницы смены пароля)</code></pre><p id="ff3583ba-bef0-46c8-a4dd-218c71b9c528" class="">После этого наше приложение выглядит минималистичным:</p><pre id="821f51e8-6e15-4d51-bb92-ceed26046c0a" class="code code-wrap"><code>Файл app.py
+
+***
+
+from flask import Flask
+
+from config import Config
+from models import db
+
+app = Flask(__name__)
+app.config.from_object(Config)
+
+db.init_app(app)
+
+# Имортируем представлениеfrom views import *
+
+
+if __name__ == &quot;__main__&quot;:
+    app.run()</code></pre><p id="7e5edb17-41eb-40c0-b34f-0018c5aa3f34" class="">Тестируем его после изменений. Оно работает.</p><h3 id="f4ec1fae-2493-4c26-8d32-940d00c61c56" class=""><strong>Инициализация пакета</strong></h3><p id="376a1b50-c49d-4866-b307-f947ddca1604" class="">Остался один нерешенный вопрос. Наше приложение по-прежнему не является пакетом Python. Давайте исправим это.</p><p id="c2717234-4fba-4fb1-934e-dc7b85bf9a1c" class="">Пусть папка, в которой находится приложение, называется &quot;example1&quot;. Название папки является названием пакета. Для завершения создания пакета в папке приложения переименуем файл модуля приложения <code>app.py</code> в файл <code>__init__.py</code>. Также изменим обращения к модулям приложения с учетом названия пакета в модуле инициализации:</p><pre id="22dd27ee-6964-4b35-9491-d4a28093ddba" class="code code-wrap"><code># Файл __init__.pyfrom flask import Flask
+
+from example1.config import Config  #!!!from example1.models import db      #!!!
+
+app = Flask(__name__)
+app.config.from_object(Config)
+
+db.init_app(app)
+
+from example1.views import *        #!!!</code></pre><p id="6990efd9-3e11-4fdc-a0b1-4a11e1ed0524" class="">Поправим импорт в модуле представлений:</p><pre id="9d62c1bc-0be7-4205-a555-33e296eca24e" class="code code-wrap"><code># Файл views.py from functools import wraps
+
+from flask import abort, flash, session, redirect, request, render_template
+
+from example1 import app, db                                                #!!!from example1.models import User                                            #!!!from example1.forms import LoginForm, RegistrationForm, ChangePasswordForm  #!!!
+
+(код модуля)
+</code></pre><p id="f90a9568-c90a-464d-a5dc-7f53cec41003" class="">Структура нашего приложения в виде пакета выглядит так:</p><pre id="f972e63b-081e-445f-b185-41d07103eb1f" class="code code-wrap"><code>example1/
+    templates/
+    __init__.py
+    config.py
+    forms.py
+    models.py
+    views.py
+</code></pre><p id="abc90f9d-82aa-48b9-bd37-e972a013b174" class="">Создадим скрипт запуска приложения run.py в папке, находящейся выше папки нашего пакета:</p><pre id="b9e9e6a4-7fb0-4c21-825c-b7e5bbf77132" class="code code-wrap"><code># Файл run.py import example1
+
+example1.app.run()
+</code></pre><p id="d49adf58-7ffb-4256-be94-109e4a117709" class="">Запустим скрипт из консоли. Работает!</p><h2 id="7b8d025a-037d-4bb7-b9cf-37afd1335dac" class=""><strong>Резюме</strong></h2><p id="df20a888-8cf6-4a10-bfb3-a8f3e7b23b99" class="">Следует следить за сложностью приложения.</p><p id="443dd944-a11c-4a1c-a191-6bacba36f07b" class="">Логически связанный код следует разделять на модули.</p><pre id="75eb7078-83ae-4575-81b9-0c24074af631" class="code code-wrap"><code>Типичная структура приложения
+
+templates/
+app.py
+config.py
+forms.py
+models.py
+views.py</code></pre><p id="d2420a57-7fe0-44fc-aa9e-ac9249f03e23" class="">Отдельные части приложения нужно правильно импортировать.</p><p id="47aead24-48d0-4e0e-819a-b8e04de75046" class="">Не стоит забывать инициализировать расширения Flask настройками.</p><p id="1a58a6b3-8938-49ae-bf95-c0e75e87b00f" class="">Мы подготовили для вас заготовку приложения: вы можете скачать ее тут:</p><p id="20bdd606-8356-4861-92ae-47718cef7d89" class=""><a href="https://stepik.org/media/attachments/course/61900/app_example.zip">https://stepik.org/media/attachments/course/61900/app_example.zip</a></p></div></article></body></html>
