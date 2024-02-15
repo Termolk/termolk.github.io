@@ -1,0 +1,633 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>4.4 Основные типы данных</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="1dba3cd3-9eb0-40e6-971c-207f1e9bfc78" class="page sans"><header><h1 class="page-title">4.4 Основные типы данных</h1></header><div class="page-body"><h2 id="3179fe68-533f-411f-abec-68ff65b50803" class=""><strong>Введение</strong></h2><p id="7ea1371a-d3a1-43f0-978f-c97c9d9f740f" class="">Как вы уже знаете, SQL - это язык для работы с данными различных типов, организованными в таблицу.</p><p id="0cb659d2-4e81-4ef0-a971-c4e7fad06f66" class="">Обычно, значения данных из одного столбца в таблице имеют одинаковый тип.Например, таблица Car может выглядеть так:</p><figure id="559b6a1a-84a0-4ca2-b3f9-aba6137ab0fa" class="image"><a href="https://ucarecdn.com/20da6541-05aa-4edb-9771-163628c6e8f4/"><img src="https://ucarecdn.com/20da6541-05aa-4edb-9771-163628c6e8f4/"/></a></figure><p id="099d003d-492b-4dc0-9c3a-45a48c05f044" class="">Мы видим, что значения в столбце года изготовления (manufacture year) представляют собой целые числа, значения цены (price) - десятичные, а значения электрический (electricity) - логические. Базы данных SQL обычно требуют, чтобы у каждого столбца в таблице базы данных было имя и тип данных. Тип данных столбца ограничивает набор значений, которые могут храниться в столбце, и определяет набор возможных операций с ними.</p><p id="7890021a-78f8-460b-b14c-e5d5edc84182" class="">Стандарт ANSI определяет довольно сложный набор типов данных. Кроме того, поставщики баз данных обычно добавляют свои нестандартные параметры данных.</p><p id="879de511-d07b-4a1a-a03a-58ecc6bfd0c0" class="">В этой теме мы рассмотрим очень простое подмножество типов данных: <strong>INTEGER</strong>, <strong>REAL</strong>, <strong>DECIMAL</strong>, <strong>VARCHAR</strong>, и <strong>BOOLEAN</strong>.</p><h2 id="4145de6d-97a0-4e48-b4db-42c8ceaeb557" class=""><strong>Integer</strong></h2><p id="d87a03f3-9402-4e08-9ee6-6e5aeff2c31b" class=""><strong>INTEGER</strong> - это числовой тип данных, представляющий некоторый диапазон математических чисел. Обычно системы управления базами данных поддерживают диапазон от -2147483648 до +2147483647, что достаточно для большинства бизнес-задач.</p><p id="9416f3bf-8999-499d-898f-321b75c55884" class="">Тип INTEGER подходит для счетчиков, числовых идентификаторов и любых целочисленных бизнес-значений, которые можно себе представить и которые соответствуют диапазону шкалы. Например, в базе данных рекламной кампании может быть таблица, в которой хранится идентификатор баннера, количество кликов по нему и количество показов баннера: все в столбцах INTEGER.</p><h2 id="c38146e4-fc29-453f-902c-d963d6d62997" class=""><strong>Real</strong></h2><p id="808dde4f-e70d-4a8b-bb1a-938b125f2bd2" class="">Числовые данные, конечно, выходят за пределы целочисленных значений: например, рассмотрим расстояние от Земли до Марса (225,0e+06 км), количество белых клеток в крови (от 1,2e+09 до 3,0e+09 на литр) или масса электрона (9.10938356e-31 кг). Для таких реальных значений SQL имеет специальный тип данных с интуитивно понятным именем <strong>REAL</strong>. Этот тип данных часто называют FLOAT, отражая способ внутреннего хранения чисел: экспоненциальная форма используется и, таким образом, десятичная точка может «плавать», то есть она может быть размещена в любом месте относительно значащих цифр числа.</p><p id="ca8020fb-5b63-43f0-8173-2a0c5295070d" class="">Этот числовой тип обычно называется неточным, поскольку некоторые значения хранятся в виде приближений (например, 0,1), поэтому сохранение и получение значения могут не всегда работать так, как ожидается. Таким образом, если требуется точное хранение и расчеты (например, для биллинговой базы данных), REAL не ваш выбор. Однако РЕАЛЬНЫЕ данные часто встречаются в системах, которые работают с очень маленькими и очень большими действительными числами и требуют быстрого времени обработки. Например, расстояние между галактиками или диаметр атомного ядра может храниться в одном столбце типа REAL. В большинстве систем тип REAL имеет диапазон шкалы от 1e-37 до 1e+37 с точностью не менее 6 десятичных цифр; абсолютная точность для малых чисел выше, чем для больших.</p><h2 id="0092158f-af14-46a4-8f86-35af9ca0b55d" class=""><strong>Decimal</strong></h2><p id="1b0de0d3-3826-4aa0-8414-7d95f39539f8" class="">В повседневной жизни мы обычно сталкиваемся с десятичными числами довольно часто: например, при измерении температуры тела (36,6 градусов Цельсия) или веса (52,700 кг), оценке высоты знаменитой Пизанской башни (55,86 м) и, конечно же, считая наши драгоценные финансы ($ 103050,79). SQL поддерживает специальный тип данных для таких значений – <strong>DECIMAL (precision, scale)</strong>.</p><p id="bd6360a5-ffdd-48e9-91af-3bb4a3af1759" class="">Как видите, этот тип имеет два параметра: precision (точность) and scale (масштаб). <strong>Scale</strong> определяет количество цифр в дробной части, справа от десятичной точки. <strong>Precision</strong> - это общее количество цифр в числе, то есть по обе стороны от десятичной точки.</p><p id="27fc5fe1-63de-4060-b9de-b6ce979e4439" class="">Тип DECIMAL обычно называют точным числовым типом с неограниченной точностью и масштабом; однако есть предел - до 131072 цифр перед десятичной запятой и до 16383 цифр после десятичной запятой. Если подумать, этого должно быть достаточно!</p><p id="9b4049ac-df2e-48e8-9bbb-50a7e9bc3f0c" class="">Одним из наиболее важных различий между типами DECIMAL и REAL для приложений являются правила округления. ДЕСЯТИЧНЫЕ значения округляются интуитивно и предсказуемо, например, округление -0,5 приведет к -1. Правила округления для типа REAL могут быть менее интуитивными, и здесь округление -0,5 даст нам -0. Однако, арифметические операции над типами REAL выполняются быстрее, а сами значения занимают меньше места для хранения.</p><h2 id="32b3d4be-126f-47b7-9161-0ad9cc24ad68" class=""><strong>Text</strong></h2><p id="4254b295-bd9e-4e92-a5b5-b3634a275c68" class="">Конечно, может потребоваться обработать что-то, кроме числовых данных, и SQL поддерживает семейство типов данных, предназначенных для представления текстовых данных. Давайте рассмотрим один из них, достаточно универсальный и базовый – <strong>VARCHAR(n)</strong>.</p><p id="73ee02b6-523d-4ec1-9e7d-5fee432c4e2d" class="">Этот тип представляет собой строку символов различной длины, не длиннее n. Например, можно вставить строки «apple», «plum» и «peach» в столбец с типом VARCHAR(5). Строки «orange» или «banana» не будут соответствовать ограничению по длине, и система либо урезает их, либо выдаст ошибку, если попытается вставить такие длинные значения.</p><h2 id="3fb02f4d-0544-4e6b-b808-2224a6b33063" class=""><strong>Boolean</strong></h2><p id="f115fb26-6f33-4b25-9524-2088e5b61dc7" class=""><strong>BOOLEAN</strong> тип представляет значения логической (истинной) логики: TRUE или FALSE. Этот простой тип данных может использоваться для любых атрибутов с семантикой флагов, например, посещал ли клиент сайт конкурента.</p><h2 id="2744e8b9-70a7-4033-9087-1756c5c36528" class=""><strong>Кто определяет типы и как?</strong></h2><p id="23f660c2-b219-4876-a418-8b49bde017b8" class="">Как пользователь базы данных, вы должны просто знать типы столбцов таблицы, которые используете, чтобы иметь возможность обрабатывать их правильно. Однако, как программист, вы должны знать, как создать таблицу и определить типы столбцов.</p><p id="55d14d18-ba80-40bf-9770-b916a7fbb1a4" class="">Давайте рассмотрим пример запроса SQL, который определяет таблицу «Census» с 5 столбцами:&quot;id&quot; с типом INTEGER, &quot;name&quot; с типом VARCHAR(20), &quot;birth_place_latitude&quot; с типом REAL, &quot;year_income&quot; с типом DECIMAL(20,3), and &quot;is_male&quot; с типом BOOLEAN.</p><pre id="b9746f65-42f1-4d90-8a0d-f2d454626143" class="code code-wrap"><code>CREATE TABLE Census (
+    id INTEGER,
+    name VARCHAR(20),
+    birth_place_latitude REAL,
+    year_income DECIMAL(20,3),
+    is_male BOOLEAN
+);</code></pre><p id="53225ab2-a0c5-4fc2-bd59-9e6b31eb61a0" class="">Можно увидеть, что шаблон выглядит следующим образом:</p><pre id="6927b45c-353d-45ef-b704-4a178660d9ed" class="code code-wrap"><code>CREATE TABLE table_name (column_name_1 column_type_1,..., column_name_n column_type_n);</code></pre><h2 id="64ea805e-23e5-4f7e-ab60-6035b0e2df28" class=""><strong>Заключение</strong></h2><p id="85e7339a-a862-473c-a2b9-8b7f0427167f" class="">Данные могут быть очень разнообразными, и SQL поддерживает обширный набор типов данных для представления этого разнообразия. Мы обсудили базовое подмножество типов данных, но существуют также: приведение типов, составные типы, специальные типы для числовых, текстовых и временных меток и так далее.</p></div></article></body></html>

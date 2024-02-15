@@ -1,0 +1,673 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>2.11 Jinja: Создание ссылок в шаблонах</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="4911e214-7dc4-4583-8798-dd9af0021561" class="page sans"><header><h1 class="page-title">2.11 Jinja: Создание ссылок в шаблонах</h1></header><div class="page-body"><p id="229da330-b4a4-4fd4-afd1-1b2aff2dc2c3" class="">На вашем сайте есть роуты, каждый со своим адресом.</p><p id="f7659a21-31d3-45f3-b497-0f3ed681ffa4" class="">И еще на вашем сайте есть ссылки из меню, списка элементов или поиска, которые на эти роуты ведут. В этом топике мы потренируемся создавать ссылки, а если точнее, использовать циклы в Jinja для создания ссылок.</p><p id="1d48e7ca-064b-47df-8a9e-0c6edbc76778" class="">Помните, что создавая новое представление для роута, рекомендуется указывать &quot;слеш&quot; в начале и в конце адреса, а при создании ссылок также добавлять &quot;слеш&quot; в конце</p><p id="b906c7ca-4759-48c4-9e29-a496502fcb42" class=""><strong>Вы научитесь:</strong></p><ul id="72480c40-d9b7-42cb-8e0d-4771a4c2c6c3" class="bulleted-list"><li>создавать меню для сайта;</li></ul><ul id="12a196c3-4610-48d4-b0bd-088eeb4ace8f" class="bulleted-list"><li>отмечать текущий пункт меню активным;</li></ul><ul id="739f6887-025f-430e-8c6f-3e4d12671b3a" class="bulleted-list"><li>выводить списки на разделы или теги;</li></ul><ul id="e5c80cdd-0ec6-4678-bb0b-30587fd0863a" class="bulleted-list"><li>выводить ссылки из поиска на страницы конкретных элементов.</li></ul><h3 id="d935aaa9-2e75-4cbb-a8ed-647ac3565fee" class=""><strong>Меню для сайта</strong></h3><p id="a691acae-9d17-4144-bf7c-a27fc4084100" class="">Обычное меню – просто набор ссылок, упакованных в &lt;nav&gt;.</p><p id="23507df5-98ad-493d-95de-e2c89b55f04f" class="">Иногда для разметки меню используют неупорядоченный список &lt;ul&gt;.</p><p id="b7e70527-a48d-44e3-af77-c610ef5d4eea" class="">Пункты для меню могут храниться в списке. В этом случае, нам нужно открыть тег меню, запустить цикл по этому списку, вывести в нем текст и адрес ссылки, а затем закрыть меню.</p><pre id="542a346b-bf38-4961-adbf-c26ee4daf50e" class="code code-wrap"><code>{% for link in links %}
+   &lt;a href=&quot;{{ link.link }}&quot;&gt;{{ link.title }}&lt;/a&gt;
+{% endfor %}</code></pre><h3 id="96f9e91a-f027-4d0c-8541-c4b2d2761478" class=""><strong>Текущий пункт меню</strong></h3><p id="a8c38da2-c226-4709-ae6d-0113a52b82cf" class="">Частая задача - отметить, на какой странице находится пользователь – например выделить цветом, рамкой или жирностью.</p><p id="a4b715c3-0435-4db7-ba83-5638b2de478d" class="">В верстке для этого обычно используется class=active.</p><p id="fa7bddd6-6f49-4982-89d3-fd83eafd09db" class="">Осталось только написать логику, когда его выводить.</p><p id="814b66d2-d615-4656-b926-2a02e5c5b09a" class="">Во Flask переменная запроса доступна в шаблонах, используйте <strong>request.path, чтобы проверить</strong> ваши ссылки!</p><pre id="f0dad2e4-35c5-4fce-8457-b35ce6674f17" class="code code-wrap"><code>{% for link in links %}
+   &lt;li&gt;&lt;a href=&quot;...&quot; class=&quot;{% if request.path == link.link %}active{% endif %}&quot;&gt;
+			...
+      &lt;/a&gt;&lt;/li&gt;
+{% endfor %}</code></pre><p id="64253548-e61a-4bb1-9c83-ae425adb7688" class="">Или вы можете использовать set, тогда код будет более читаемый:</p><pre id="1a7e8c0c-576c-4f66-922a-5dd1028cfe51" class="code code-wrap"><code>{% for link in links %}
+   &lt;li&gt;
+      {% if request.path == link.link %}{% set c = &quot;active&quot; %}
+			{% else %} {% set c=&quot;&quot; %} {% endif %}
+      &lt;a href=&quot;...&quot; class=&quot;{{ c }}&quot;&gt;...&lt;/a&gt;&lt;/li&gt;
+{% endfor %}</code></pre><h3 id="06aaa304-e386-459a-87db-d562101e5b04" class=""><strong>Список разделов</strong></h3><p id="67e92a94-ad62-4c78-97bb-c5c9c847724b" class="">Бывает так, что содержимое сайта (еда, сотрудники, туры) сгруппировано по категориям и вам нужно вывести список на страницу категории. Примеры таких ссылок:</p><ul id="a36ec23e-fcb8-450f-ae8d-b96537277139" class="bulleted-list"><li>для еды</li></ul><pre id="c46fbe77-c1a5-4506-9d37-34e8cf1f5b38" class="code code-wrap"><code>&lt;a href=&quot;/drinks/&quot;&gt;Напитки&lt;/a&gt;
+&lt;a href=&quot;/streetfood/&quot;&gt;Стритфуд&lt;/a&gt;
+&lt;a href=&quot;/lunches/&quot;&gt;Обеды&lt;/a&gt;</code></pre><ul id="8e25e6af-c244-4386-a61c-0a77b643737f" class="bulleted-list"><li>для сотрудников</li></ul><pre id="0dae3e9e-e4a5-42d0-b97f-e047cf845e67" class="code code-wrap"><code>&lt;a href=&quot;/management/&quot;&gt;Менеджмент&lt;/a&gt;
+&lt;a href=&quot;/designers/&quot;&gt;Дизайнеры&lt;/a&gt;
+&lt;a href=&quot;/developers/&quot;&gt;Разработчики&lt;/a&gt;</code></pre><p id="9177228e-a03d-49e6-8061-78cbba8f053c" class="">При этом список разделов обычно хранится в таком виде:</p><pre id="cb8109ab-4f75-41eb-9988-8ce264229e86" class="code code-wrap"><code>categories = [
+  {&quot;id&quot;:&quot;drinks&quot;,&quot;title&quot;:&quot;Напитки&quot;},
+  {&quot;id&quot;:&quot;streetfood&quot;,&quot;title&quot;:&quot;Стритфуд&quot;},
+  {&quot;id&quot;:&quot;lunches&quot;,&quot;title&quot;:&quot;Обеды&quot;}
+]</code></pre><p id="90dad43c-3de2-462a-bca5-0268205607cb" class="">Чтобы вывести работающие ссылки на разделы, добавляем слеши к id в адресе:</p><pre id="4a4b5d3c-4b43-4033-8d82-78d2665c01e7" class="code code-wrap"><code>{% for cat in categories %}
+   &lt;li&gt;&lt;a href=&quot;/{{ cat.id }}/&quot;&gt;{{ cat.title }}&lt;/a&gt;&lt;/li&gt;
+{% endfor %}</code></pre><p id="3f62dade-ef02-48c9-911b-dd197b62fddb" class="">Получаем:</p><pre id="6a563dc8-8673-4e45-b2a2-c3f5ddbaddd5" class="code code-wrap"><code>&lt;a href=&quot;/drinks/&quot;&gt;Напитки&lt;/a&gt;
+&lt;a href=&quot;/streetfood/&quot;&gt;Стритфуд&lt;/a&gt;
+&lt;a href=&quot;/lunches/&quot;&gt;Обеды&lt;/a&gt;</code></pre><h3 id="276876e6-5a1d-4d75-a273-740acb38dfa0" class=""><strong>Ссылки на внутренние страницы</strong></h3><p id="840cb64b-bd41-4328-8c13-faeec295a586" class="">Еще один случай, который иногда встречается: элемент находится в категории, а ссылку мы хотим дать с главной страницы (например, товар у нас лежит в разделе или страна относится к континенту или тур относится к стране).</p><p id="2164a3eb-f1a9-4d8e-aa78-03130e68fc6a" class="">Мы должны сформировать ссылку типа:</p><pre id="9155528f-8d50-43f6-bc0d-9940eaf18fea" class="code code-wrap"><code>&lt;a href=&quot;/категория/товар/&quot;&gt; ... &lt;/a&gt;</code></pre><p id="8547bc65-c4c7-4436-86ac-e997d1486e44" class="">Как это делается?</p><p id="f1b83772-869a-4e1e-8f48-9921b0ce423c" class="">Вот, например, у нас есть список товаров:</p><pre id="aad1cbc2-6f36-47a4-ab22-d4d6c03e539b" class="code code-wrap"><code>items = [
+ {&quot;id&quot;:&quot;espresso-machine123&quot;,&quot;name&quot;:&quot;Кофеварка Пш-Пш 3&quot;,&quot;cat&quot;:&quot;coffee-machines&quot;},
+ {&quot;id&quot;:&quot;vacuum-cleaner99&quot;,&quot;name&quot;:&quot;Пылесос торнадо 9&quot;,&quot;cat&quot;:&quot;vacuum-cleaners&quot;},
+ {&quot;id&quot;:&quot;lavalamp-66&quot;,&quot;name&quot;:&quot;Лавалампа в цветочек&quot;,&quot;cat&quot;:&quot;lamps&quot;},
+]</code></pre><p id="b2eede94-983a-43b8-89e6-6b3215551c62" class="">Тогда сперва мы используем в создании ссылки идентификатор категории (cat), а затем идентификатор товара (id) и получаем ссылку на внутреннюю страницу.</p><pre id="16495bcb-d5d0-4ebd-9847-8f1ffc92d637" class="code code-wrap"><code>&lt;nav&gt;
+{% for item in items %}
+    &lt;a href=&quot;/{{ item.cat }}/{{ item.id }}/&quot;&gt;...&lt;/a&gt;
+{% endfor %}
+&lt;/nav&gt;</code></pre><p id="2ee8add1-646b-490c-8a64-06a28f010495" class="">В результате мы получим такой набор ссылок:</p><pre id="65b5dea9-f235-4ad1-b57e-a9d2cfb78bec" class="code code-wrap"><code>&lt;a href=&quot;/coffee-machines/espresso-machine123/&quot;&gt;...&lt;/a&gt;
+&lt;a href=&quot;/vacuum-cleaners/vacuum-cleaner99/&quot;&gt;...&lt;/a&gt;
+&lt;a href=&quot;/lamps/lavalamp-66/&quot;&gt;...&lt;/a&gt;</code></pre><p id="5c396e47-38e2-4f69-a761-2a148363a60d" class="">То, что нужно. При необходимости так можно собирать ссылки любой длины!</p><h2 id="e2a52834-3fc9-47f9-8b85-b07f76fb9bdc" class=""><strong>Множественное предпочтительнее единственного</strong></h2><p id="42d79d8f-9bec-4b22-862c-ec696abded50" class="">Почему названия сущностей (lamps, coffee-machines) идут во множественном числе?</p><p id="410716c8-eb86-44e6-9b9a-c2732a079e4b" class="">Дело в том, что, когда поисковые системы анализируют сайт, они строят свое понимание того, как он устроен на основе адресов. Чтобы однозначно дать понять, что страничка <code>lamp 66 </code>входит в раздел <code>lamps</code>, адрес странички <code>lamp 66</code> должен включать в себя адрес раздела lamps</p><p id="73be5974-11be-4f27-a09b-f74322de1d06" class=""><strong>Правильное написание:</strong></p><p id="99b13a02-31c5-4a16-bdbd-66fcea676002" class="">/lamps/</p><p id="b70e49d1-344c-4a3c-b61e-1cb137875607" class="">/lamps/lamp-66</p><p id="8caba637-70f2-452c-9a16-7833f5490b46" class=""><strong>Менее правильное написание:</strong></p><p id="b6c34d1e-c256-42a3-9879-b23451696402" class="">/lamp/  (страница с разделом ламп называется &quot;лампа&quot;)</p><p id="8f72f0e8-3b53-4624-a1b5-3cb90c0afa23" class="">/lamp/lamp-66</p><p id="aeb493d2-d1c1-4200-9363-40db0cee797d" class=""><strong>Совсем неправильное написание:</strong></p><p id="d77f9b07-f9be-42d6-9f4e-2f552ae96e9e" class="">/lamps/</p><p id="1ae190ad-97d6-4ab1-b471-e9ebff6643ae" class="">/lamp/lamp-66 (страница лампы не является дочерней для раздела с лампами)</p><h3 id="effe2837-2d3f-47ff-9876-3c6e97cab773" class=""><strong>Типичные ошибки</strong></h3><p id="5101d610-244e-47a4-86e2-2c6f3a59f73c" class="">1. Терять слеш в начале</p><p id="6f00465a-12ab-4d7d-b0e9-7101007a8123" class="">Предположим мы находимся на странице /about и хотим разместить на ней ссылки. Полезно помнить, что относительные ссылки в html могут указывать путь от корня href=&quot;/way&quot; и от текущей страницы href=&quot;way&quot; Бывают ещё абсолютные ссылки вида <a href="http://t/">http://t</a><a href="http://his.is/way">his.is/way</a>, но в наших проектах мы не будем их использовать.</p><p id="64ca7c5f-2aba-4fa8-95c5-6697dfa96bc8" class="">При нажатии на ссылку от корня ( на сайте <a href="http://theway.me/">th</a><a href="http://is.is/about">is.is/about</a> нажимаем на ссылку &quot;/way&quot; мы перейдем на <a href="http://this.is/way">this.is/way</a>, все верно. А вот при нажатии на &quot;way&quot; мы перейдем на <a href="http://this.is/about/way">this.is/about/way</a> , что выдаст нам ошибку 404.</p><p id="c4293970-144e-414c-b8aa-54eb9d8a3b5c" class="">Вывод: не забывайте слеш, если пишете путь от корня.</p><h2 id="6e62d5cd-915a-4c40-a52c-2cabb4c79a1d" class=""><strong>Резюме</strong></h2><p id="548ae52b-18a6-4fc0-9cec-2f57138046aa" class="">Обычное меню – просто набор ссылок, упакованных в &lt;nav&gt;:</p><pre id="d788c561-041a-43ce-9955-37bc630bc7ea" class="code code-wrap"><code>{% for link in links %}
+   &lt;li&gt; &lt;a href=&quot;{{ link.link }}&quot;&gt;{{link.title}}&lt;/a&gt; &lt;/li&gt;
+{% endfor %}</code></pre><p id="1ac297fa-f1ef-491b-b963-5e46351fc743" class="">Во Flask переменная запроса доступна в шаблонах, используйте <strong>request.path, чтобы выделить текущую</strong> ссылку активной!</p><pre id="5c419dd0-c982-4abd-85a3-6d919332af59" class="code code-wrap"><code>{% for link in links %}
+   &lt;li&gt;&lt;a href=&quot;...&quot; class=&quot;{% if request.path == link.link %}active{% endif %}&quot;&gt;
+			...
+      &lt;/a&gt;&lt;/li&gt;
+{% endfor %}</code></pre><p id="77dd04d4-4b6a-4a33-96c5-fbe937f9a236" class="">Чтобы вывести работающие ссылки на разделы, добавляем слеши к id в адресе:</p><pre id="01f7a3b0-fa6f-4006-af20-5fccbbe00a3c" class="code code-wrap"><code>{% for cat in categories %}
+   &lt;li&gt;&lt;a href=&quot;/{{ cat.id }}/&quot;&gt;{{ cat.title }}&lt;/a&gt;&lt;/li&gt;
+{% endfor %}</code></pre><p id="e4fc65e9-c9e4-4099-9923-5935cb770714" class="">Чтобы вывести ссылки на внутренние страницы используйте:</p><pre id="02748db8-ae57-4196-a05d-c28f28da6125" class="code code-wrap"><code>&lt;nav&gt;
+{% for country in сountries %}
+    &lt;a href=&quot;/{{ country.continent }}/{{ country.id }}/&quot;&gt;{{ country.title }}&lt;/a&gt;
+{% endfor %}
+&lt;/nav&gt;</code></pre><p id="fcb22e8a-2b20-43da-bf66-6cfa40ae15eb" class="">Вот и все! Теперь вы знаете, как делать меню и списки ссылок!</p><p id="67470cec-21d1-4a0d-b2c6-4db887a3bbdb" class="">
+</p></div></article></body></html>

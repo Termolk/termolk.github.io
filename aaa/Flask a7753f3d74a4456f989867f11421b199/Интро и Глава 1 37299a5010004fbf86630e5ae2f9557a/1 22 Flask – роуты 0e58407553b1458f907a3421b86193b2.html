@@ -1,0 +1,701 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>1.22 Flask – роуты</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="0e584075-53b1-458f-907a-3421b86193b2" class="page sans"><header><h1 class="page-title">1.22 Flask – роуты</h1></header><div class="page-body"><p id="7a6119cc-bf57-412d-a8dc-8d529a60c3d8" class="">Мы научимся:</p><p id="9414bd76-1857-46db-9d39-f7051956e745" class="">– Выводить разные странички на разные запросы.</p><p id="05d333dc-d78d-415d-b2a8-7e4124157d85" class="">– Выполнять разный код для разных случаев.</p><p id="6800492c-96df-4056-9541-aeb954c4fc97" class="">– Принимать параметры от пользователя (например, запрос в поиске).</p><p id="3aaa0c74-f271-46e0-afeb-be903f58c0ec" class="">– Обрабатывать ситуацию, когда ничего не найдено.</p><h1 id="33cf3153-db52-476f-b2c7-431b92cfbf56" class=""><strong>Создание роутов</strong></h1><p id="bcf58c67-db48-419a-b4fa-275cbc766741" class="">Как правило, на вашем сайте будет несколько типов адресов, по которым обращаются пользователи – к видео, к плейлисту, к тегу, к главной. И для каждого такого адреса (маршрута, роута) будет функция, которая, например, покажет список видео по конкретному тегу.</p><p id="d80fad89-7055-43cd-ad4b-255475e99d80" class="">Например, когда мы набираем в адресной строке <strong>/about/,</strong> то хотели бы, чтобы выполнялась функция render_about().</p><p id="858ab9b1-8ea7-43e3-9294-6d0dbd8c3d26" class="">Или когда мы набираем в адресной строке <strong>/products/</strong>, то хотели бы, чтобы выполнилась функция render_products().</p><p id="24df2ff9-f827-480f-9b06-f403a59a69ac" class="">Простейший роут состоит из URL (урла, пути) и функции. Более сложный роут содержит в себе десятки и тысячи разных URL.</p><p id="22910608-b921-4f9b-a255-de559f4ec6d1" class="">А если ввести незарегистрированный ни в одном роуте путь, сервер выдаст ошибку “Not Found”.</p><h1 id="043c2abb-b39f-4829-8850-f89d510c05ec" class=""><strong>Типичные простые роуты</strong></h1><p id="4df65262-783f-4fd2-8907-d99500e59500" class="">В самом простом случае, одному URL соответствует одна функция.</p><p id="4689422f-0a89-461f-8029-2cd6c7eaf70b" class="">Предположим, мы хотим вывести список продуктов по адресу /products.</p><p id="50da7d62-462f-458a-b312-de3213956829" class="">Тогда создадим роут для  /products и объявим для него функцию. Например,</p><pre id="f4fc164e-f771-4245-92ea-d20882645c4a" class="code code-wrap"><code>@app.route(&#x27;/products/&#x27;)
+def render_products():
+    return &quot;Здесь будут продукты&quot;</code></pre><p id="096f4368-464e-466b-bee8-2e7084df3b33" class="">Аналогично сделаем для страницы <em>О проекте</em>:</p><pre id="9db5313a-b92b-4a19-8974-63e521f5ff4f" class="code code-wrap"><code>@app.route(&#x27;/about/&#x27;)
+def render_about():
+	return &#x27;Информация о проекте&#x27;</code></pre><p id="f8c55378-da4f-4966-84e6-8a778d21b247" class="">Для главной страницы поменяем название функции и выводимый текст:</p><pre id="3a0df2b1-5046-4cae-bad0-1a6aeea030fe" class="code code-wrap"><code>@app.route(&#x27;/&#x27;)
+def render_main():
+	return &#x27;Здесь будет главная&#x27;</code></pre><p id="bb2ebd5b-af9b-4e2a-8667-aad6fdaaf9ef" class=""><strong>Расширяем наше приложение (скопируйте этот текст):</strong></p><pre id="68c55d24-f924-44d3-b4c2-193a888a8f31" class="code code-wrap"><code>from flask import Flask # сперва подключим модуль
+
+app = Flask(__name__) # объявим экземпляр фласка
+
+@app.route(&#x27;/&#x27;)
+def render_main():
+	return &#x27;Здесь будет главная&#x27;
+
+@app.route(&#x27;/products/&#x27;)
+def render_products():
+	return &#x27;Продукты&#x27;
+
+@app.route(&#x27;/about/&#x27;)
+def render_about():
+	return &#x27;Информация о проекте&#x27;
+
+app.run() # запустим сервер</code></pre><h2 id="c244f61b-6cdd-41b1-b3db-fcfc8fd3acef" class=""><strong>@app – что такое декораторы?</strong></h2><p id="3b98d67e-af70-4176-ba3d-285be428fd13" class="">Как вы могли заметить, код описания роута начинается с @app.</p><p id="a2352d17-7c08-4452-81c4-8463307c92d2" class="">Возможно, вы уже знаете, что это синтаксис декоратора. При описании роутов он используется для наглядности.</p><p id="8c6cd497-1f1c-4746-9795-f72ef9716646" class="">Одна из фишек декоратора, которая делает Flask классным – возможность использовать несколько декораторов для одной функции. Предположим, у нас есть несколько страниц, которые мы пока делаем и мы хотим показывать по ним страничку &quot;еще в разработке&quot;. Тогда мы можем сделать так:</p><pre id="0bbfa4bd-aa93-4f6b-9ac5-4ae9fe15bf51" class="code code-wrap"><code>@app.route(&#x27;/profiles/&#x27;)
+@app.route(&#x27;/about/&#x27;)
+@app.route(&#x27;/contacts/&#x27;)
+def render_under_construction():
+    return render_template(&#x27;under_construction.html&#x27;)</code></pre><p id="1158268e-eaf4-4347-97d1-4c4290391524" class="">Теперь, при обращении на:</p><pre id="552b5d44-f034-475e-aae5-25ed5062f5f3" class="code code-wrap"><code>/profiles/
+/about/
+/contacts/</code></pre><p id="430bc9e5-80d6-4464-b173-4af7800bad5f" class="">Вы увидите вашу страничку и вам не нужно создавать три функции.</p><p id="6fd1e1b3-e765-45c2-95de-2ec719399cb1" class="">Почитать про декораторы можно здесь:</p><p id="a736d635-acd8-4c7e-b50b-c35f90f637f0" class=""><a href="https://python-scripts.com/decorators">https://python-scripts.com/decorators</a></p><h1 id="5cc4a006-5847-4c63-9826-5bef6dbfa0d0" class=""><strong>Принимаем один параметр</strong></h1><p id="ba566c7a-ef88-4844-b4ac-c315f44764c7" class="">Бывает так, что нам нужно выводить контент в зависимости от параметра, который пользователь запросил в адресной строке. Например, выводить разные видео для /videos/243/ и videos/455/, и videos/122/.</p><p id="8f5c35f8-1339-4070-8258-67fe9fc9eebc" class="">Тогда нам нужно:</p><p id="679b70fa-d7c8-41ed-b79d-9b9958a1b85e" class="">– обозначить, что мы ожидаем параметр id;– передать параметр id в функцию;– использовать параметр в функции.</p><pre id="3b09e192-cfa2-42d6-91a2-9776f0aa61fb" class="code code-wrap"><code>@app.route(&#x27;/videos/&lt;video_id&gt;/&#x27;)
+def render_videos_item(video_id):
+	return &quot;Здесь будет видео &quot; + video_id
+</code></pre><p id="942f4376-c40e-4101-b151-30f8920ee6ce" class="">Посмотрим, что получится. Если вы открыли Flask на <strong>0.0.0.0:5000</strong>, откройте ссылку:</p><pre id="41f61d2f-b394-4e82-9e60-06fabc997e2e" class="code code-wrap"><code>http://0.0.0.0:5000/videos/mymovie/
+
+http://0.0.0.0:5000/videos/another_movie/
+
+http://0.0.0.0:5000/videos/001/</code></pre><h1 id="9b8b0428-a513-473c-97bd-d90868112f98" class=""><strong>Принимаем несколько параметров</strong></h1><p id="9d8ce5c9-a2fe-4f9d-abd0-bc52bdc116ea" class="">Иногда в рамках одного роута нам нужно принять несколько параметров из адресной строки. Например, мы делаем книжный магазин и у нас есть страница книги, у которой есть автор и название:</p><pre id="203b6ddf-cd0e-4d43-90de-707c258c69f0" class="code code-wrap"><code>mysite.com/book/johndoe/introduction-to-python/
+</code></pre><p id="b113def4-4fe7-48dc-bf8f-6b206e8b750c" class="">Или мы находим филиал склада в городе, у него есть город и улица:</p><pre id="2ef25378-c20c-4d77-9f66-d509601586b5" class="code code-wrap"><code>mysite.com/stores/ekaterinburg/lenina-ulitsa/</code></pre><p id="50cd7471-d4ce-4f08-9fc0-d0d9b8f3763d" class="">Чтобы принять их, будем использовать такую схему:</p><pre id="49b86759-816b-4e61-8b66-d255f89b4aa2" class="code code-wrap"><code>@app.route(&#x27;/book/&lt;author&gt;/&lt;title&gt;/&#x27;)
+def render_book(author,title):
+		return &quot;Здесь будет страница книги &quot; + title + &quot; автора &quot; + author
+</code></pre><p id="3239712b-09dc-4698-8a80-5b1c0539f8b1" class="">Запустим:</p><pre id="5d4d6fa2-7a31-404a-b0e0-c0486aa3d6c5" class="code code-wrap"><code>mysite.com/book/johndoe/introduction-to-python/
+</code></pre><p id="1c5ef500-6e57-4d85-a771-17c63bff29c6" class="">Получим страницу с надписью:</p><pre id="58623312-007f-4e3a-a322-cdc73f621c04" class="code code-wrap"><code>Здесь будет страница книги introduction-to-python автора johndoe</code></pre><p id="d1aba6ac-311b-4f09-b1d2-c18037d4e972" class="">
+</p><h2 id="579d8556-d9eb-4d7b-b2bb-bc27451b1534" class=""><strong>Встроенное приведение типов &lt;int:uid&gt;</strong></h2><p id="14c8e677-1cad-4c0f-a513-c476caeb0ef6" class="">URL – это строка, поэтому  полученные из нее данные передаются в функцию в строковом типе.</p><p id="64260be2-b2f0-466a-8b67-e2e8e33a101b" class="">В этом легко убедиться, используя type():</p><ul id="f090c3d2-e5d0-4732-9cc3-e547ee1a217c" class="bulleted-list"><li>создайте такой роут и перейдите на <code>/book/1/</code>:</li></ul><pre id="42ce18d5-9ed7-4a1a-bbb8-c7323e97963f" class="code code-wrap"><code>@app.route(&#x27;/book/&lt;book_id&gt;/&#x27;)
+def render_book(book_id):
+    print(type(book_id))
+    return &quot;&quot;</code></pre><ul id="b478349e-275c-4e92-bf3a-717fa5104bb9" class="bulleted-list"><li>вы увидите в консоли:</li></ul><pre id="e158412e-f394-4287-9638-20e517248954" class="code code-wrap"><code>&lt;class &#x27;str&#x27;&gt;</code></pre><h3 id="8097e833-6de2-46ce-83c1-b256c69980a3" class=""><strong>Приведение типа к числу – способ 1 (классический)</strong></h3><p id="4a9ceb6a-c635-4277-9a2b-6f640ea51d98" class="">Обычно, если мы хотим привести строковую переменную к числовому виду, используем int().</p><p id="6410ddac-05b5-4e41-86ab-dc8e75345131" class="">Попробуем реализовать это:</p><pre id="cef632da-ef5a-436c-8bc8-e76d3ff813a2" class="code code-wrap"><code>@app.route(&#x27;/book/&lt;book_id&gt;/&#x27;)
+def render_book(book_id):
+    book_id = int(book_id)
+    print(type(book_id))
+    return &quot;&quot;</code></pre><p id="f4d52ef7-f8a6-4d30-841a-093207fff98c" class="">Попробуйте выполнить этот код и вы увидите в консоли:</p><pre id="83ba0daf-a1d6-4898-96bf-76db4f352022" class="code code-wrap"><code>&lt;class &#x27;int&#x27;&gt;</code></pre><p id="09aa8557-ff37-48c9-94c6-144dd5bfe16a" class="">Все работает, однако у нас появилась лишняя строчка кода и, если мы принимаем 3 параметра, нам нужно обрабатывать каждый. Не очень удобно.</p><h3 id="17d5ede0-cdbc-4236-8c99-360cb048769a" class=""><strong>Приведение типа к числу – способ 2 (встроенный, правильный)</strong></h3><p id="9c6d7a35-9cb4-456d-8c96-c4a97b33b4c7" class="">Flask (спасибо ему за это) позволяет менять тип переменной &quot;на лету&quot;. Вот так:</p><pre id="f28c4ddb-541d-437a-ad18-3e75a7827f03" class="code code-wrap"><code>@app.route(&#x27;/book/&lt;int:book_id&gt;/&#x27;)</code></pre><pre id="577b59ad-2b6e-49dc-be66-df627fb3a0bf" class="code code-wrap"><code>@app.route(&#x27;/book/&lt;float:book_id&gt;/&#x27;)</code></pre><p id="09b3d20b-9131-4869-a5e3-248ce269aaa5" class="">Попробуйте выполнить этот код:</p><pre id="a67f17a1-63e1-4a13-b9bd-5ce107fc6640" class="code code-wrap"><code>@app.route(&#x27;/book/&lt;int:book_id&gt;/&#x27;)
+def render_book(book_id):
+    print(type(book_id))
+    return &quot;&quot;</code></pre><p id="9ba7f6b8-a14f-4f08-b98c-4776f2ea0059" class="">И вы увидите в консоли:</p><pre id="764d9a87-94f7-47b1-a659-f6d8c46c809e" class="code code-wrap"><code>&lt;class &#x27;int&#x27;&gt;</code></pre><p id="d65f73de-65da-4dd1-8996-a04495835f26" class="">Аналогично для float.</p><h3 id="5f0c7e13-b13f-4c1e-bbd0-8d923d3afe94" class=""><strong>Полный листинг кода:</strong></h3><pre id="d2fc2cac-abee-44e1-af6e-f3c3e30efaa2" class="code code-wrap"><code>from flask import Flask
+app = Flask(__name__)
+
+
+@app.route(&#x27;/book/&lt;int:book_id&gt;/&#x27;)
+def render_book(book_id):
+    print(type(book_id))
+    return &quot;&quot;@app.route(&#x27;/temp/&lt;float:temp_value&gt;/&#x27;)
+
+def render_temp(temp_value):
+    print(type(temp_value))
+    return &quot;&quot;
+
+
+app.run()</code></pre><h1 id="a3a1bbc0-cc6d-4a1e-bff6-54e54fddff5a" class=""><strong>Страницы ошибок</strong></h1><p id="de00085d-dbe8-44d4-9b72-0de6b2d64bf5" class="">Иногда нам хочется сделать страничку 404 красивой.</p><p id="6d012111-c338-4eae-b4c6-0f3b86edb78c" class="">Вот, как это можно сделать:</p><pre id="81dab6c2-5221-43e8-b9ad-e4255987171e" class="code code-wrap"><code>@app.errorhandler(404)
+def render_not_found(error):
+    return &quot;Ничего не нашлось! Вот неудача, отправляйтесь на главную!&quot;</code></pre><p id="ea44eba6-6a6c-4107-b5da-abc874755631" class="">Можно сделать страничку ошибки сервера:</p><pre id="a1a7068d-bec4-486e-a982-f4e7d6882dc3" class="code code-wrap"><code>@app.errorhandler(500)
+def render_server_error(error):
+    return &quot;Что-то не так, но мы все починим&quot;</code></pre><p id="67f449fc-2020-45f7-8d31-3728ef6af0ad" class="">Таким образом можно создавать веселые и нестандартные страницы ошибок.</p><p id="c0d3a591-fa11-41eb-8680-3392741f15fc" class=""><strong>Код ответа сервера</strong></p><p id="5661c31f-5873-45ad-91bb-5d87a48860af" class="">Чтобы поисковые системы правильно понимали страницы ошибок, нужно обязательно указать код ответа сервера. Когда мы выполним код выше, страничка &quot;что-то не так...&quot; будет отдана сервером с кодом 200, что можно увидеть во вкладке Network браузера.</p><figure id="020d7136-58b8-4e6b-bfed-fdbce0d0c578" class="image"><a href="https://ucarecdn.com/56f4f0e2-5398-464f-8763-8a8fdb477deb/"><img src="https://ucarecdn.com/56f4f0e2-5398-464f-8763-8a8fdb477deb/"/></a></figure><p id="ad040469-88fd-49de-ac4e-7a51040ca098" class="">Чтобы код ответа сервера был корректным,  допишем eго к return:</p><pre id="1d3598a4-7643-485a-a40a-49d33fa5a7dd" class="code code-wrap"><code>@app.errorhandler(500)
+def render_server_error(error):
+    return &quot;Что-то не так, но мы все починим&quot;, 500</code></pre><p id="285f81aa-7f32-4c7a-9d0c-2513d98cc196" class=""><strong>Параметр е</strong></p><p id="1509920e-4f22-4b5d-bfb2-679247f637c2" class="">Объект <strong>e</strong> можно использовать для вывода ошибки или логирования.</p><p id="ab3676b3-c070-4d47-8944-1197bb64f1e3" class="">Такой код:</p><pre id="aad55fd3-0091-47f9-acbb-f1b2cf827eab" class="code code-wrap"><code>@app.errorhandler(404)
+def render_server_error(error):
+    return &quot;Что-то не так, но мы все починим:\n{}&quot;.format(error), 404</code></pre><p id="e81a4834-ca95-477d-bb71-ecdef065c699" class="">Выведет:</p><pre id="7428ed15-ec03-4109-95be-7b868f8dbf06" class="code code-wrap"><code>Что-то не так, но мы все починим:
+404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</code></pre><p id="3d1c2adc-b61c-4450-9317-f033623393aa" class=""><strong>Другие ошибки:</strong></p><p id="ef0f28bf-29a1-41eb-a0aa-74363609e2ab" class="">Можно сделать любую другую страничку из <a href="https://ru.wikipedia.org/wiki/%D0%A1%D0%BF%D0%B8%D1%81%D0%BE%D0%BA_%D0%BA%D0%BE%D0%B4%D0%BE%D0%B2_%D1%81%D0%BE%D1%81%D1%82%D0%BE%D1%8F%D0%BD%D0%B8%D1%8F_HTTP">списка кодов состояния HTTP</a></p></div></article></body></html>

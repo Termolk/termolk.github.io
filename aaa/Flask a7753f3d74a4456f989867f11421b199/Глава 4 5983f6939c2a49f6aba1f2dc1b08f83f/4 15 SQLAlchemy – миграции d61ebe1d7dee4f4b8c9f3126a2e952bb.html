@@ -1,0 +1,674 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>4.15 SQLAlchemy – миграции</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="d61ebe1d-7dee-4f4b-8c9f-3126a2e952bb" class="page sans"><header><h1 class="page-title">4.15 SQLAlchemy – миграции</h1></header><div class="page-body"><p id="cd411afa-f6ed-4eab-9937-d5c9a7c7bb8e" class="">
+</p><p id="70252b03-aa33-4a09-8677-949bf379e2e0" class="">До этого момента каждое изменение структуры БД мы делали простым пересозданием БД.</p><p id="9d9d20dd-f3a6-45f4-a86c-33b094919602" class="">В реальном мире мы так делать не можем, так как нам важны данные которые уже в БД есть.</p><p id="807f7ab2-36db-48ee-9b20-825c67b22852" class="">В этом топике мы научимся:</p><ul id="1e7a4415-eafa-41dc-9871-3c16704f7a74" class="bulleted-list"><li>Устанавливать инструмент для миграции.</li></ul><ul id="7a3cc3a1-1795-4854-bcec-4fb4857a3b4c" class="bulleted-list"><li>Создавать миграции.</li></ul><ul id="410f7a25-392d-46a2-914f-060f446be2ab" class="bulleted-list"><li>Модифицировать структуру базы данных.</li></ul><h2 id="9e981c83-eb67-404b-91b1-355e88ff409e" class=""><strong>Модификация таблицы</strong></h2><p id="e3eda60b-0cd1-4ea9-ad20-d673372d143e" class="">Когда мы создаём структуру БД, то можем допускать ошибки или требования нашей программы могут измениться. Изменить структуру можно или созданием новой базы, или модификацией существующей.</p><p id="12de39ae-074c-4970-917f-137c853c887f" class="">Мы можем:</p><ul id="d76de492-d039-4029-b375-b2315dd07245" class="bulleted-list"><li>Добавлять столбцы.</li></ul><ul id="181783e4-4855-4f62-b176-e6bc5b6f27b5" class="bulleted-list"><li>Удалять столбцы.</li></ul><ul id="7df42dda-607e-4248-a01a-179578ae5ec8" class="bulleted-list"><li>Добавлять ограничения.</li></ul><ul id="cb77ad10-353f-46dd-8a14-85023fd1295e" class="bulleted-list"><li>Удалять ограничения.</li></ul><ul id="75c0fc56-9e2c-4579-a754-1bbe8e974de5" class="bulleted-list"><li>Изменять значения по умолчанию.</li></ul><ul id="9cf7ea2d-abb9-4a2d-b3b8-7398760cda58" class="bulleted-list"><li>Изменять типы столбцов.</li></ul><ul id="986cba4c-5d5e-4c26-a98d-fc946f3b0fbe" class="bulleted-list"><li>Переименовывать столбцы.</li></ul><ul id="8297246c-eb12-4461-80df-ca3effcef9ac" class="bulleted-list"><li>Переименовывать таблицы.</li></ul><p id="3a4e2b23-ee89-444f-af2a-61119f6b5d1a" class="">Все эти действия - это формы команды <code>ALTER TABLE</code>.</p><h2 id="d43f232c-9762-447b-bd97-ad7893ca6d9d" class=""><strong>Миграции</strong></h2><p id="d3a4c6ad-813e-4302-b3b2-dbac7e224ec2" class="">Миграции — это способ описания изменений в БД. Миграция, по сути, это файл с информацией об изменении. Их удобно хранить в системе контроля версий. С ними удобно строить инкрементальную, обратимую систему изменений структуры БД.</p><p id="7f3c4606-8dd5-425c-84ce-6cdc1fe5004b" class="">В SQLAlchemy за миграции отвечает пакет Alembic. Удобно настроить Alembic на работу с Flask можно с помощью дополнения Flask-Migrate. По факту в Alembic миграция - это файл с кодом на Python, который при миграции исполняется и генерирует SQL команды <code>ALTER TABLE</code>.</p><h2 id="b68a0774-674c-4565-af00-cb3a640b3ac0" class=""><strong>Flask-Migrate</strong></h2><p id="4c9c4321-9dbe-49ed-a34a-e19e7868bb5b" class="">Установим Flask-Migrate.</p><p id="bbf48253-c149-4c53-931c-1e0f7818c1f2" class="">Для этого запустим команду <code>pip install Flask-Migrate</code>.</p><p id="3606d103-ddef-4350-b367-b4af6d2eedb0" class="">Так же как и с Flask-SQLAlchemy, нам нужно связать дополнение с объектом приложения, и передать ему ещё и объект Flask-SQLAlchemy.</p><pre id="dd3317f3-c492-4a67-aff4-589e1b9471b7" class="code code-wrap"><code>from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+
+app = Flask(__name__)
+app.config[&quot;SQLALCHEMY_DATABASE_URI&quot;] = &quot;sqlite:///test.db&quot;
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+</code></pre><p id="16e13960-b010-4b4a-a965-8614c9493fac" class="">После этого запустим команду <code>flask db init</code>.  Эту, и все остальные команды <code>flask db имя_команды</code> нужно вводить в терминале (в консоли). Там же где и <code>pip install</code></p><p id="4206dbcf-efdd-4782-8c82-d1825479564a" class="">Эта команда создаст в проекте директорию migrations, в которой вся необходимая для миграций информация. В ней же находится директория versions, в которой в дальнейшем будут содержаться файлы наших миграций. Важно: команду <code>flask db init</code> нужно исполнять только один раз, не больше. Иначе есть шанс того, что уже готовые миграции повредятся.</p><p id="e9f03eb0-45e7-474c-aef4-332033e275df" class="">Расценивайте директорию migrations как ваш код, держите её под контролем версий.</p><h2 id="6c59c1bc-ad0b-4117-a752-5df28d3f69a2" class=""><strong>Первая миграция</strong></h2><p id="f7cbbd94-9af9-4e9f-a78f-1f6b2f45a2ee" class="">Есть два способа создания миграций. Первый способ - это написать её руками. Второй способ - это положиться на автогенерацию миграций с помощью Alembic. Для этого напишите код с моделью и запустите команду <code>flask db migrate</code>.</p><p id="2e26f408-58cc-4304-b361-46cec23b38c9" class="">Для примера код приложения:</p><pre id="73d2d625-c43c-42f5-9515-bd7ea7163b5a" class="code code-wrap"><code>from flask import Flask
+from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
+
+app = Flask(__name__)
+app.config[&quot;SQLALCHEMY_DATABASE_URI&quot;] = &quot;sqlite:///test.db&quot;db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+
+
+class User(db.Model):
+    __tablename__ = &quot;user&quot;
+
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(255), unique=True, nullable=False)
+</code></pre><p id="e27ae6e1-19eb-4f5b-b76a-24e8d28e97ed" class="">После запуска команды <code>flask db migrate</code> в директории migrations/versions появился новый файл. Название у него будет разным у каждого из нас, так как оно генерируется случайным образом. При этом содержимое будет примерно совпадать.</p><pre id="430d81b0-d1aa-4d63-bff6-c29b01428ec1" class="code code-wrap"><code>&quot;&quot;&quot;empty message
+
+Revision ID: 396bf5902164
+Revises:
+Create Date: 2020-01-18 23:29:15.551043
+
+&quot;&quot;&quot;from alembic import op
+import sqlalchemy as sa
+
+
+# revision identifiers, used by Alembic.
+revision = &#x27;396bf5902164&#x27;
+down_revision = None
+branch_labels = None
+depends_on = Nonedef upgrade():# ### commands auto generated by Alembic - please adjust! ###
+    op.create_table(&#x27;user&#x27;,
+    sa.Column(&#x27;id&#x27;, sa.Integer(), nullable=False),
+    sa.Column(&#x27;email&#x27;, sa.String(length=255), nullable=False),
+    sa.PrimaryKeyConstraint(&#x27;id&#x27;),
+    sa.UniqueConstraint(&#x27;email&#x27;)
+    )
+    # ### end Alembic commands ###def downgrade():# ### commands auto generated by Alembic - please adjust! ###
+    op.drop_table(&#x27;user&#x27;)
+    # ### end Alembic commands ###</code></pre><p id="7715b4c3-b32f-42b2-b095-890b34a713e7" class="">Как видим, файл миграции - это файл с кодом на Python, который содержит информацию о том, какая это миграция. Например, revision это идентификатор ревизии, состояния БД после того, как миграция будет исполнена. Alembic контролирует переход из одной ревизии (состояния БД) в другую.</p><p id="caa05daf-0312-4740-96eb-26e87962b2ec" class="">Текущую ревизию Alembic получает из специальной системной таблицы в БД, которую сам создаст при исполнении первой миграции (в коде миграции этой операции нет, так как она служебная).</p><p id="7b59fdc9-a9ef-45f5-9a6d-70b0cb2065e0" class=""><strong>down_revision</strong> - это идентификатор прошлой миграции, а так как у нас не было прошлых миграций то None.</p><p id="0f4bf995-464f-4b0d-b9ca-847d32d5c1c5" class="">Именно благодаря <strong>revision</strong>  и <strong>down_revision</strong> Alembic может генерировать изменения.</p><p id="752e3293-c5af-470d-891b-314c58272b1a" class="">Ключевое в миграции - это функции upgrade и downgrade. Их вызывает Alembic в процессе применения или отката миграции соответственно.</p><h2 id="e826a58d-4baf-431f-b63a-7b922753b327" class=""><strong>Применение миграции</strong></h2><p id="b6f0d303-d672-4700-a48a-d594e1dabd04" class="">Для применения миграции выполните команду <code>flask db upgrade</code>.</p><p id="71921b1f-58fc-4af7-baf5-5e0a96b86316" class="">Эта команда применит миграцию. Если все миграции уже применены, то не произойдёт ничего. Если более одной миграции не применено, то они исполнятся поочерёдно, в порядке указанном в down_revision. Зная изначальное состояние базы (первая миграция), и миграции после неё, Alembic высчитывает разницу между тем, что описывают модели и текущей структурой БД.</p><h2 id="ba32504b-88e3-4d70-af62-e6d4287f0e61" class=""><strong>Откат миграции</strong></h2><p id="7c64fccc-8277-4b0e-922c-c28fe8db3cda" class="">Для того чтобы вернуть БД в состояние предыдущей миграции, выполните <code>flask db downgrade</code>.</p><p id="5797c7cf-50a9-435d-abc3-f6effb3a5e5f" class="">Однако, откат миграции более сложная операция, потому есть шансы того, что она не удастся.</p><h2 id="347c22be-7fa5-4f47-9d06-e91683c0eab5" class=""><strong>Автогенерация не идеальна</strong></h2><p id="e4797efa-a64c-4873-8ae0-b024c2f1bc15" class="">Важно! Alembic на текущий момент не может вычислить все изменения в моделях. Например, в данный момент не вычисляются изменения имени поля, констрейнта и таблицы. Автогенерация не предназначена для создания идеального файла миграции, рассматривайте её скорее, как удобный шаблон, который всё равно нужно прочитать и проверить прежде, чем исполнить.</p><h2 id="17514faa-57bb-4d64-9b46-ebd56a8c5e1e" class=""><strong>Резюме</strong></h2><ul id="a2db9841-ab58-4806-95b6-6d1c7306150d" class="bulleted-list"><li>Изменения в структуру БД можно вносить с помощью команды <code>ALTER TABLE</code>.</li></ul><ul id="a0f26f85-efe0-4726-8269-cab5883c1f7f" class="bulleted-list"><li>Миграции это способ структурировано, инкрементально вносить изменения в структуру БД.</li></ul><ul id="2be0b1d8-0341-458e-8069-cb3ea4189a6f" class="bulleted-list"><li>За миграции в SQLAlchemy отвечает пакет Alembic, а за связку Alembic и Flask — Flask-Migrate. Установить его можно командой <code>pip install Flask-Migrate</code>.</li></ul><ul id="ca2888df-7c45-49f5-af10-3d9a204ca985" class="bulleted-list"><li>Инициализации Alembic через команду <code>flask db init</code>, она создаст необходимую директорию migrations.</li></ul><ul id="2f4c9b00-1fbe-4f7f-877f-4c446b42805d" class="bulleted-list"><li>Миграция в Alembic - это файл с кодом на Python.</li></ul><ul id="f96000d5-b3ff-48b4-8855-1fd865a928ff" class="bulleted-list"><li>Alembic может сам создавать файл с миграцией, за это отвечает команда <code>flask db migrate</code>.</li></ul><ul id="ee88ec39-d002-489f-b10b-1336c1391025" class="bulleted-list"><li>За применение миграций отвечает команда <code>flask db upgrade</code>.</li></ul><ul id="7580b51a-4332-4779-813d-6eb949aa7b8d" class="bulleted-list"><li>За отмену изменений, откат на версию назад отвечает команда <code>flask db downgrade</code>.</li></ul><p id="7c29d8a1-8205-40ab-84e4-77b01fc8f062" class="">
+</p></div></article></body></html>

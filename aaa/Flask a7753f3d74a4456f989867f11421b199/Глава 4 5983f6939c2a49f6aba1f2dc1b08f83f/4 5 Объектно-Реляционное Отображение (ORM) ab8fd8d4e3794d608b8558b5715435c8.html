@@ -1,0 +1,628 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>4.5 Объектно-Реляционное Отображение (ORM)</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="ab8fd8d4-e379-4d60-8b85-58b5715435c8" class="page sans"><header><h1 class="page-title">4.5 Объектно-Реляционное Отображение (ORM)</h1></header><div class="page-body"><p id="d3fd3a39-b8ea-4a26-8d6e-b3e01330eae8" class="">
+</p><p id="143a5d94-c4b2-43b6-a8a9-307888aec9dc" class="">Язык программирования — это инструмент для обработки данных из одного состояния в другое. Если мы хотим сохранить состояние данных навсегда, для этого потребуется некоторое хранилище. Обычно для этой цели используют реляционную базу данных, но  возникает проблема: языки программирования и базы данных работают с данными по-разному. Кроме того, реляционные базы данных имеют свой язык именования <strong>SQL </strong>(Structured Query Language).</p><p id="a1077f36-d3db-47bb-b2f3-7eb014e577f8" class="">Если вы изучали SQL ранее - отлично! Если нет – посмотрите соответствующий курс на Stepik или попробуйте интуитивно догадаться, что значат строчки на SQL - они достаточно понятны, если вы знаете английский на базовом уровне.</p><h2 id="ba790a33-e1ed-4a69-bf92-aaabbcc32a3f" class=""><strong>SQL – норм, но это не точно</strong></h2><p id="d0ac52c6-21c3-4c3e-9180-7352a124aeee" class="">Например, если вы храните информацию о пользователях в базе данных, для изменения имени пользователя с номером 244, вам будет достаточно написать такое выражение на SQL:</p><p id="b4ba0cf3-1356-401d-98fb-2fc339907a48" class=""><code>UPDATE `users` SET `email` = &quot;masha@stepik.org&quot; WHERE `id` = &quot;244&quot;</code></p><p id="e653e639-5918-4e3e-a0d1-bc9d31620108" class="">Такая команда называется SQL запросом. У этого языка есть свой синтаксис, свои особенности и свои подводные камни. Однако, каждому разработчику проще и приятнее работать с данными на своем любимом языке, а в случае Python – по возможности использовать объекты. Да, код выше выглядит неплохо, но было бы лучше написать вместо него что-то вроде:</p><p id="f1437f7f-e97f-4b10-931c-d832dfe5a25f" class=""><code>users.magic_get(244).email = &#x27;masha@stepik.org&#x27;</code>Другой пример. Если вы создаете нового пользователя в базе данных, операция на SQL будет выглядеть так</p><p id="d4bcb28e-c1e3-44f3-8b1e-ec97bc64982d" class=""><code>INSERT INTO users(name, email, phone) VALUES (&#x27;Alice&#x27;,&#x27;alice@stepik.org&#x27;,&quot;+134545445&quot;);</code></p><p id="81a461d5-f69d-4956-8905-a6e735384119" class="">Но было бы здорово использовать Python и написать что-то подобное:</p><p id="a17d93d5-0087-4a91-b8df-2992bbecb700" class=""><code>alice = Users(&quot;name&quot;=&quot;Alice&quot;,&quot;email&quot;=&quot;alice@stepik.org&quot;,&quot;phone&quot;=&quot;+134545445&quot;)</code></p><p id="8a2bb835-9982-40af-9c6a-8507443da440" class="">Последний пример - удаление.</p><p id="0c33cb5d-b07b-409e-a2f9-7c83d455037a" class=""><code>DELETE FROM `users` WHERE `id` = &quot;244&quot;</code></p><p id="99aef72d-2106-4c65-b166-24a679479dbb" class="">Было бы неплохо заменить на</p><p id="cb475be7-929e-4502-9d20-cb1d347330d4" class=""><code>Users.magic_delete(244)</code></p><h2 id="d2005a6b-8537-4c24-b854-15f52e1b4089" class=""><strong>Хорошая новость</strong></h2><p id="efdd13ec-1da5-4cfa-aa77-47432f097830" class="">К счастью, мы не первые люди на Земле, которые страдают от этой беды. Существует подход, называемый <strong>Объектно-Реляционное Отображение</strong> (<strong>Object-Relational Mapping</strong>, далее будет использоваться аббревиатура — <strong>ORM</strong>), который способен «переводить» запросы с «объектного» языка на язык «базы-данных» и обратно! Вы можете использовать набор классов, которые предоставляет ваш фреймворк для всего цикла CRUD, то есть для того, чтобы:</p><p id="1e227b07-61fb-4810-b1ad-52026c91b990" class="">– Создавать записи в базе данных (create)</p><p id="f677f88a-e620-4380-b47e-bc5a81cc5878" class="">– Получать их из базы данных (read)</p><p id="7a4b8fb9-3ef7-4802-81f9-1342b3ca1b05" class="">– Редактировать эти записи (update)</p><p id="a34cc99d-6e0d-4c22-a208-01de6cc14964" class="">– Удалять их (delete)</p><h2 id="a012a709-93ed-4a25-8c12-def7aeb19a74" class=""><strong>Концепция Объектно-Реляционного отображения</strong></h2><p id="3a3be58f-3361-4ede-a7e7-0c1001eb97e6" class="">Почти все языки программирования имеют библиотеки ORM, но прежде чем начать их использовать, давайте выясним, в чем заключается концепция ORM.</p><p id="8dc1f17b-a28e-4fb9-9725-d9c0598773a0" class=""><strong>Объектно-реляционное отображение </strong>— это концепция преобразования данных из объектно-ориентированного языка программирования в представление реляционной базы данных и наоборот. Это решает проблему согласования двух систем разных типов и синхронизации потока данных между ними.</p><figure id="445d5983-62a8-4abd-86bd-d8cec4db0869" class="image"><a href="https://ucarecdn.com/6320f0e6-535c-4e62-a6dc-36832eced00f/-/crop/2131x1052/0,80/-/preview/"><img src="https://ucarecdn.com/6320f0e6-535c-4e62-a6dc-36832eced00f/-/crop/2131x1052/0,80/-/preview/"/></a></figure><p id="f0e88bd2-a057-472b-98c0-84596ddcc138" class="">ORM включает в себя:</p><ul id="d0c0a116-371d-4de8-a117-6ccf2795d499" class="bulleted-list"><li>Виртуальные таблицы.</li></ul><ul id="db2a91ff-1bb6-4f18-937b-f7ea29c41806" class="bulleted-list"><li>Отношения.</li></ul><ul id="419af0c0-1cba-48e1-a6f7-5c0acbe3db8b" class="bulleted-list"><li>Операции с объектами.</li></ul><p id="7313a62c-89c3-477f-a087-1ca0e11b5171" class="">Так что же это за составляющие и зачем они нам нужны? Давайте рассмотрим подробнее каждый пункт.</p><h2 id="aa2e35e8-185d-48ac-b0da-d44d0d3403f2" class=""><strong>Виртуальные таблицы</strong></h2><p id="5458d3bc-a237-4e6d-b73e-157d0b46259f" class="">Реляционные базы данных используют кортежи и таблицы для хранения данных. Большинство языков программирования имеют кортежи, но не имеют таблиц. Каким же образом можно представить их на языке программирования?</p><p id="4fbb362b-f0e6-4f84-8743-f66a216f1ed5" class="">Основная идея заключается в использовании классов в качестве описания таблиц. Необходимо создать класс как виртуальную таблицу для данной таблицы в базе данных. Мы используем или определяем методы для этого класса чтобы извлечь, изменить и удалить данные.</p><p id="25bb4001-5dce-4b15-a361-adf87859bd93" class="">Чтобы представить одну строку из таблицы, мы можем определить другой класс (для некоторых библиотек это может быть тот же класс) и сопоставить его атрибуты со столбцами таблицы. Экземпляр этого класса может манипулировать не только значениями строки, но и отношениями, которые имеет этот ряд. Далее обсудим это подробнее на примере.</p><p id="fe191986-72fc-4118-b838-c34203592f03" class="">На рисунке представлен пример с классом <code>City</code>. Мы сопоставляем значения в таблицах со скалярными атрибутами в классе. Имя (name) может быть строкой. Долгота (longitude) и широта (latitude) могут быть действительными числами.</p><figure id="e199e159-82f3-4404-819c-d946c3211a0c" class="image"><a href="https://ucarecdn.com/bcde7d07-4e6f-4eb0-b55d-c2f465c8b580/-/crop/2773x1331/117,0/-/preview/"><img src="https://ucarecdn.com/bcde7d07-4e6f-4eb0-b55d-c2f465c8b580/-/crop/2773x1331/117,0/-/preview/"/></a></figure><p id="7a208c00-b668-41a9-8996-7c0e56dcf047" class="">Как известно, класс может иметь атрибуты, представляющие список других объектов. Например, в городе может быть много улиц. Это противоречит отображению атрибута в столбец, но ORM предоставляет инструменты и для этих случаев. В терминах реляционных баз данных связь между одним объектом и несколькими другими называется отношением «один ко многим». Это очень похоже на атрибут списка объекта.</p><h2 id="805e5ec9-656c-45f8-bb16-36b8d962941b" class=""><strong>Отношения</strong></h2><p id="e9203c68-b462-4df3-a8fd-c4fd0749194d" class="">Отношение — это ссылка, которая связывает значение из одной таблицы со строкой в другой. База данных может хранить такие ссылки как ключи. Вы можете думать об этом как об объекте, содержащем другой объект как атрибут.</p><p id="de45c366-56ca-4175-a4eb-bb37b0271b0e" class="">Отношения в базах данных — это не просто ссылки. Когда вы удаляете корневую строку из одной таблицы, это может подразумевать каскадное удаление всех связанных строк из других таблиц. Это не та же логика, что и для языка программирования. Если у нас есть ссылка в объекте, то ожидаем, что при удалении этой ссылки исчезнет только ссылка, а не сам связанный объект. С другой стороны, если в базе данных есть таблица «Город», а в ней, например, строка «Стамбул», то можно предположить, что при её удалении из таблицы все связанные строки из таблицы «Улица» также исчезнут. Улица принадлежит городу, а без города нет улиц.</p><figure id="6d8c7faa-118f-4290-a5b7-8a9a89bd24f4" class="image"><a href="https://ucarecdn.com/3efacbab-5f79-44a6-bca4-08932ec6655a/-/crop/1565x1228/85,156/-/preview/"><img src="https://ucarecdn.com/3efacbab-5f79-44a6-bca4-08932ec6655a/-/crop/1565x1228/85,156/-/preview/"/></a></figure><p id="a79ab9ce-e87f-4f96-8843-11b8078c7f21" class="">Мы можем представить этот пример как класс <code>City</code> со списком улиц или в виде множества экземпляров класса <code>Street</code> с атрибутом <code>City</code>.</p><p id="a8df64c3-dde1-4ea7-8958-86081b89f3ee" class=""><strong>ВАЖНО! </strong>Вы можете ожидать, что при удалении города также удаляются все соответствующие ему улицы. С другой стороны, если вы удалите улицу с атрибутом city, город останется в базе данных. Это означает, что отношения имеют направления. Каскадные удаления подразумевают удаление зависимых объектов, не зависящих от них.</p><h2 id="a3f104b0-0373-42db-8ca7-68464e418879" class=""><strong>Операции с объектами</strong></h2><p id="93cf5e24-46dd-44d1-a140-f4df0c4abefa" class="">Четыре часто используемые операции со строками в базе данных называются операциями CRUD (создание, чтение, обновление, удаление). Это похоже на то, что можно делать с объектами на языке программирования.</p><p id="9c855241-4cf0-4980-81f0-1abea56d2cca" class="">После прочтения о виртуальных таблицах и отношениях вы можете попытаться управлять ими с помощью библиотеки ORM. Библиотеки обычно предоставляют команды высокого уровня, которые похожи на работу с любыми другими объектами в языке программирования. Знания об отношениях и таблицах помогут не повредить данные в базе данных.</p><p id="8d80aa4f-dc2d-4678-bf6d-c9f2cf87c3b3" class="">Настоятельно рекомендуем прочитать документацию для библиотеки ORM перед ее использованием. Это поможет познакомиться с последствиями и значениями прикладных операций.</p><h2 id="d31bd82c-ed0d-49f7-8b0a-870402bfd6dd" class=""><strong>Плюсы и минусы</strong></h2><p id="e6e0a79a-2398-407f-ba1c-9c5527a47256" class="">Рассмотрим плюсы и минусы ORM, для того, чтобы вы могли определиться использовать или нет данную концепцию для своего проекта.</p><p id="176f4914-8f45-4c39-84b5-408581e853c1" class="">Плюсы:</p><ul id="2abf13ed-b120-44a7-9145-d8c889afbe6e" class="bulleted-list"><li>Вы работаете с базой данных так же, как вы пишете другой код;</li></ul><ul id="e47b28fc-0d50-4506-9aae-758745fe5a27" class="bulleted-list"><li>Библиотека изолирует ваш код от специфики языка SQL базы данных, которую вы используете;</li></ul><ul id="20d5bde1-a189-49af-b398-3d75133d6d97" class="bulleted-list"><li>Код, использующий ORM, обычно легче читать, писать и поддерживать;</li></ul><ul id="50e11987-63db-4008-8fab-0571df41d306" class="bulleted-list"><li>Вы не должны знать SQL для работы с базой данных.</li></ul><p id="85b69a99-0b78-40c5-8c83-b0187b101562" class="">Минусы:</p><ul id="bd3385d1-929c-4b1d-a6f7-b6d6790a89c2" class="bulleted-list"><li>Иногда библиотеки ORM генерируют неэффективные запросы к базе данных;</li></ul><ul id="12857bc5-e6ac-47f5-a1e6-26e4594a2c1c" class="bulleted-list"><li>Сложно контролировать генерацию запросов;</li></ul><ul id="48824730-e326-4642-9c68-3beeeed370d1" class="bulleted-list"><li>Вы не можете использовать все возможности и преимущества конкретной базы данных, которая у вас есть;</li></ul><ul id="45bd15d6-9e5e-4995-b61c-579398202828" class="bulleted-list"><li>Вы должны научиться работать с библиотекой.</li></ul><p id="b446e829-e0a7-47ca-9fc8-2f1c6faa10fd" class="">В то время как ваш проект предназначен для сотен или даже тысяч пользователей, библиотеки ORM могут быть хорошим выбором. Если же вы планируете создать новый Facebook или Google, возможно, ORM — это не то, что вам нужно для такой амбициозной цели!</p><p id="c9ede885-7454-4063-aa58-be720484f473" class="">Чтобы начать работать с библиотекой ORM, вы можете рассмотреть SQLAlchemy для Python.</p></div></article></body></html>

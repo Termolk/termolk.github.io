@@ -1,0 +1,731 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>2.9 Jinja – базовые шаблоны</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="aa529d16-f8ee-445b-acab-a81f4da38b10" class="page sans"><header><h1 class="page-title">2.9 Jinja – базовые шаблоны</h1></header><div class="page-body"><p id="8ac5479e-b73b-4fb4-b68a-5c4a54578c06" class="">На страницах сайта повторяется один и тот же код шапки сайта и подвала сайта.  Повторять его в  в шаблонах для каждой страницы - плохая идея. Это не очень удобно: если вам понадобится изменить шапку, то придется редактировать несколько файлов. Это не очень правильно: нарушается принцип DRY (Don&#x27;t Repeat Yourself) <a href="https://ru.wikipedia.org/wiki/Don%E2%80%99t_repeat_yourself">https://ru.wikipedia.org/wiki/Don%E2%80%99t_repeat_yourself</a> .</p><p id="fd00850d-a6e8-44e5-9ddd-bf16b2378feb" class="">Шаблонизатор Jinja позволяет создать один общий базовый шаблон, а уже в него вкладывать шаблоны страниц, таких как главная, каталог, контакты и так далее.</p><p id="603c3b13-45ec-415f-95e1-e45564d74b16" class=""><strong>В этом уроке вы научитесь:</strong></p><p id="325d1832-4864-4270-a630-476bd436584c" class="">– выносить повторяющийся код в отдельный шаблон.</p><p id="88f508d1-bb5b-4843-9524-641c0d8a0b57" class="">У шаблонизатора есть и более мощные возможности.</p><p id="1fa0b466-d57c-42e6-b8f2-73719f14b289" class="">Больше информации здесь: <a href="https://jinja.palletsprojects.com/en/2.10.x/templates/#template-inheritance">https://jinja.palletsprojects.com/en/2.10.x/templates/#template-inheritance</a> .</p><h2 id="74413e73-7804-420e-82cd-98ebf773805f" class=""><strong>Принцип действия</strong></h2><p id="84393e52-1da2-47c6-96ef-b1bfbab3405d" class="">Шаблонизатор Jinja позволяет создать один общий базовый шаблон (для этого вам нужно будет взять одну из страниц и вырезать из нее содержательную часть), а уже в него &quot;вклеивать&quot; шаблоны страниц, таких как главная, список, поиск и так далее.</p><figure id="3014e509-a38d-49db-8f23-c767b1c945ff" class="image"><a href="https://ucarecdn.com/451c677d-68e2-4f85-8717-15ada92dd38c/"><img src="https://ucarecdn.com/451c677d-68e2-4f85-8717-15ada92dd38c/"/></a></figure><p id="6dd34f18-21d6-456a-a2a6-53af4d9312ca" class="">Таким образом, ваш список шаблонов для сайта с вакансиями будет выглядеть как-то так:</p><p id="6ef7f033-3771-41da-8b1a-c37711f7b156" class="">– общий шаблон (шапка, подвал, стили, скрипты)</p><p id="acbc0b1f-38da-4f91-9f9f-865416e505f7" class="">– специфичная часть шаблона страницы одной вакансии</p><p id="4b4bd3ba-f156-4e8e-9054-17883551d9ad" class="">– специфичная часть шаблона страницы списка вакансий</p><p id="eb3833dc-d9ee-4129-8900-ca2cc4eaf9bc" class="">– специфичная часть шаблона страницы поиска</p><p id="c0b2ddb3-4804-4c78-a1be-89f6d1e27db9" class="">– специфичная часть шаблона главной</p><p id="16aa51e3-cb84-4554-8519-05bf3772df62" class="">– и так далее</p><p id="43c9c6a5-11b8-4b84-9453-d514d299881a" class="">На самом деле этот механизм реализован через расширение шаблонов и может выглядеть необычно: в Jinja шаблон страницы получает контроль и &quot;<strong>вклеивает себя</strong>&quot; в общий шаблон, обычно обзаводясь шапкой, и подвалом.</p><figure id="6cf4319f-a08b-4817-b77d-3059e45c6509" class="image"><a href="https://ucarecdn.com/8840d94d-440c-4fe7-ad72-05d28a7245cf/"><img src="https://ucarecdn.com/8840d94d-440c-4fe7-ad72-05d28a7245cf/"/></a></figure><h2 id="77571234-7668-4403-94c4-56dae338e7eb" class=""><strong>Присматриваемся к страницам</strong></h2><p id="0524057a-06cc-4915-966e-81d924094496" class="">Посмотрите на пример кода ниже. Это упрощенный код страницы сайта со списком вакансий. Конечно, страница настоящего сайта сложнее, а ее код длиннее, но структура остается примерно такой же.</p><pre id="0b3ed9bb-99d7-48f7-8dfe-58ecd4c387d8" class="code code-wrap"><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;title&gt;Джуманджи вакансии&lt;/title&gt;
+		&lt;script src=&quot;...&quot;/&gt;&lt;style link=&quot;..&quot;/&gt;
+	&lt;/head&gt;
+	&lt;body&gt;
+		&lt;header&gt;
+			&lt;nav&gt;menu&lt;/nav&gt;
+		&lt;/header&gt;
+		&lt;div class=&quot;container&quot;&gt;
+			&lt;div class=&quot;content&quot;&gt;
+				&lt;h2&gt;Вакансии&lt;/h2&gt;
+				&lt;div class=&quot;vacancies&quot;&gt;
+	        (list of vacancies)
+			  &lt;/div&gt;
+			&lt;/div&gt;
+		&lt;/div&gt;
+		&lt;footer&gt;site footer&lt;/footer&gt;
+	&lt;/body&gt;
+&lt;/html&gt;</code></pre><p id="2ceb827a-fcc7-42c4-99d8-19aabfb2b958" class="">А следующий пример – упрощенный код страницы одной вакансии.</p><pre id="8bfab688-95a2-4bf0-9126-56f0c5db1084" class="code code-wrap"><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;title&gt;Джуманджи вакансии&lt;/title&gt;
+		&lt;script src=&quot;...&quot;/&gt;&lt;style link=&quot;..&quot;/&gt;
+	&lt;/head&gt;
+	&lt;body&gt;
+		&lt;header&gt;
+			&lt;nav&gt;menu&lt;/nav&gt;
+		&lt;/header&gt;
+		&lt;div class=&quot;container&quot;&gt;
+			&lt;div class=&quot;content&quot;&gt;
+				&lt;h2&gt;Одна вакансия&lt;/h2&gt;
+				&lt;div class=&quot;vacancy-details&quot;&gt;
+	        (list of vacancies)
+			  &lt;/div&gt;
+			&lt;/div&gt;
+		&lt;/div&gt;
+		&lt;footer&gt;site footer&lt;/footer&gt;
+	&lt;/body&gt;
+&lt;/html&gt;</code></pre><p id="16a1f014-afc2-4018-b712-2f482e5fde63" class="">Можно заметить, что специфичной для страницы является часть между тегами &lt;div class=&quot;container&quot;&gt;&lt;/div&gt;, а остальное повторяется от страницы к странице. Давайте вынесем повторяющиеся блоки в отдельный файл!</p><h2 id="3e56309e-328d-4e0d-943f-409f5c816629" class=""><strong>Создаем базовый шаблон</strong></h2><p id="25a50376-2d57-49f7-90a8-ce06d8415c85" class=""><strong>1. Создайте файл base.html, оставьте там код, который повторяется от страницы к странице.</strong></p><p id="2e3cd83d-eea6-44c4-8df8-a4f038f12c40" class="">Код, который не повторяется, сохраните отдельно, он понадобится нам позже, а пока замените его на:</p><pre id="e1acbf82-b4bd-4406-9a5e-b29bcf480d51" class="code code-wrap"><code>{% block container %} {% endblock %}</code></pre><p id="2e9491a7-dbd4-450a-84e2-3ac1b9014873" class="">У вас получится примерно такой шаблон:</p><pre id="718e7091-df32-409c-ad42-c82c8551ab57" class="code code-wrap"><code>&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;head&gt;&lt;title&gt;Videos – Stepik Media&lt;/title&gt;&lt;script src=&quot;...&quot;/&gt;
+  &lt;style link=&quot;..&quot;/&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+  &lt;header&gt;&lt;nav&gt;menu&lt;/nav&gt;&lt;/header&gt;
+
+  &lt;div class=&quot;container&quot;&gt;
+    {% block container %} {% endblock %}
+  &lt;/div&gt;&lt;footer&gt;
+    site footer
+  &lt;/footer&gt;&lt;/body&gt;&lt;/html&gt;</code></pre><p id="ad32f09a-7939-44de-bff2-2cea3daaa2be" class=""><strong>2. Создайте файл шаблона</strong></p><p id="4f8ca6e9-cd36-4436-bf97-c71d4f11be43" class="">Теперь возьмите код, который вырезали и продолжайте работать с ним:</p><p id="f62b4d16-cdee-4bec-babe-08afd6c6ffc5" class="">– Добавьте в начале инструкцию, что ваш шаблон нужно будет &quot;вклеить&quot; в базовый шаблон <strong>base.html</strong>:</p><pre id="4b3aa147-dabc-4b56-8fa6-f6b5f02c495b" class="code code-wrap"><code>{% extends &#x27;base.html&#x27; %}</code></pre><p id="db5357e4-8b38-4116-ad5d-0788e8a0b50c" class="">– Оберните шаблон в конструкцию {% block container %}, чтобы показать, какую именно часть нужно будет &quot;вклеить&quot;:</p><pre id="aafeed2e-c54c-4051-9be2-577f81fc8b08" class="code code-wrap"><code>{% block container %}
+
+  ...
+
+{% endblock %}</code></pre><p id="494f4cf4-73e1-465e-a65b-855c9d7fa331" class="">Результат должен получиться примерно таким:</p><pre id="3b829ea6-994e-4df9-b85d-98b6eeac1dfb" class="code code-wrap"><code>{% extends &#x27;base.html&#x27; %}
+
+{% block container %}
+
+   &lt;div class=&quot;content&quot;&gt;&lt;h2&gt;Videos&lt;/h2&gt;&lt;div class=&quot;videos&quot;&gt;
+        (list of videos)
+     &lt;/div&gt;&lt;/div&gt;
+
+{% endblock %}</code></pre><p id="d4eb597d-bed6-4519-8a14-921f6ed50393" class=""><strong>3. Проверьте себя</strong></p><p id="57f6c207-913a-4ac9-ac03-90731ff25f36" class="">– имя файла базового шаблона <code>xxx.html</code> должно совпадать с инструкцией<code> {% extends &#x27;xxx.html&#x27; %}</code> в дочернем шаблоне;– название блока в базовом шаблоне <code>{% block yyy %}</code> должно совпадать с названием блока дочернем шаблоне <code>{% block yyy %}</code>.</p><h2 id="95ac0e54-f9c2-4430-8414-25eb59e969da" class=""><strong>Include</strong></h2><p id="2925404d-b21f-445f-85fa-fe14b1479a19" class="">Также повторяющийся на нескольких страницах HTML код можно вынести в отдельный файл и импортировать в шаблон с помощью <code>include</code>:</p><pre id="47db70dd-98fd-4ab5-af21-87aa0b1c17e2" class="code code-wrap"><code>{% extends &#x27;base.html&#x27; %}
+
+{% block container %}
+
+   {% include &#x27;banner.html&#x27; %}
+
+   &lt;div class=&quot;content&quot;&gt;&lt;h2&gt;Videos&lt;/h2&gt;&lt;div class=&quot;videos&quot;&gt;
+        (list of videos)
+     &lt;/div&gt;&lt;/div&gt;
+
+{% endblock %}</code></pre><h2 id="6051d1b7-e618-44fc-a7b7-9c533b06a205" class=""><strong>Super</strong></h2><p id="af11bf4b-6f32-45d8-b15b-05f41ca1ab5e" class="">Обычно в общем шаблоне блок, куда вклеивается шаблон представления, будет пустым, так как его содержимое все равно бы заменилось содержанием блока представления. Вот так:</p><pre id="f8fd5a43-f6ea-4795-a16f-35a8f47bac99" class="code code-wrap"><code># base.html
+
+&lt;html&gt;&lt;body&gt;
+    {% block title %}
+            Мой сайт с вакансиями.
+    {% endblock %}
+&lt;/body&gt;&lt;/html&gt;</code></pre><pre id="0f9c67bd-3592-454b-98ac-94725dbec31d" class="code code-wrap"><code>#  categories.html
+
+{% extends &quot;base.html&quot; %}
+{% block title %}
+    Вот такие типы вакансий у нас есть:
+{% endblock %}
+
+</code></pre><p id="9867aa69-5924-467b-99b3-6c47dbf983a3" class="">В результате представление, использующее шаблон <code>categories.html</code>, отрендерится так:</p><pre id="8a932186-c666-48ae-b02a-8823b0388a22" class="code code-wrap"><code>&lt;html&gt;&lt;body&gt;
+    Вот такие категории у нас есть:
+&lt;/body&gt;&lt;/html&gt;</code></pre><p id="e04e9339-3b29-45a9-afb9-60a8c99af4c2" class="">Как мы видим, контент, который был в базовом шаблоне внутри <code>{% block title %}</code>, исчез из получившегося html.</p><p id="8fbecd69-a600-46bc-8aa5-c488a389accf" class="">Однако, мы можем использовать конструкцию <code>{{ block.super }}</code>, чтобы сохранить его. Вот так:</p><pre id="45b9a8dd-b9a6-40e2-a01d-0e7cf59e5cfe" class="code code-wrap"><code>#  categories.html
+
+{% extends &quot;base.html&quot; %}
+{% block title %}
+    {{ block.super }} Вот такие категории у нас есть:
+{% endblock %}
+
+</code></pre><p id="f22dc0c5-ea91-494a-89b3-a27b5ee10152" class="">В результате получится:</p><pre id="67cd06a0-bd2d-40ff-ae92-4be3ec8a85a0" class="code code-wrap"><code>&lt;html&gt;&lt;body&gt;
+    Мой сайт с вакансиями. Вот такие категории у нас есть:
+&lt;/body&gt;&lt;/html&gt;</code></pre><p id="b388d49a-b6a6-4bca-b202-9ac6c35eb2f9" class="">Не уверены, что вам это пригодится в ближайшее время, но, как минимум, это весело. :)</p><h2 id="3eed68f3-13e8-4053-808e-32ec1a6b50d4" class=""><strong>Резюме</strong></h2><p id="21219c4c-a5a7-438a-b3fa-eccaf7da8f52" class="">Использование базовых шаблонов позволяет не повторяться, создать структуру шаблонов, упростить их чтение и редактирование.</p><p id="7af826a8-4441-4584-9f19-c891d6489abe" class="">Чтобы задать в базовом шаблоне блок для вклеивания дочернего, напишите:</p><pre id="2b4e2d6d-32c3-40bc-95c1-917010fe44a4" class="code code-wrap"><code>{% block container %} {% endblock %}</code></pre><p id="832a4e89-847f-4504-94ff-320de5413001" class="">Подготовьте дочерний шаблон к использованию вместе с базовым, оберните его в</p><pre id="c6437838-6abb-4f7f-9b45-b0edc31f8e7e" class="code code-wrap"><code>{% extends &#x27;base.html&#x27; %}
+
+{% block container %}
+
+  ...
+
+{% endblock %}</code></pre><p id="d5aab949-b2c5-45c5-a1ee-c67eeeb2e138" class="">Чтобы принудительно вклеить один шаблон в другой полностью, используйте тег include</p><pre id="506dfc7a-f187-44c6-bf18-db758686828e" class="code code-wrap"><code>{% include &#x27;banner.html&#x27; %}</code></pre><p id="c0991538-3b71-4b53-9109-94bea64a973d" class="">
+</p></div></article></body></html>

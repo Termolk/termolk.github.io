@@ -1,0 +1,675 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>3.8 ООП – Класс и экземпляр</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="718ce049-7c20-4531-8752-891a2a5f4080" class="page sans"><header><h1 class="page-title">3.8 ООП – Класс и экземпляр</h1></header><div class="page-body"><p id="70e217a1-0f2c-4d20-bcb1-7042a2507ba2" class="">Вы уже знаете, чем в Python различаются <strong>атрибуты класса</strong> и <strong>атрибуты экземпляра</strong>. Как вы наверняка помните, атрибуты класса являются общими для всех объектов класса, а атрибуты экземпляра специфическими для каждого экземпляра. Более того, атрибуты класса определяются внутри класса, но вне каких-либо методов, а атрибуты экземпляра обычно определяются в методах, чаще всего в <code>__init__</code> .</p><p id="158c7f94-2a36-4d2c-a657-d80210535c9a" class="">Теперь давайте рассмотрим разницу между атрибутами класса и атрибутами экземпляра более подробно.</p><h2 id="00070d17-b1d2-4c22-9502-210217a69939" class=""><strong>Изменение атрибутов</strong></h2><p id="1b969461-0328-4ae1-aba6-f88878fbf3fd" class="">Предположим, у нас есть класс Pet:</p><pre id="82cfa4bc-b315-4d32-9601-a6e9f56212da" class="code code-wrap"><code>class Pet:
+    kind = &quot;mammal&quot;
+    n_pets = 0  # количество питомцев
+    pet_names = []  # список имен всех питомцев
+
+    def __init__(self, spec, name):
+        self.spec = spec
+        self.name = name
+        self.legs = 4</code></pre><p id="4312d74f-31a0-4fdd-ab61-33bd831b73f2" class="">Этот класс имеет три атрибута класса: kind, n_pets и pet_names, а также три атрибута экземпляра, определенных в методе __init__: spec, name и legs.</p><p id="06441ffa-e544-4e20-85b9-9832fbaf987b" class="">Давайте создадим несколько экземпляров этого класса и посмотрим, как работает изменение атрибутов класса или атрибутов экземпляра в Python:</p><pre id="0f001495-a6b7-4c21-9366-23aba7960096" class="code code-wrap"><code>tom = Pet(&quot;cat&quot;, &quot;Tom&quot;)
+avocado = Pet(&quot;dog&quot;, &quot;Avocado&quot;)
+ben = Pet(&quot;goldfish&quot;, &quot;Benjamin&quot;)</code></pre><p id="cca9d9b0-4c77-43da-93c9-2e10357254c7" class="">Мы создали три экземпляра класса Pet, которые имеют одинаковые атрибуты класса и разные атрибуты экземпляра. Теперь имеет смысл изменить значение n_pets, потому что у нас более 0 питомцев. Так как n_pets является целым числом, которые относятся к неизменяемому типу данных, мы можем изменить его значение для всего класса, только если мы получим к нему доступ <strong>непосредственно </strong>как к атрибуту класса:</p><pre id="062d089e-5873-44a6-a45d-60d1c48a98dc" class="code code-wrap"><code># получим доступ к атрибуту класса напрямую через класс
+Pet.n_pets += 3
+
+Pet.n_pets      # 3
+tom.n_pets      # 3
+avocado.n_pets  # 3
+ben.n_pets      # 3</code></pre><p id="b538b0dc-0476-4ca0-81a4-cc4388d584ef" class="">Если бы мы попытались изменить значение n_pets через экземпляры, то у нас бы ничего не получилось:</p><pre id="d3809e21-1145-4bec-a65a-47178ff0bcef" class="code code-wrap"><code># попытаемся получить доступ к атрибуту класса через экземпляры
+tom.n_pets += 1
+avocado.n_pets += 1
+ben.n_pets += 1
+
+Pet.n_pets      # 0
+tom.n_pets      # 1
+avocado.n_pets  # 1
+ben.n_pets      # 1</code></pre><p id="4e156830-f4b1-4d01-b2b2-fc5295d5ef08" class="">Несмотря на то, что все экземпляры имеют доступ к атрибуту класса, если эти атрибуты неизменны, изменение их значения для одного экземпляра не изменит их для всего класса.</p><p id="9b30ee8c-d2cd-40c9-89c6-ea5d19237de9" class="">То же самое будет и с атрибутом kind, поскольку строки также неизменны в Python. Если мы изменим его для объекта ben (поскольку золотая рыбка не является млекопитающим), он останется неизменным для других атрибутов:</p><pre id="126742a3-815c-49dd-9bb0-bdcfef94530b" class="code code-wrap"><code>ben.kind = &quot;fish&quot;
+
+Pet.kind      # &quot;mammal&quot;
+tom.kind      # &quot;mammal&quot;
+avocado.kind  # &quot;mammal&quot;
+ben.kind      # &quot;fish&quot;</code></pre><p id="757f623c-b0db-495c-a7ab-5a126b907ddc" class="">В тех случаях, когда есть несколько уникальных объектов, которые должны иметь другое значение переменной класса, это вполне нормально. Однако, если таких объектов много, вам следует рассмотреть возможность сделать этот атрибут атрибутом экземпляра!</p><p id="a690d4bd-508e-40c3-9af9-daf3fb368bf7" class="">Ситуация с атрибутом pet_names другая. Атрибут pet_names является списком и, следовательно, изменяемым, поэтому изменения в нем влияют на весь класс:</p><pre id="2915e65b-dfcd-4a9f-ad0d-5e7718c3a6b3" class="code code-wrap"><code>tom.pet_names.append(tom.name)
+avocado.pet_names.append(avocado.name)
+ben.pet_names.append(ben.name)
+
+Pet.pet_names      # [&quot;Tom&quot;, &quot;Avocado&quot;, &quot;Benjamin&quot;]
+tom.pet_names      # [&quot;Tom&quot;, &quot;Avocado&quot;, &quot;Benjamin&quot;]
+avocado.pet_names  # [&quot;Tom&quot;, &quot;Avocado&quot;, &quot;Benjamin&quot;]
+ben.pet_names      # [&quot;Tom&quot;, &quot;Avocado&quot;, &quot;Benjamin&quot;]</code></pre><p id="3878be26-09b1-43de-9308-ca56cf961c3b" class="">Если по какой-то причине мы хотели, чтобы атрибут класса pet_names сохранял разные значения для разных экземпляров, мы могли бы создать новый список вместо добавления к существующему:</p><pre id="1670b5b1-5711-4a50-841a-635cebb0ee53" class="code code-wrap"><code>tom.pet_names = [&quot;Tom&quot;]
+avocado.pet_names = [&quot;Avocado&quot;]
+ben.pet_names = [&quot;Benjamin&quot;]
+
+Pet.pet_names      # []
+tom.pet_names      # [&quot;Tom&quot;]
+avocado.pet_names  # [&quot;Avocado&quot;]
+ben.pet_names      # [&quot;Benjamin&quot;]</code></pre><p id="52418326-0a34-428f-a06b-589ab4877c29" class="">Но это не кажется таким уж удобным или необходимым: в конце концов, это атрибут класса, и идея заключается в том, что он хранит значения, общие для всех экземпляров. Итак, еще раз, если вы хотите, чтобы какой-то атрибут хранил уникальные значения, сделайте его атрибутом экземпляра!</p><p id="1ba2660f-571a-4262-b61b-e573d420ff84" class="">Как, например, переменная legs. Это атрибут экземпляра, даже если он явно не передается в качестве аргумента метода __init__. Значение по умолчанию равно 4, но мы можем изменить его, если потребуется. Это было бы полезно для объекта ben, потому что у рыб нет ног (у них есть плавники, но давайте оставим вопрос о том, может ли плавник считаться ногой на другой раз). Вот как мы меняем значение legs для объекта ben :</p><pre id="b627739f-e90c-4949-8592-55e95373dd03" class="code code-wrap"><code>ben.legs = 0</code></pre><p id="3702ff81-dcd3-4d25-b955-70d602409e18" class="">Вот и все! В изменении атрибутов экземпляра нет ничего сложного, потому что, опять же, они влияют только на один объект.</p><h2 id="d9a3b7ad-3fe0-4d88-bfdf-bc4960ad157c" class=""><strong>Добавление атрибутов</strong></h2><p id="ff0b9c26-d947-4496-a8b9-a08bbb2a7574" class="">В дополнение к изменению атрибутов мы также можем создавать атрибуты для класса или конкретного экземпляра. Например, мы хотим видеть информацию о всех видах наших питомцев. Мы могли бы записать ее в самом классе с самого начала или создать переменную следующим образом:</p><pre id="53e6deed-9ab0-40b7-935e-6e2d9d1f5bda" class="code code-wrap"><code>Pet.all_specs = [tom.spec, avocado.spec, ben.spec]
+
+tom.all_specs      # [&quot;cat&quot;, &quot;dog&quot;, &quot;goldfish&quot;]
+avocado.all_specs  # [&quot;cat&quot;, &quot;dog&quot;, &quot;goldfish&quot;]
+ben.all_specs      # [&quot;cat&quot;, &quot;dog&quot;, &quot;goldfish&quot;]</code></pre><p id="e85fd0c7-e4bd-4633-8666-7bb222c1354e" class="">Еще мы могли бы создать атрибут для конкретного экземпляра. Например, мы хотим вспомнить породу собаки под именем Avocado. Про породы чаще говорят применительно к собакам (у кошек тоже есть породы, но они не так сильно различаются), поэтому имеет смысл,  чтобы только у нее был атрибут с такой информацией:</p><pre id="6a692543-b65b-4040-adc8-466c37beb990" class="code code-wrap"><code>avocado.breed = &quot;corgi&quot;</code></pre><p id="98cad0bb-f226-47f5-a037-3f85c976f6e2" class="">Здесь мы создали атрибут breed для объекта avocado и присвоили ему значение corgi. Другие экземпляры класса Pet , а также самого класса не имеют этого атрибута, поэтому следующие строки кода могут вызвать ошибку:</p><pre id="1ba94178-0892-41b4-9513-cea3332c1386" class="code code-wrap"><code>Pet.breed  # AttributeError
+tom.breed  # AttributeErrorben.breed  # AttributeError</code></pre><h2 id="905796b4-b3ff-492f-8aba-bc9f59292603" class=""><strong>Заключение</strong></h2><p id="d6df2aef-c8d8-476c-ad41-e09b7908b960" class="">В этой теме мы рассмотрели различия в использовании <strong>атрибутов класса</strong> и <strong>атрибутов экземпляра</strong>.</p><p id="196c8e63-6e0f-4aba-911a-358c587f4f78" class=""><strong>Атрибуты класса </strong>используются для хранения информации, свойственной для всех экземпляров класса, но их использование может оказаться сложным, если мы не примем во внимание тип переменной.</p><p id="a5eaf633-cc62-4a53-ac7c-f1812ce3a174" class="">Итак, в каких случаях мы хотим использовать атрибуты класса? Ну, во-первых, если мы хотим определить значения по умолчанию для всех объектов. Во-вторых, хранить необходимые класс-специфические константы (например, математические). И, наконец, вести учет данных всех объектов, как в примере с <code>pet_names</code>. Возможно, вы захотите иметь легкий доступ к определенной информации каждого экземпляра вашего класса, и в этом случае вы можете использовать атрибут изменяемого типа.</p><p id="01bd37e8-dc57-4c50-a88a-083d46aa40a7" class=""><em>Помните, что изменение значений атрибутов класса зависит от того, являются ли они изменяемыми или нет. Учитывайте это при написании вашей программы и работе с объектами класса!</em></p><p id="5ec8e412-47fc-4726-b6ee-6585332f11e7" class=""><strong>Атрибуты экземпляра</strong>, с другой стороны, хранят информацию, различную для каждого экземпляра, и это, очевидно, их основная функция. Изменение и добавление новых атрибутов экземпляра может повлиять только на один объект, но, тем не менее, обращайте внимание на изменения, которые вы делаете.</p><p id="0276c1ed-4920-48df-bf2c-a1b651dfd53f" class="">Мы надеемся, что теперь вам понятна разница между атрибутами класса и экземпляра, и вы будете успешно использовать полученные знания в своих программах!</p></div></article></body></html>

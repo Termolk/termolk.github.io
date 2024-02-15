@@ -1,0 +1,627 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>3.14 Проектное задание главы 3</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="cd32a7c2-5c05-474a-973e-515d7ddf3b78" class="page sans"><header><h1 class="page-title">3.14 Проектное задание главы 3</h1></header><div class="page-body"><h1 id="b3230ae7-0783-44a9-a4fa-2232bbde1b6c" class=""><strong>Проектное задание главы 3</strong></h1><p id="cae17c44-66b8-4cf5-b340-2c1fb739fdbe" class="">Макеты проекта. Задание на следующем шаге.</p><p id="87b8786b-a780-4f56-85de-aa9f0c37a889" class=""><strong>Главная страница</strong></p><figure id="6ec20916-3a1d-4a07-b406-b67c8e880157" class="image"><a href="https://ucarecdn.com/94a9cf62-f2ee-4406-96c9-3c58340dace4/"><img src="https://ucarecdn.com/94a9cf62-f2ee-4406-96c9-3c58340dace4/"/></a></figure><p id="a9ce8c07-f980-4b7a-aac5-28dedc12e65b" class=""><strong>Все репетиторы</strong></p><figure id="da8560ab-c3d8-4cd4-bd66-c29ac579a7ea" class="image"><a href="https://ucarecdn.com/e58117f7-7e70-44a8-aa2f-992c8401fd8c/"><img src="https://ucarecdn.com/e58117f7-7e70-44a8-aa2f-992c8401fd8c/"/></a></figure><p id="02fc8f73-7a72-4dfc-a4b6-659fdc606a81" class=""><strong>Преподаватели по цели изучения</strong></p><figure id="f92c1f0c-8e47-46e1-b5a1-4c6ce4b319f2" class="image"><a href="https://ucarecdn.com/ee8c2905-f580-40eb-8044-2f2e83a1d885/"><img src="https://ucarecdn.com/ee8c2905-f580-40eb-8044-2f2e83a1d885/"/></a></figure><p id="d6b1a04b-95ea-46d1-9979-cdff10932284" class=""><strong>Страница репетитора</strong></p><figure id="b7b16615-e409-4039-8769-eeb1c265d906" class="image"><a href="https://ucarecdn.com/f0ae7e41-8612-4d05-9d02-d90e92e160b5/"><img src="https://ucarecdn.com/f0ae7e41-8612-4d05-9d02-d90e92e160b5/"/></a></figure><p id="6a1170ba-f802-4222-bfbd-f4d964ba7d36" class=""><strong>Запись на урок</strong></p><figure id="3edc3e6c-8f4c-453b-aa9d-655fb4674b4f" class="image"><a href="https://ucarecdn.com/6ff8b214-2f96-4bfd-8f1c-73bacbf77355/"><img src="https://ucarecdn.com/6ff8b214-2f96-4bfd-8f1c-73bacbf77355/"/></a></figure><p id="2cff79ef-fec1-4971-8c9a-9e2de21672bb" class=""><strong>Отправка формы записи</strong></p><figure id="1240d0ff-5bb2-4f52-87ba-844f313d8c76" class="image"><a href="https://ucarecdn.com/2e393fd5-5b7d-4c46-b364-52f87cdecb04/"><img src="https://ucarecdn.com/2e393fd5-5b7d-4c46-b364-52f87cdecb04/"/></a></figure><p id="c77d2804-838d-48a8-aa1b-059673152cea" class=""><strong>Страница подбора преподавателя и отправки формы</strong></p><figure id="7a25e018-54c2-4709-831e-b3f9f9089a54" class="image"><a href="https://ucarecdn.com/a5e497da-44e5-4b5f-8b3a-42cf44f68d52/"><img src="https://ucarecdn.com/a5e497da-44e5-4b5f-8b3a-42cf44f68d52/"/></a></figure><figure id="3598813d-1921-4c53-a733-b0841762e980" class="image"><a href="https://ucarecdn.com/eb3a29ed-fa16-4b59-81e3-1dcb5f18268e/"><img src="https://ucarecdn.com/eb3a29ed-fa16-4b59-81e3-1dcb5f18268e/"/></a></figure><h1 id="6c6cb0d3-2648-4264-9455-da50fdfea2b4" class=""><strong>Проектное задание главы 3</strong></h1><p id="b80fae55-640e-4b53-a0ed-66600a5920f7" class="">Вам предстоит создать сайт, у которого будет &quot;база данных&quot; в виде JSON-файлов.</p><p id="c697c4f8-7e9c-4991-a5b0-002d8f90962b" class="">При ответе на запрос данные из &quot;базы данных&quot; нужно прочитать, а при сохранении пользовательских заявок данные нужно записать в &quot;базу данных&quot;.</p><p id="e968730c-7b99-4bb6-b1dc-ad4f5ea38a34" class="">Вы можете использовать WTForms в этом проекте, а можете не использовать :)</p><p id="03be1e96-bbc1-46f7-a8fa-aeceb00133b1" class=""><strong>1. Распишите роуты, выведите текст:</strong></p><ul id="59fe6efc-c929-469d-a49f-d3d94e50f83c" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">- главной / – здесь будет главная),</span></li></ul><ul id="faa780b1-2c5c-40b4-9fdb-6d0e91894704" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">- все преподаватели /all - здесь будут преподаватели,</span></li></ul><ul id="135ba4cc-85c7-4e01-9dc7-f86d4550a785" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">- цели /goals/&lt;goal&gt;/  – здесь будет цель &lt;goal&gt;,</span></li></ul><ul id="b6b4f9b7-a75e-4359-a4bf-b582a2880a27" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked"> - профиля учителя /profiles/&lt;id учителя&gt;/ – здесь будет преподаватель &lt;id учителя&gt;,</span></li></ul><ul id="51f97f8c-f5b7-4596-8a53-65b0e5fcfb25" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">- заявки на подбор /request/ – здесь будет заявка на подбор,</span></li></ul><ul id="ff780d37-6f57-4969-99b8-41009b2fbca6" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">- принятой заявки на подбор /request_done/ – заявка на подбор отправлена,</span></li></ul><ul id="4f2aaa82-e690-44f0-a094-279f27ddde4e" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">- формы бронирования /booking/&lt;id учителя&gt;/&lt;день недели&gt;/&lt;время&gt;/ – здесь будет форма бронирования &lt;id учителя&gt;,    </span></li></ul><ul id="9b2e0eaf-2211-4815-a76b-f337a01c4b33" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">- принятой заявки на подбор /booking_done/   – заявка отправлена.</span></li></ul><p id="1c55fe82-715b-47e4-83ee-0ed2eaf2ae36" class=""><strong>2. Скопируйте мок-данные в JSON-файл</strong></p><p id="aab15ff3-0322-4a02-8f74-48912e7b5078" class="">Напишите скрипт, который из мок-данных в data.py сохранит их в нашу  &quot;базу данных&quot;.</p><p id="f9210438-d453-4152-aa9a-7f015d1378d3" class="">Этот скрипт должен быть отдельным .py файлом и должен быть выполнен один раз.</p><p id="a4f5d5a9-18c5-43d8-a6cf-13dffe4a3350" class=""><a href="https://github.com/kushedow/flask-html/blob/master/Project%202/data.py">https://github.com/kushedow/flask-html/blob/master/Project%202/data.py</a></p><p id="3a981df3-9400-4bbf-9088-62a2e57e2f12" class=""><strong>3. Скачайте или склонируйте репозиторий с шаблонами.</strong></p><p id="236c07ab-49d2-404c-8d1a-06893861a1ee" class=""><a href="https://github.com/kushedow/flask-html/tree/master/Project%202">https://github.com/kushedow/flask-html/tree/master/Project%202</a></p><p id="b4b5e1e2-723b-48bf-bf4f-e701fc5a8ca0" class="">Скопируйте шаблоны в вашу папку templates:</p><ul id="c2fe7ca2-a43f-4ee2-866c-04c7b172e248" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">– index.html главной,</span></li></ul><ul id="af01a53b-d327-4f4a-8ccb-bbeb10931dbd" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">– all.html все преподаватели,</span></li></ul><ul id="b5cddbb8-91e3-4f07-9838-67f12a7bd8d4" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">– goal.html цели,</span></li></ul><ul id="b617bd94-e38a-405e-b053-292141c3a282" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">– profile.html профиля преподавателя,</span></li></ul><ul id="62ebcdb8-478b-4e81-9f68-ed836ab30d2c" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">– request.html для заявки на подбор,</span></li></ul><ul id="c70dbacd-47d5-49e0-84f3-3bee09248479" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">– request_done.html для отправленной заявки,</span></li></ul><ul id="98172777-9a00-44c9-936a-5395df5db966" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">– booking.html заявки на бронирование,</span></li></ul><ul id="37894f2e-21ee-4956-ad98-53074ddc64ed" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">– booking_done.html для отправленной заявки.</span></li></ul><p id="9dceca65-7c8d-4b96-9a30-6b9b6e35e430" class=""><strong>4. Выведите страницу преподавателя</strong></p><ul id="7cbbb939-d176-4f38-b495-7111907f0022" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">– изучите мок-данные,</span></li></ul><ul id="91be9eb4-007a-42f9-84b5-5d686ff38d06" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">– прочитайте  данные о преподавателе из JSON-файла,</span></li></ul><ul id="93d2a5cf-0ccc-4cd5-9770-e1512426641d" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">– отредактируйте шаблон,</span></li></ul><ul id="6d1161a4-b7d7-4256-ad81-7a5e5028457b" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">– проверьте результат,</span></li></ul><ul id="ff4f71cc-65e3-4ea3-83fa-e12dc753c570" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">– выведите табличку занятости,</span></li></ul><ul id="fcac1844-897b-4a3d-84b2-aeae9511c75f" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">– из кнопки выбора времени сделайте ссылку на страницу бронирования (cформируйте ссылку типа /booking/215/monday/12).</span></li></ul><p id="d026b87d-1d66-4348-a2db-da8366a9571e" class=""><strong>5А. Реализуйте страницу бронирования</strong></p><ul id="fca31d9f-b050-4e4b-982b-8361874ff38e" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">– изучите шаблон,</span></li></ul><ul id="060b105d-4bf6-4c36-acef-1d4ec20d1964" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">– выведите форму, используя данные о преподавателе, а также день и время    </span></li></ul><ul id="1396d553-e04f-429e-afcb-af137213218c" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">– выведите данные о времени и дне недели в скрытых полях из адреса запроса (типа /booking/215/monday/12)    </span></li></ul><ul id="8cbe507a-04a4-4f0c-bcb1-0c544db1bb81" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">– проверьте результат.</span></li></ul><p id="3458b4a0-0c48-464f-b8c2-043d101da3e3" class=""><strong>5B. Реализуйте страницу завершения бронирования</strong></p><ul id="7c5ee19f-7913-47c7-b2d2-6bafc0231ac3" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">– примите данные через booking_done,    </span></li></ul><ul id="35a9fc2f-bb3b-41e3-a8c7-ee33d85083c1" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">– сохраните данные в JSON файле booking.json. <strong>Не</strong> потеряйте заявки при записи новых!    </span></li></ul><ul id="0f72dbe2-3d16-4a5f-8f9c-dbe5856191e6" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">– выведите сообщение что все успешно,    </span></li></ul><ul id="c564116b-aff6-44dc-827d-6b3ff3fa8da3" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">– проверьте результат.</span></li></ul><p id="b30c98c7-a6e3-4243-b134-a15f807b01c6" class=""><strong>6А. Реализуйте страницу запроса подбора</strong></p><ul id="6be61549-d2d6-433c-8ffd-662e4b9bde17" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">– выведите форму.</span></li></ul><p id="1bf1e2f0-04fc-449d-966e-6debc6f915e8" class=""><strong>6B. Реализуйте страницу завершения запроса подбора</strong></p><ul id="b8ad4d8c-3352-4645-a8a9-8714d5e21a50" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">– примите данные через request,    </span></li></ul><ul id="289672cc-9327-4a21-b569-fafbf4aeafb2" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">– сохраните данные в JSON файле request.json.  <strong>Не</strong> потеряйте заявки при записи новых!    </span></li></ul><ul id="2a164977-ccac-43ca-a63c-ae7845257d9b" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">– выведите сообщение, что все успешно,   </span></li></ul><ul id="3d2e25d6-b27f-462e-aa92-33305f5c3e2a" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked"> – проверьте, что запрос записался в файле.  </span></li></ul><p id="3a241cfc-dbdf-4c98-b729-495744989928" class=""><strong>7. Реализуйте страницу цели, например, &quot;для переезда&quot;</strong></p><ul id="36764513-76ec-46a8-869d-af983401c31b" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">– получите цель,    </span></li></ul><ul id="ea96d6e4-3c88-460d-a1a9-0948994acfe0" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">– получите список преподавателей, отфильтруйте преподавателей по цели,    </span></li></ul><ul id="c69b074c-0104-4e9e-8937-fcff6f1fd0e6" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">– выведите их на странице в порядке убывания рейтинга,    </span></li></ul><ul id="46dfc77f-2e6a-4c84-adb2-30cef763795c" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">– проверьте результат.</span></li></ul><p id="495f969d-0796-4231-ad4f-727400dffd7c" class=""><strong>8. Выведите главную страницу</strong></p><ul id="576135e2-d7a8-4b19-afaf-4514da9f1572" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">– получите 6 случайных преподавателей     </span></li></ul><ul id="f11129ec-e480-4c74-b0c6-3e5fcaaff9aa" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">– выведите их на странице,    </span></li></ul><ul id="d52b31d8-a0f9-4793-b6ad-da3257f382cf" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">– добавьте ссылки на цели,    </span></li></ul><ul id="882f2c85-cbce-40f3-8f6a-a194d1113efb" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">– проверьте результат.</span></li></ul><p id="7f393a31-80d7-474f-b76a-1c6bae33a7d2" class=""><strong>9. Выведите страницу для всех преподавателей</strong></p><p id="9ade09b6-688f-4f08-9acc-ba7499b8279c" class=""><strong>10. Добавьте еще одну цель</strong>  </p><ul id="928cd9a7-9699-4f39-9897-3a5e827ac9a1" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">– проверьте, что, используя цели в шаблонах, вы всегда получаете их из python- кода  </span></li></ul><ul id="c6959b64-159b-403f-a80e-269c7fca9e9b" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">– добавьте новую цель &quot;для программирования&quot; преподавателям   8,9,10,11   </span></li></ul><ul id="43628bae-7686-4ce6-83a1-95a3014d0d74" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">– проверьте, что цель корректно отображается на всех страницах</span></li></ul><p id="9e80b762-4425-4899-8f60-caef8d411b30" class="">PS: для вывода случайных выберите один из способов рандомизации:</p><p id="46dc11eb-3c08-469f-a748-b2d71119b18d" class=""><a href="https://python-scripts.com/random">https://python-scripts.com/random</a></p></div></article></body></html>

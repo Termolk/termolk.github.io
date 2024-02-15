@@ -1,0 +1,627 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>4.2 Введение в базы данных</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="33c973cb-5fee-4bfc-963a-ce24a0a4df93" class="page sans"><header><h1 class="page-title">4.2 Введение в базы данных</h1></header><div class="page-body"><p id="8c7f18d3-5308-48b4-8730-5872c3db6594" class="">Мир сегодня перегружен информацией, и мы тоже, так что естественным образом возникает вопрос, как лучше ее хранить и сортировать. Вы, например, можете просто держать все в своей голове и надеяться, что ничего не забудете и не перепутаете, но лучше записать это или сохранить на своем устройстве. Таким образом, эта информация будет находиться на вашем компьютере или телефоне, и программа сохранит информацию в безопасности. Пока программа активна, она «запоминает» все. Однако выход из нее может привести к потере всех данных. Вот почему лучше хранить данные, используя более сложные инструменты.</p><p id="85e7426a-d019-4b48-b7eb-40237fb398f2" class="">Задача состоит в том, чтобы перемещаться по обширной и сложной сети информации и обеспечить сохранность и организованность всех данных: задача, с которой отлично справляются <strong>базы данных</strong>.</p><h2 id="8b258b60-a33c-4beb-8b49-d49120fb2dde" class=""><strong>База данных</strong></h2><p id="05d0911f-36ee-497f-aa79-9525352b7559" class="">База данных — это набор данных, специально организованных для быстрого поиска и внесения изменений, обрабатываемых компьютером.</p><p id="3598e9bf-9d7a-4e01-b2ef-8cb2f803e4ec" class="">Разница между базой данных и обычным файлом заключается в том, что файл может быть структурированным или нет, но база данных должна иметь определенную структуру. Например, вы можете создать файл со списком дел:</p><figure id="f6924d20-5da4-48e7-92da-cb6fa877b7a5" class="image"><a href="https://ucarecdn.com/d0a83903-5f02-4aff-8758-e57938a01901/"><img src="https://ucarecdn.com/d0a83903-5f02-4aff-8758-e57938a01901/"/></a></figure><p id="7cf1adf4-5962-488e-bbf6-372741fc1586" class="">Очевидно, мы бы сказали, что этот файл имеет какую-то структуру, но с точки зрения компьютера, это все еще простой файл, пока вы не напишите программу, которая управляет данными в нем.</p><h2 id="0743c592-48c6-4645-8b1d-09887785a558" class=""><strong>Система управления базами данных</strong></h2><p id="fd7b75b9-4c32-4214-91db-18a9d5b55470" class=""><strong>Система управления базами данных (СУБД)</strong> представляет собой тип программного обеспечения, которое позволяет пользователям определять, создавать и контролировать данные в базе данных.</p><p id="6a440b8b-1a11-4e80-bbb8-c53cd21de588" class="">СУБД является посредником между пользователем и базой данных, что означает, что пользователи могут работать с базами данных через интерфейс СУБД.</p><p id="e13f51da-3785-4651-8821-e9b9b99d36c0" class="">Нам нужна СУБД, чтобы сделать базы данных более эффективными, поскольку разработчики могут оптимизировать структуры данных и алгоритмы для баз данных независимо от пользовательского интерфейса.</p><p id="25cfa326-4593-43e7-85b0-9fa10b90467f" class="">Другая цель этого программного обеспечения — помочь пользователям работать с разными базами данных, не раскрывая их фактических различий.</p><figure id="af369b5c-b735-40ba-aa8c-425785222e1b" class="image"><a href="https://ucarecdn.com/36ac204f-352a-4029-8ee2-9d553112761d/-/crop/2144x920/0,159/-/preview/"><img src="https://ucarecdn.com/36ac204f-352a-4029-8ee2-9d553112761d/-/crop/2144x920/0,159/-/preview/"/></a></figure><p id="302f3247-63e6-4fcf-b233-0fe78fc39868" class="">Большинство систем управления базами данных имеют довольно хорошие описания и учебные пособия на своих сайтах. Есть также определенные языки, которые вам нужно выучить, чтобы начать работать с базой данных, но если вы уже знаете какие-либо языки программирования, вы можете вместо этого работать с базой данных с помощью их инструментов.</p><p id="57ee182a-7ba1-47bf-8aaa-3787717ddd8b" class=""><em>Хотя кажется, что все базы данных имеют разный синтаксис, большинство из них фактически реализуют общие стандарты. Почти все реляционные базы данных используют стандарт SQL, поэтому вы можете применять одни и те же команды в разных СУБД.</em></p><h2 id="e43b9ad3-3947-46e6-9557-2294b65a8219" class=""><strong>Доступ к данным</strong></h2><p id="4e52f1e0-2809-4a21-8aee-b962eb70dab7" class="">На этом этапе у вас все еще могут возникнуть сомнения относительно использования баз данных. Вам нужно выучить новый язык для обновления и выбора данных, что может занять много времени, так почему бы не использовать вместо них простые файлы?</p><p id="d0d02770-7d5d-44ed-9c51-19ab210f130f" class="">Конечно, вы можете хранить файлы локально, но по мере их увеличения вы не сможете быстро найти информацию. Базы данных предоставляют схемы и метаданные, которые позволяют осуществлять быстрый поиск необходимой вам информации.</p><p id="014d9514-68d3-4a9a-a519-1cb62459bb03" class=""><em>Схема описывает, как ВЫ организуете данные. Метаданные содержат структурную и статистическую информацию.</em></p><p id="e26330b1-a7df-4b43-a321-6b1b9b55225d" class="">Если вы хотите получить доступ к своим данным с нескольких устройств, большинство систем предоставляют удобный способ работы с ними через Интернет.</p><p id="50fb3515-01c1-42fc-96ab-9b0f03609824" class="">Чтобы открыть ограниченный доступ другому лицу, некоторые системы управления используют простую аутентификацию по логину/паролю, а некоторые предоставляют более сложные инструменты. С их помощью вы можете предоставить доступ к ограниченной части данных для каждого пользователя.</p><figure id="de37e9aa-dc40-41bf-8fbe-8fb728bba48c" class="image"><a href="https://ucarecdn.com/133f8c65-6edd-49cc-97ec-15d5eb7cdf0d/-/crop/1705x1517/128,93/-/preview/"><img src="https://ucarecdn.com/133f8c65-6edd-49cc-97ec-15d5eb7cdf0d/-/crop/1705x1517/128,93/-/preview/"/></a></figure><p id="1661abba-8def-430d-8f27-d46156f6d98c" class="">Если вы все еще не уверены в том, стоит ли использовать СУБД, давайте посмотрим, что еще они могут вам предложить.</p><h2 id="4523567e-9538-49af-aa0d-1927fc288e88" class=""><strong>Согласованность данных</strong></h2><p id="96d2a86b-62ea-4632-a63e-c5ea4a75ab04" class="">Одной из лучших особенностей баз данных является их способность правильно хранить и восстанавливать данные. Это не означает, что СУБД знает, что значит «правильно». Но как только вы определите правильность с помощью конфигурации или схемы, вы можете быть уверены, что ничто не нарушит эти правила. СУБД обычно предоставляет форматы, которые вы можете использовать для ваших данных. Вы также можете самостоятельно настроить все тесты и ограничения, так как вам удобнее.</p><p id="7b4e9b94-4ba5-41bd-bd32-84d183537054" class="">Допустим, у вас есть данные, к которым имеют доступ несколько пользователей со своих устройств: это может привести к конфликту обновлений. Обновления в файлах обычно следуют правилу «last save wins». Базы данных же, с другой стороны, изолируют разных пользователей и могут быть настроены для разрешения конфликтов между их обновлениями.</p><p id="cc564950-d5e6-4aa1-a835-23f3a4d63f08" class="">Когда обычный файл поврежден и не может быть открыт, вы потеряете свои данные навсегда. Используя вместо этого СУБД, вы можете создавать резервные копии, а затем восстанавливать данные, чтобы продолжить работу.</p><p id="f9c3687b-2e33-4974-8ad4-6e28f0e42cb0" class=""><em>Конечно, вы можете эмулировать все эти операции и разработать свою СУБД, но сначала попробуйте поработать с существующими решениями.</em></p><h2 id="72c67275-b14a-4ce9-9fe9-d2c0173fb8e6" class=""><strong>Заключение</strong></h2><p id="96de4f46-dc95-4560-805e-63e6ea011005" class="">Прежде чем начать работу с базами данных, вам нужно многое изучить.</p><p id="1bb42e87-fff8-4247-a579-f8ccb7e9ccf8" class="">Зато с базами данных вы сможете:</p><ul id="b3c4e4ec-12eb-4d2b-ae30-6660e1aa69cf" class="bulleted-list"><li>Хранить, извлекать и обновлять данные.</li></ul><ul id="459632a8-4a27-4378-ab2b-21770ccbe653" class="bulleted-list"><li>Получить метаданные и словари данных.</li></ul><ul id="6f11bfab-c796-40ce-97a7-534fa13f00a0" class="bulleted-list"><li>Иметь доступ к базе данных удаленно.</li></ul><ul id="a222de92-7ad1-4cdb-9ffe-47d76bb4d457" class="bulleted-list"><li>Ограничить доступ к данным.</li></ul><ul id="7a55de2c-8c30-4c2e-a505-c5060bf9c109" class="bulleted-list"><li>Делать одновременные обновления.</li></ul><ul id="85f2ee01-b66c-4243-a936-1e585d8568c2" class="bulleted-list"><li>Восстановить нужную вам «версию» данных.</li></ul><ul id="2c45b5bb-8e83-466c-9dfd-bac7e19fa03b" class="bulleted-list"><li>Проверять правила согласованности данных автоматически.</li></ul><p id="4a1fc151-1e2e-4a1f-9d51-dc30f5b47654" class="">В мире, управляемом данными, такая функциональность является крайне полезной. Добро пожаловать в мир новых возможностей и удачи в изучении баз данных!</p></div></article></body></html>

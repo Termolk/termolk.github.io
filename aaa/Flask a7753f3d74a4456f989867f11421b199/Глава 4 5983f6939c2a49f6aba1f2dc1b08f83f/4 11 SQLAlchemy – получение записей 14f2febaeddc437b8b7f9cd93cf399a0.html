@@ -1,0 +1,829 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>4.11 SQLAlchemy – получение записей</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="14f2feba-eddc-437b-8b7f-9cd93cf399a0" class="page sans"><header><h1 class="page-title">4.11 SQLAlchemy – получение записей</h1></header><div class="page-body"><p id="f773b900-7166-4f00-9dbb-3c844232ccb7" class="">
+</p><p id="cfff2aa4-be1f-4eda-9c61-f2b209f2808a" class="">Почти за каждой страничкой сайта, которую вы открываете стоят запросы к БД.</p><p id="959797f0-67cb-423d-a70e-46560706888d" class="">Вы решили узнать, что идет в кино и зашли на сайт киноафиш? Сервер сайта извлекает список фильмов в категории &quot;новинки&quot;.</p><p id="76328e81-a083-40ab-950c-0878171ade0d" class="">Хотите узнать больше про фильм? Сервер снова обращается к таблице &quot;фильмы&quot;, но уже, чтобы получить описание, бюджет, сборы, рейтинги и всякую другую полезную информацию. Хотите посмотреть, где идет вот этот новый фильм про супергероев? Сервер делает выборку из таблицы &quot;сеансы&quot;. Хотите почитать, кто играет в этом фильме? Сервер вынимает актеров из таблицы &quot;актеры&quot;, которые связаны с этим фильмом.</p><p id="f2ec2ad0-bbdd-426e-bbf2-30a19fa426e3" class="">Пора и нам научиться извлекать данные из созданных таблиц!</p><p id="3a8b042a-1e98-4b83-a166-bdc94b9a4451" class=""><strong>В этом топике вы научитесь:</strong></p><ul id="28796838-2619-4cd4-94a6-2769fb6d5de7" class="bulleted-list"><li>Получать несколько записей из базы данных</li></ul><ul id="947700a3-f45a-4cc8-9bbb-d5369cc36071" class="bulleted-list"><li>Получать запись по id</li></ul><ul id="b5c9e642-27c5-4c38-b4eb-4bf3c7d267c0" class="bulleted-list"><li>Получать записи в определённом порядке</li></ul><h2 id="b9b2cbce-e7f1-4289-846b-bc3201321d9f" class=""><strong>Получение набора записей</strong></h2><p id="51bda22e-fb90-470c-905e-5c7f3ee67314" class="">В SQL получение записей из таблицы называется выборкой, и делается с помощью запроса начинающегося с ключевого слова <code>SELECT</code>. В ответ на запрос база возвращает нам набор записей. В CRUD это буква R, read. Удобство декларативного SQL в том что нам не нужно знать как база хранит данные физически, достаточно указывать что именно мы хотим получить.</p><p id="5c7b3189-81ce-4816-b303-762fb4b125ce" class="">В SQLAlchemy за получение объектов из базы ответственен объект Query, в нашем случае <code>db.session.query</code> .</p><p id="fa302df9-697b-4491-ab98-a81b71eb6e84" class="">Когда мы хотим добавить дополнительные критерии, мы не изменяем уже созданный объект Query, а создаём его копию с измененным содержимым. В Python таким же образом ведут себя строки, мы не можем изменить строку напрямую, а все методы строки, которые что-либо в ней меняют, на самом деле возвращают новую строку с соответствующими изменениями.</p><p id="c6e03dcd-20f8-44ee-908d-68e016c242f7" class="">Для начала получим всех наших пользователей. Для этого укажем, какую модель будем использовать, передав её аргументом.</p><pre id="e6680119-a88d-4379-9ea9-c9b6a189e1d5" class="code code-wrap"><code>users = db.session.query(User).all()</code></pre><p id="0f86e723-ac37-4001-ae73-3239b3470172" class="">Мы получили объект класса Query, который будет выбирать записи из таблицы, на которую указывает модель User. После у нашего объекта мы можем вызывать различные методы, которые будут создавать дополненный условиями объект Query. Или же мы можем вызвать метод <code>Query.all</code>, который указывает SQLAlchemy, что мы хотим получить все объекты заданной Query себе.</p><p id="46aafe88-15f8-44cb-a1e3-515a9bf3a8f8" class="">В момент вызова <code>.all</code> будет сгенерирован запрос типа:</p><pre id="b5c9edce-b27a-44fa-9e33-273ff63bae91" class="code code-wrap"><code>SELECT users.id AS users_id, users.name AS users_name, users.email AS users_email, users.password AS users_password
+FROM users
+</code></pre><p id="bb520e94-dce9-4f97-994f-82db42b55e25" class="">Как мы видим SQLAlchemy берёт информацию о названии полей и таблицы из модели, и указывает их в запросе.</p><p id="557e3075-a1b2-4b27-b8c4-d2b2745eb517" class="">Полный код примера:</p><pre id="455aa07b-e120-4fc5-9fcf-f284a5a02534" class="code code-wrap"><code>class User(db.Model):
+    __tablename__ = &quot;users&quot;
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    email = db.Column(db.String, nullable=False)
+    password = db.Column(db.String, nullable=False)
+
+
+# Следующие строчки добавляют записи в базу
+db.session.add(User(name=&quot;Марк&quot;, email=&quot;mark@stepik.org&quot;, password=&quot;himark111&quot;))
+db.session.add(User(name=&quot;Лиза&quot;, email=&quot;lisa@stepik.org&quot;, password=&quot;whatamidoing222&quot;))
+db.session.commit()
+
+# Теперь выведем записи из базы
+users = db.session.query(User).all()
+print(users)
+</code></pre><h2 id="a008e8ba-a3c2-4543-9d5f-900b8df76f5f" class=""><strong>Работа с результатами запроса</strong></h2><p id="5400080f-6d45-43b3-b9a7-93e786417b09" class="">После того как мы написали запрос, обычно мы хотим получить записи из базы. Для этого у объекта Query есть несколько методов которые возвращают результаты запроса.</p><p id="98dbb591-7096-4fd6-8c5e-236f83cc836b" class="">Это <code>Query.all</code>, <code>Query.scalar</code> и <code>Query.get</code>.</p><h2 id="5cb72545-9623-4abd-80d7-16ea98e4e9c3" class=""><strong>Порядок</strong></h2><p id="243847ed-3fb6-40cc-8ac9-e83bbb805da0" class="">Также мы можем указывать порядок, в котором база будет возвращать записи.</p><p id="17ed7654-620f-48f7-97db-56089bc77383" class="">Важно — если порядок не указан явно, БД имеет полное право вернуть записи в любом порядке, и он не обязан даже совпадать от запроса к запросу.</p><p id="abf4f024-cc3d-47c0-bc97-908b9a0e5af8" class="">Например, наш аналитик попросил у нас данные тех товаров, которые были созданы в таблице раньше всех. Он хочет убедиться что данные старых товаров всё ещё актуальны.</p><p id="14f48f30-f044-46b7-9e3f-0613c7b7fa2c" class="">У нас есть модель товара, с полем даты создания. Давайте получим десять самых старых продуктов! Для этого у нас есть модель Product:</p><pre id="8c1bcea7-87b7-4a87-b718-eff715b8259f" class="code code-wrap"><code>class Product(db.Model):
+    __tablename__ = &quot;products&quot;
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    created_at = db.Новый порядок
+
+Наш аналитик был доволен полученными данными. Но теперь к нам пришел дизайнер, и попросил данные про пять товаров отсортированных в обратном алфавитном порядке. Мы благоразумно решили не спрашивать зачем это ему и просто написали новый код.
+
+Теперь нам нужно указать другое поле для сортировки и указать порядок не по возрастанию, а по убыванию. Для этого у поля модели есть метод .desc(), вызвав который мы указываем, что хотим получить сортировку по убыванию.
+
+Полный код примера:
+
+class Product(db.Model):
+    __tablename__ = &quot;products&quot;
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False)
+
+
+products_query = db.session.query(Product).order_by(Product.name.desc())
+products = products_query.all()
+print(&quot;Получили&quot;, len(products), &quot;продуктов&quot;)
+for product in products:
+    print(&quot;Продукт&quot;, product.name, &quot;был создан&quot;, product.created_at)
+Вывод скрипта.
+
+Получили 5 продуктов
+Продукт Холодец был создан 2008-09-25 22:30:31.883956
+Продукт Фарш питонисты был создан 2000-04-23 03:33:44.966675
+Продукт Уха из ряпушки был создан 2006-08-23 00:21:28.902633
+Продукт Тонкие блины с черемшой был создан 2031-06-04 00:40:58.244517
+Продукт Тонкие блины с черемшой был создан 2001-08-12 02:55:25.812228Column(db.DateTime, nullable=False)
+</code></pre><p id="0253d821-b5b8-4513-9fa6-9242ef074b5b" class="">Для этого нам понадобится отсортировать записи в ответе. В объекте Query для этого есть метод .order_by. Он создаст новый объект Query, в котором будет указано как сортировать и база сама отсортирует нам записи. Создадим нужный нам объект Query:</p><pre id="95bc1336-93aa-4336-aa2f-8e24ef1f09e0" class="code code-wrap"><code>class Product(db.Model):
+    __tablename__ = &quot;products&quot;
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False)
+
+
+products_query = db.session.query(Product).order_by(Product.created_at).limit(10)
+</code></pre><p id="23e7a435-7a7a-4abe-b6d4-14859472fc23" class="">И получим все данные по нашему запросу. Заодно убедимся, что получили столько записей сколько мы хотели, и не больше:</p><pre id="018b199d-9468-4c43-8f94-11591552ff12" class="code code-wrap"><code>products = products_query.all()
+print(&quot;Получили&quot;, len(products), &quot;продуктов&quot;)
+</code></pre><p id="19c9f264-79eb-4289-aacd-3df7c868b769" class="">Заодно давайте выведем имя и дату создания продуктов, чтобы точно убедиться, что они идут по порядку и от самых старых к самым новым:</p><pre id="f2f369c1-eed5-40dc-9573-d102fdc1345c" class="code code-wrap"><code>for product in products:
+    print(&quot;Продукт&quot;, product.name, &quot;был создан&quot;, product.created_at)
+</code></pre><p id="1b303501-328d-45dd-ad94-dc14d06898d7" class="">Полный код примера:</p><pre id="8b150a8c-8d92-4a88-b2e5-6766829adeda" class="code code-wrap"><code>import datetime
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+
+app = Flask(__name__)
+app.secret_key = &#x27;randomstring&#x27;
+app.config[&#x27;SQLALCHEMY_DATABASE_URI&#x27;] = &#x27;sqlite:///products.db&#x27;
+app.config[&#x27;SQLALCHEMY_TRACK_MODIFICATIONS&#x27;] = False
+db = SQLAlchemy(app)
+
+class Product(db.Model):
+    __tablename__ = &quot;products&quot;
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False, unique=True)
+    created_at = db.Column(db.DateTime, nullable=False)
+
+db.create_all()
+
+_products = []
+_products.append(Product(name=&quot;Бефстроганов классический&quot;, created_at=datetime.date(year=2000, month=4, day=3)))
+_products.append(Product(name=&quot;Грузди соленые&quot;, created_at=datetime.date(year=2000, month=2, day=10)))
+_products.append(Product(name=&quot;Гвозди жареные&quot;, created_at=datetime.date(year=2000, month=2, day=14)))
+_products.append(Product(name=&quot;Ряпушка по-карельски&quot;, created_at=datetime.date(year=2000, month=3, day=12)))
+_products.append(Product(name=&quot;Голубцы с перловкой и грибами&quot;, created_at=datetime.date(year=2000, month=4, day=2)))
+db.session.add_all(_products)
+db.session.commit()
+
+products_query = db.session.query(Product).order_by(Product.created_at)
+products = products_query.all()
+print(&quot;Получили&quot;, len(products), &quot;продуктов&quot;)
+for product in products:
+    print(&quot;Продукт&quot;, product.name, &quot;был создан&quot;, product.created_at)
+</code></pre><p id="dab4ccea-ee12-4779-9077-5e66da396a1f" class="">Вывод скрипта:</p><pre id="695d9f0d-26d6-4973-8afe-0ac1e2f37426" class="code code-wrap"><code>Получили 5 продуктов
+Продукт Бефстроганов классический был создан 2000-01-17
+Продукт Грузди соленые был создан 2000-02-10
+Продукт Гвозди жареные был создан 2000-02-14
+Продукт Ряпушка по-карельски был создан 2000-03-12
+Продукт Голубцы с перловкой и грибами был создан 2000-03-18</code></pre><h2 id="7b45bf31-1957-4237-88c6-2394ff1b488f" class=""><strong>Новый порядок</strong></h2><p id="941101e7-1de3-4fc3-8069-e9100429129d" class="">Наш аналитик был доволен полученными данными. Но теперь к нам пришел дизайнер, и попросил данные про пять товаров отсортированных в обратном алфавитном порядке. Мы благоразумно решили не спрашивать зачем это ему и просто написали новый код.</p><p id="eb207519-3383-4669-8e30-b63a43687657" class="">Теперь нам нужно указать другое поле для сортировки и указать порядок не по возрастанию, а по убыванию. Для этого у поля модели есть метод <code>.desc()</code>, вызвав который мы указываем, что хотим получить сортировку по убыванию.</p><p id="486d31c9-2a7e-4ca2-81ca-b3a6b25b97e1" class="">Полный код примера:</p><pre id="a2452743-3a11-49ba-a328-077bc97584f1" class="code code-wrap"><code>class Product(db.Model):
+    __tablename__ = &quot;products&quot;
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False)
+
+
+products_query = db.session.query(Product).order_by(Product.name.desc())
+products = products_query.all()
+print(&quot;Получили&quot;, len(products), &quot;продуктов&quot;)
+for product in products:
+    print(&quot;Продукт&quot;, product.name, &quot;был создан&quot;, product.created_at)
+</code></pre><p id="b13c3b53-5ba6-4463-a017-9aa656c18ec4" class="">Вывод скрипта.</p><pre id="ea181b2a-bdcb-4283-97a1-b142fd574847" class="code code-wrap"><code>Получили 5 продуктов
+Продукт Холодец был создан 2008-09-25 22:30:31.883956
+Продукт Фарш питонисты был создан 2000-04-23 03:33:44.966675
+Продукт Уха из ряпушки был создан 2006-08-23 00:21:28.902633
+Продукт Тонкие блины с черемшой был создан 2031-06-04 00:40:58.244517
+Продукт Тонкие блины с черемшой был создан 2001-08-12 02:55:25.812228</code></pre><h2 id="b951b59d-f3ec-400e-8ef4-1ceadf0c3d92" class=""><strong>Лимит на количество записей</strong></h2><p id="70dfe968-1bdc-4387-9bae-43405070eba4" class="">Обычно мы хотим получить себе в ответ не всю базу данных сразу, а только часть содержащихся в ней данных. В Query объекте для этого есть метод <code>.limit(n)</code>. Он создают новый объект Query, в котором будет указано сколько записей мы хотим получить.</p><pre id="7a8cfdf5-6840-44d5-bc68-447e1d954fb1" class="code code-wrap"><code>class Product(db.Model):
+    __tablename__ = &quot;products&quot;
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False)
+
+
+products_query = db.session.query(Product).order_by(Product.name.desc()).limit(3)
+products = products_query.all()
+print(&quot;Получили&quot;, len(products), &quot;продуктов&quot;)
+for product in products:
+    print(&quot;Продукт&quot;, product.name, &quot;был создан&quot;, product.created_at)
+</code></pre><p id="546c9b89-a3e3-450c-b92d-174ad59fd022" class="">Такой код вернет нам:</p><pre id="664a11a4-fbc6-4c6b-920f-719e08ecf8d8" class="code code-wrap"><code>Получили 3 продуктов
+Продукт Бефстроганов классический был создан 2000-01-17
+Продукт Грузди соленые был создан 2000-02-10
+Продукт Гвозди жареные был создан 2000-02-14</code></pre><h2 id="e5d26be4-1d94-4dbe-9535-e4ea5c8b392c" class=""><strong>Получение одной записи</strong></h2><p id="f7321564-b621-4802-9e4f-9932a899dc80" class="">Что если мы хотим получить строго один объект? Типичная задача, пользователь делает запрос, в котором указывает свой id, и мы хотим получить объект пользователя с этим id из базы.</p><p id="065f32b8-5796-4401-b80d-3b1a48d83c14" class="">Для этого случая у query есть метод get. Он принимает в качестве аргумента первичный ключ и возвращает строго одну запись, так как в таблице не могут содержаться несколько записей с одинаковым первичным ключом.</p><p id="4fd761ee-a85c-41ca-8dbd-ec6370e0a266" class="">Например, мы знаем что у нас есть пользователь с id равным 1.</p><p id="0252b04c-65d1-4f6a-8b5d-a57d8b64af6d" class="">Тогда мы можем использовать <code>user = db.session.query(User).get(1)</code> ,  чтобы получить одну запись по ее id.</p><p id="6d316e62-5209-41e0-b482-dd36a0186978" class="">Полный код примера:</p><pre id="c4ae7f75-d5df-4be5-a1b9-dbe69ffc6ea3" class="code code-wrap"><code>from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+
+app = Flask(__name__)
+app.secret_key = &#x27;randomstring&#x27;
+app.config[&#x27;SQLALCHEMY_DATABASE_URI&#x27;] = &#x27;sqlite:///products.db&#x27;
+app.config[&#x27;SQLALCHEMY_TRACK_MODIFICATIONS&#x27;] = False
+db = SQLAlchemy(app)
+
+class User(db.Model):
+    __tablename__ = &quot;users&quot;
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    email = db.Column(db.String, nullable=False)
+    password = db.Column(db.String, nullable=False)
+
+db.create_all()
+
+_users = []
+_users.append(User(name=&quot;Артимович Лева Алексеевич&quot;, email=&quot;Ohota257@gmail.com&quot;, password=&quot;sAtMnZgiB9d2&quot;))
+_users.append(User(name=&quot;Фёдорова Таммия Георгиевна&quot;, email=&quot;FedorovaTammiya32@gmail.com&quot;, password=&quot;96r1C7TbRJmo&quot;))
+_users.append(User(name=&quot;Крылов Васька Макарович&quot;, email=&quot;KryilovVaska145@gmail.com&quot;, password=&quot;sLhczSy3YUWg&quot;))
+
+db.session.add_all(_users)
+db.session.commit()
+
+user = db.session.query(User).get(1)
+print(user.id, user.name)</code></pre><p id="1c3ed334-f4b0-4cb9-a03c-9c7a91e52a03" class="">Такой код вернет нам:</p><pre id="82a2ee94-a332-4599-88e0-d441ebd94e88" class="code code-wrap"><code>1 Артимович Лева Алексеевич</code></pre><h2 id="b8f7810e-e93c-4e65-88ae-864bc87fe5cd" class=""><strong>Несуществующий ключ</strong></h2><p id="eef0111d-2726-49b1-94df-125320469e5d" class="">Если в таблице нет записи с нужным id, get вернёт None.</p><pre id="0788bc7b-b3e5-4942-a8b8-462543851ebe" class="code code-wrap"><code>user = db.session.query(User).get(-1)
+print(&#x27;Is user None?&#x27;, user is None)
+</code></pre><p id="d1b1bb91-8064-4f18-9f6f-4403dcffee3a" class="">В свою очередь, в вебе часто нужно, если объекта с нужным id в базе не нашлось, вернуть пользователю ответ с кодом 404 Not found. Для этой задачи Flask-SQLAlchemy добавляет в объект Query метод <code>.get_or_404</code>, который как можно угадать по названию или возвращает нам объект по id, или возвращает пользователю ответ со статус кодом 404.</p><p id="bd859ba3-40a7-45d7-a66d-8319ffa01076" class="">Например, мы хотим вернуть имя пользователя по его id или 404 если такого пользователя нет в базе.</p><p id="3648cd38-343a-460d-91e1-c4c311c92afc" class=""><strong>Полный код примера:</strong></p><pre id="0e54278c-1186-4f0c-913a-41e76318ab77" class="code code-wrap"><code>from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+
+
+app = Flask(__name__)
+app.config[&quot;SQLALCHEMY_DATABASE_URI&quot;] = &quot;sqlite:///users.db&quot;app.config[&#x27;SQLALCHEMY_TRACK_MODIFICATIONS&#x27;] = False
+db = SQLAlchemy(app)
+
+
+class User(db.Model):
+    __tablename__ = &quot;users&quot;
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    email = db.Column(db.String, nullable=False, unique=True)
+    password = db.Column(db.String, nullable=False)
+
+db.create_all()
+
+_users = []
+_users.append(User(name=&quot;Артимович Лева Алексеевич&quot;, email=&quot;Ohota257@gmail.com&quot;, password=&quot;sAtMnZgiB9d2&quot;))
+_users.append(User(name=&quot;Фёдорова Таммия Георгиевна&quot;, email=&quot;FedorovaTammiya32@gmail.com&quot;, password=&quot;96r1C7TbRJmo&quot;))
+_users.append(User(name=&quot;Крылов Васька Макарович&quot;, email=&quot;KryilovVaska145@gmail.com&quot;, password=&quot;sLhczSy3YUWg&quot;))
+
+db.session.add_all(_users)
+db.session.commit()
+
+@app.route(&#x27;/user/&lt;id&gt;&#x27;)
+def show_name(id):
+    user = db.session.query(User).get_or_404(id)
+    return user.name
+
+app.run()</code></pre><p id="2b4d9ff1-6b9c-4afa-b217-73cbf1809280" class="">Запустите этот код, затем перейдите на id существующего и несуществующего пользователя, чтобы получить ошибку.</p><h2 id="00a59d5b-2ea7-4bd0-9b77-5d7fe541ed63" class=""><strong>Альтернативный короткий синтаксис</strong></h2><p id="1e3f5f6b-f65a-4ec8-9d59-1eb70ab44027" class="">Все перечисленные раньше операции можно писать в сокращенном виде:</p><p id="3cfeedc0-d394-43ce-899a-ba4d31ea74a5" class=""><strong>Получение всех записей:</strong></p><p id="03e916cb-16b3-4702-8c2f-8ee1cabba5d4" class="">User.query.all()</p><p id="7659254d-f942-4008-9dfb-592b97168269" class=""><strong>Получение одной записи:</strong></p><p id="44c93408-058b-49d2-931e-e7ea79fe84ac" class="">User.query.get(1)</p><p id="4bbf2726-a1b3-4a31-ab7d-f830d48c3a42" class=""><strong>Упорядочивание:</strong></p><p id="2b20e646-70de-4174-ac86-c45191315b77" class="">User.query.order_by(User.mail).all()</p><p id="0f81f7e9-e40a-41d5-b3fb-81865d9eeaa4" class=""><strong>Лимит на количество записей:</strong></p><p id="0feb2a01-8e5c-4c4f-b16a-1a54c3def708" class="">User.query.limit(5).all()</p><p id="e9bcda07-5e06-474e-86e3-6cc8f3ae2bd1" class="block-color-red">Обратите внимание: такой синтаксис, в отличие от db.session... работает только во flask-sqlalchemy и не работает в sqlalchemy самостоятельной.</p><h2 id="c3710129-5947-4a95-a1fe-3578641e5342" class=""><strong>Резюме</strong></h2><p id="a8e6f647-be53-4d0c-afd6-ef0e52a44d35" class=""><strong>db.session.query(Модель).all() </strong>возвращает все записи</p><p id="6553a191-027b-44b9-bdd4-1337ea76c30b" class=""><code>users = db.session.query(User).all()</code></p><p id="3aece7cc-6314-418f-b313-539ef8824d86" class="">User.query.all()</p><p id="4d0012b8-e77a-4a92-90af-634d27272745" class=""><strong>db.session.query(Модель).get(id) </strong>возвращает одну запись по ее id.</p><p id="cb8d7473-1ef1-4942-80db-a11e5f0c61e2" class=""><code>user = db.session.query(User).get(1)</code></p><p id="40856b6f-1740-442c-9a58-3b0c1de30cf6" class=""><strong>.order_by определяет параметр сортировки</strong></p><p id="e7e4fd3c-2e29-4b79-827e-b049eab1b8e9" class=""><code>db.session.query(Product).order_by(Product.created_at)</code></p><p id="d48e970d-92be-4041-8e59-ae0631a81205" class=""><strong>.desc инвертирует сортировку</strong></p><p id="067206e8-8b97-4930-93bc-72c607d9586c" class=""><code>db.session.query(Product).order_by(Product.created_at.desc())</code></p><p id="7d4b7e61-dda9-45d3-9a66-658d00eff17c" class=""><strong>.limit задает количество, которым будет ограничен результат</strong></p><p id="b9c72279-3911-49f7-ba0d-e92012773725" class=""><code>db.session.query(Product).limit(5)</code></p><h2 id="2b622305-dc4c-41fa-a459-a8840b672e10" class=""><strong>Альтернативная короткая запись</strong></h2><p id="74874681-152c-4c58-a9eb-f39c84940d06" class=""><strong>Получение всех записей:</strong></p><p id="523f1a85-3781-4d82-a1b9-c3f5287c6431" class=""><code>User.query.all()</code></p><p id="bbecdd7f-36e2-4815-9c31-95448326e204" class=""><strong>Получение одной записи:</strong></p><p id="78cafe49-5bc9-46c3-864c-a40e99e10268" class=""><code>User.query.get(1)</code></p><p id="831f188a-45ce-4c9e-b793-2650555239b3" class=""><strong>Упорядочивание:</strong></p><p id="ccbf1eda-25e2-4cba-8d64-7321efc00d76" class=""><code>User.query.order_by(User.mail).all()</code></p><p id="4ace9707-e493-4dd0-b69b-bdb6b1a59858" class=""><strong>Лимит на количество записей:</strong></p><p id="224a9197-4a6e-41fa-a547-828613c68539" class=""><code>User.query.limit(5).all()</code></p><p id="fe8ada69-21ac-497f-86a0-09b8205f0059" class="">
+</p></div></article></body></html>

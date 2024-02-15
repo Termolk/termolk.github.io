@@ -1,0 +1,721 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>5.3 Flask: сессии</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="9e55270d-8a45-435b-bacf-de356f0aa24b" class="page sans"><header><h1 class="page-title">5.3 Flask: сессии</h1></header><div class="page-body"><p id="5d4f1c3d-8561-418a-a1cb-1ddc800cd744" class="">Объект сессии — это способ хранить данные конкретных пользователей между запросами.</p><p id="05e4e684-ef1b-4c1d-8ac7-e7b182cc32bc" class="">Так пользователь может добавить товар в корзину на одной странице, а на следующей увидеть, что товар все еще находится в корзине. Так же и со входом по паролю: пользователь может войти на одной странице, а Flask-приложение будет узнавать его на всех следующих.</p><p id="7798da2f-fcad-42ad-be52-a9150093212a" class=""><strong>Как это работает?</strong></p><p id="e0a6f239-719a-4a45-a135-934abb27f075" class="">При первом обращении сервер отдает браузеру клиента cookie, которые тот передает при следующем запросе обратно серверу, а тот меняет и возвращает обратно браузеру и так далее. Данные сессии хранятся поверх cookie, и сервер подписывает их криптографически. Изменить их в браузере нельзя, для этого требуется SECRET_KEY, который есть только на стороне сервера.</p><p id="90848cb7-525e-4555-8229-c5a58fa5f44d" class="">Для получения данных из сессии и записи обратно в сессию используется объект <strong>session</strong> из пакета flask.</p><p id="f5f3912e-a20e-4d2e-b13b-392d522f742d" class="">Мы можем работать с этим объектом как со словарем, содержимое которого индивидуально для каждого браузера-клиента.</p><p id="d66db891-c611-40a7-aa7e-b6011f2db9ea" class="">Обратите внимание, поскольку сессии хранятся поверх куки, мы можем хранить ограниченный объем данных.</p><p id="cbd74ed6-2389-46dd-a0ae-cb50ffc56c57" class=""><strong>В этом топике вы научитесь:</strong></p><ul id="64b325cd-25af-461c-b9db-3ac4ae0a45a4" class="bulleted-list"><li>записывать переменные в сессию;</li></ul><ul id="2a4cfb61-b3a7-4fc9-8348-4c2802d16688" class="bulleted-list"><li>хранить в сессии данные пользователя – id, роль, почту итд;</li></ul><ul id="53c3f4c1-8daa-4e10-a316-c61ef6608dd7" class="bulleted-list"><li>получать данные из сессии;</li></ul><ul id="6ec1dbfd-36de-47db-a6f9-9b73209ca971" class="bulleted-list"><li>получать данные из БД на основе данных сессии.</li></ul><h2 id="74465413-d88e-4f3a-9825-3c5f2d154f58" class=""><strong>Начало работы с сессиями</strong></h2><p id="24f7a4ce-d529-4b05-90ed-ff58c6598f03" class="">Записывать в сессию и читать из нее можно так, как будто это словарь:</p><pre id="357fba4d-48a5-4e53-9a8c-aad79a3023ba" class="code code-wrap"><code>session[&quot;username&quot;] = &quot;Alexey&quot;print(session[&quot;username&quot;])
+
+&gt;&gt;&gt; Alexey
+
+print(session.get(&quot;username&quot;))
+
+&gt;&gt;&gt; Alexey
+</code></pre><p id="9f1611df-aae9-46be-84b6-e65c3b51d6bb" class=""><strong>Создадим простой код, чтобы показать работу сессий:</strong></p><ul id="008b8987-ac76-407a-8d29-a856c2f7c40f" class="bulleted-list"><li>импортируем сессии;</li></ul><ul id="eafb2037-5939-4c79-aed6-81e43e4e349f" class="bulleted-list"><li>создадим роут;</li></ul><ul id="b73cd84a-c3d7-450c-96d3-b5cdaf2eae40" class="bulleted-list"><li>напишем его логику;</li></ul><ul id="15318cad-7c4c-44e3-8e35-852dec6f93e4" class="bulleted-list"><li>запустим приложение.</li></ul><pre id="2ba9ce5a-a12f-4577-8038-3253f8dc5fe4" class="code code-wrap"><code>from flask import Flask, session
+
+app = Flask(__name__)
+app.secret_key = &quot;randomstring&quot;@app.route(&#x27;/&#x27;) def increase():
+
+  current = session.get(&quot;i&quot;, 0)     # начинаем с 0, увеличиваем i каждый раз
+  session[&quot;i&quot;] = current + 1return str(current)                # возвращаем i
+
+app.run()
+</code></pre><p id="ae729e75-5cc4-497a-bbe0-a88c46e99e4f" class="">Когда вы откроете этот пример в браузере, то увидите – 0.</p><p id="ecaedbec-6870-43fc-a8c9-db06a8c27bd1" class="">После первого обновления страницы вы увидите – 1, после второго – 2, после третьего – 3.</p><h2 id="353a0e9d-3de7-4d9e-aaba-4b3814edf28c" class=""><strong>Сохраняем простую настройку</strong></h2><p id="09e8f062-8bc3-47da-b399-832aa25f3746" class="">Создадим еще один простой пример использования сессий.</p><p id="3f76b7e0-bd10-46f0-b174-f03660354a32" class="">Напишем переключатель темной темы на светлую.</p><p id="586c0fee-0b45-4d93-a1a6-434facf5a53d" class="">Будем помнить для клиента, какую тему он использует, не привлекая для этого файлы и базы данных.</p><p id="533f660d-896a-407c-bea8-7c35f9e2b1d9" class="">Создадим три роута:</p><p id="93c29e1e-1af3-4446-9241-7ed1d8dcf0f9" class="">– роут, который записывает в сессию ключ dark=True;– роут, который записывает в сессию ключ dark=False;– роут, который выводит то, что записано в сессию.</p><pre id="2ea154eb-83c5-4e01-8025-c8dd970db96e" class="code code-wrap"><code>from flask import Flask, session
+
+app = Flask(__name__)
+app.secret_key = &quot;randomstring&quot;@app.route(&#x27;/dark/&#x27;)def on():
+    session[&#x27;dark&#x27;] = Truereturn &quot;Set to Dark&quot;@app.route(&#x27;/light/&#x27;)def off():
+    session[&#x27;dark&#x27;] = Falsereturn &quot;Set to Light&quot;@app.route(&#x27;/&#x27;)def show():
+    dark = session.get(&quot;dark&quot;,False)
+
+    return &quot;&lt;body bgcolor={}&gt;&lt;/body&gt;&quot;.format(&quot;#000&quot; if dark else &quot;#fff&quot;)
+
+app.run()
+</code></pre><p id="9f4e41c9-8148-43cb-accb-22bba7bbeb54" class="">Теперь, протестируем наше приложение:</p><p id="dc8c4605-d402-490a-b3ec-3a081e0355bf" class="">Открываем <strong>/</strong>Белый экран</p><p id="23eed9e1-bf0f-4629-9146-ddde20214400" class="">Открываем <strong>/dark</strong>Set to Dark</p><p id="cefab48a-4c1f-43e4-ba3f-702ae22abd7d" class="">Открываем <strong>/</strong>Черный экран</p><p id="39c14d55-4009-4212-9774-83ed0de33bef" class="">Открываем <strong>/light</strong>Set to Light</p><p id="74ef60ec-f90f-4bd8-8d2d-0ce7fc201cf6" class="">Открываем <strong>/</strong>Белый экран</p><p id="f2be0d37-19bf-442b-bd89-1d1f18e91953" class="">Отлично, мы сохранили простую настройку и применили ее для стилизации приложения.</p><p id="ef474604-fee7-46bb-b086-562cd6464c87" class="">Там можно хранить размер шрифта, имя пользователя и другие штуки!</p><h2 id="feb20137-56e4-4d44-bf7a-529a3bdcc831" class=""><strong>Механизм работы сессий</strong></h2><p id="bb97ef2c-bae9-4323-ac01-8b767781dd78" class="">В примере на прошлом шаге цифра продолжала меняться, поскольку объект session хранит в себе свойство i и увеличивает его на единицу каждый раз.</p><p id="c570c672-eea4-42af-a658-aefd30622dd4" class="">Так как сессии хранятся в кукисах, то с помощью инструментов разработчика в браузере можно подсмотреть, как браузер и сервер обмениваются ими.</p><p id="75303a83-deda-4fb4-9c4e-54c76e9d0357" class="">Во время первого захода можно отметить, что браузер не отправляет никакие куки, а вот сервер отправляет их с именем session. И в их значении хранятся наши данные, т.е. то, что i равно 1. Они секретные, поэтому зашифрованы в строку.</p><figure id="e9156c1a-c9c4-41b9-9330-e65caff43569" class="image"><a href="https://ucarecdn.com/299d2a7b-e9a8-4bc5-9cdb-6c0158f6944c/"><img src="https://ucarecdn.com/299d2a7b-e9a8-4bc5-9cdb-6c0158f6944c/"/></a></figure><p id="351d503b-5999-470d-8c07-930efe67140f" class="">А уже во время второго захода на страницу браузер отправит на сервер полученные раннее от него кукис. В нашем случае — это session.</p><p id="e8af7d6b-4768-4781-bb73-79e9358cc57e" class="">Несмотря на то, что содержимое зашифровано, мы можем заметить, что строка, которая была получена и которая сейчас отправлена, совпадает.</p><p id="5f63ffaf-b312-4c2f-8541-13d14c57bb32" class="">Также можно увидеть, что сервер вновь отправил нам эту куки, но уже с какой-то другой информацией. Как мы можем догадаться, там лежит i = 2.</p><figure id="ef64b6fa-4c92-4df8-87a9-848b48ea8e63" class="image"><a href="https://ucarecdn.com/b5442704-fb2a-4276-9845-b42491572569/"><img src="https://ucarecdn.com/b5442704-fb2a-4276-9845-b42491572569/"/></a></figure><h2 id="4a1e6273-d6ef-471c-b038-e988fb054801" class=""><strong>Хранение пользовательских данных</strong></h2><p id="398b231d-62c9-4446-8861-342216f5a030" class="">Попробуем сделать заготовку классического примера аутентификации.</p><p id="e96b3b70-f6ff-428c-8d4a-a840a29402cf" class="">Создадим для этого три роута:</p><p id="b88648c9-a185-4b82-a50a-97a1a861a235" class="">– роут, который имитирует аутентификацию и записывает в сессию данные пользователя;</p><p id="9db1c135-052b-4b75-8a15-e0e75e6f1a0c" class="">– роут, который как бы имитирует разлогинивание пользователя;</p><p id="6a62fff1-31c5-4f3a-8875-3c46cd38cf69" class="">– роут, который показывает статус пользователя.</p><pre id="68187524-f212-483a-96bb-abd00fc163a2" class="code code-wrap"><code>from flask import Flask, session
+
+app = Flask(__name__)
+app.secret_key = &quot;randomstring&quot;
+
+@app.route(&#x27;/login/&#x27;)
+def login():
+
+    session[&#x27;id&#x27;] = 1357
+    session[&#x27;name&#x27;] = &quot;Mary Jane&quot;return &quot;User data set&quot;
+
+@app.route(&#x27;/logout&#x27;)
+def logout():
+
+    session.pop(&quot;id&quot;)
+    session.pop(&quot;name&quot;)
+    return &quot;User data removed&quot;
+
+@app.route(&#x27;/&#x27;)
+def index():
+    return &quot;Id: {} Name: {}&quot;.format(session.get(&quot;id&quot;),session.get(&quot;name&quot;))
+
+app.run()
+</code></pre><p id="27ada70a-2640-4272-8083-83d5d5cc39c4" class="">Открываем <strong>/</strong></p><p id="542cf441-3633-46f1-afeb-2769adbe503d" class="">Id: None Name: None</p><p id="f5231ffd-081a-4119-aadf-ee8ecdbe157b" class="">
+</p><p id="4118b9d9-77c8-496d-a770-a2baf9ab0e27" class="">Открываем <strong>/login</strong></p><p id="d4f89414-aa3a-41e3-833a-e403c462d3ca" class="">User data set</p><p id="e899b398-1214-41c5-8adf-76ca8b612ce5" class="">
+</p><p id="41e52528-1eff-4075-b343-84b641b23a6a" class="">Открываем <strong>/ </strong></p><p id="a96a0d9a-1278-4582-925d-08c7b338f877" class="">Id: 1357 Name: Mary Jane</p><p id="23fede1d-3c04-4652-af37-534385115957" class="">
+</p><p id="5f40ef6e-76be-40ac-9083-7c5b94ed17ae" class="">Открываем <strong>/logout</strong></p><p id="d3aa45bf-db5c-457e-b14e-98ba27671fa1" class="">User data removed</p><p id="420329b5-4adf-4c2f-abde-de0144a3810e" class="">
+</p><p id="0c57573f-bc61-4a96-ba20-2b42a728c26b" class="">Открываем <strong>/ </strong></p><p id="fc6ef7ef-7e69-4948-bfd9-b9eda539e40c" class="">Id: None Name: None</p><p id="df246539-1de9-4ce9-80f0-82ebb3342635" class="">Скопируйте и запустите эту заготовку!</p><h2 id="bc1029ac-7942-4591-baa0-1ec98ecf25e1" class=""><strong>Хранение списков и словарей в сессии</strong></h2><p id="6a8f02fc-56d1-4231-9914-45fb982a1ef3" class="">Попробуем сделать еще один классический пример – корзину.</p><p id="fa58c641-6cca-4071-ae35-36cb62b9cfd0" class="">Создадим для этого три роута:</p><p id="18e89783-de68-4c46-a42a-413228ac02da" class="">– роут, который добавляет товар в корзину;– роут, который показывает корзину;– роут, который очищает корзину.</p><pre id="5c0d2c8f-0e71-4dce-80ba-c332e01c0f41" class="code code-wrap"><code># Импортируем объект сессии
+from flask import Flask, session
+
+app = Flask(__name__)
+app.secret_key = &quot;randomstring&quot;
+
+
+@app.route(&#x27;/add/&lt;item&gt;/&#x27;)
+def add_to_cart(item):
+
+    # Получаем либо значение из сессии, либо пустой список
+    cart = session.get(&quot;cart&quot;, [])
+    # Добавлям элемент в список
+    cart.append(item)
+    # Записываем список обратно в сессию
+    session[&#x27;cart&#x27;] = cart
+
+    return &quot;Item {} added&quot;.format(item)
+
+
+@app.route(&#x27;/&#x27;)
+def show_cart():
+    return &quot;You have {} in your cart&quot;.format(&quot;, &quot;.join(session.get(&quot;cart&quot;, [&quot;nothing&quot;])))
+
+
+@app.route(&#x27;/reset/&#x27;)
+def reset_cart():
+    # удаляем корзину из сессии
+    session.pop(&quot;cart&quot;)
+    return &quot;Cart is empty!&quot;
+
+app.run(debug=True)
+</code></pre><p id="d4e86182-9869-459d-bceb-85eab56f5cc4" class="">Открываем <strong>/</strong></p><p id="4b8ca6eb-0b01-487c-852b-eb6cb2b4d6e4" class="">You have nothing in your cart!</p><p id="e6b928a4-37c0-415c-89df-bcff72cf38aa" class="">
+</p><p id="d8a94652-9def-4fb4-9277-4d5a93fb3783" class="">Открываем <strong>/add/cream</strong></p><p id="037eb974-c258-49a9-9e8c-ed3243e55cfd" class=""><strong>cream</strong> added</p><p id="a739ec26-cee1-453f-a74e-62eece43534e" class="">
+</p><p id="7f62dc50-c40d-46d9-b06d-c127bcc8abfa" class="">Открываем <strong>/add/coffee</strong></p><p id="433b08c7-a9dd-4ef3-b836-db5eca7de1df" class=""><strong>coffee</strong> added</p><p id="910b27c4-54ab-4ccb-8ff9-482e9de939f7" class="">
+</p><p id="e4c0a4ea-dc9e-4dc7-9fce-93b7c1e9ef49" class="">Открываем /</p><p id="bd4b17d3-6b72-4c2b-bbb1-2351082f08ca" class="">You have cream, coffee in your cart</p><p id="5a0c1105-133e-4ef5-a979-53a8e655b451" class="">
+</p><p id="1035f2bc-0ef9-4343-af97-da4ec5d01bca" class="">Открываем <strong>/reset</strong></p><p id="ce3144b4-ab32-4e2f-8f1e-0c4c90518d21" class="">Cart is empty!</p><p id="8d266e60-d84a-411e-a55c-b609c17668c0" class="">
+</p><p id="ebeb4e42-6465-4aff-a358-e897c39670be" class="">Открываем<strong> / </strong></p><p id="f0136a45-0331-40cc-b081-39bb210b01d6" class="">You have nothing in your cart!</p><p id="64389730-7b19-46fd-b0ff-e27093b80b00" class="">
+</p><p id="f173bec3-78fe-44e5-ae3d-6969656dac16" class="">Отлично! Теперь мы можем хранить в сессиях еще и короткие списки!</p><h2 id="87b0f774-ed9f-456b-a6f7-9bdc13bd04d3" class=""><strong>Резюме</strong></h2><p id="80097ec8-1117-4804-83d9-1a7c8f9d0f88" class="">Объект сессии — это способ хранить данные пользователей между запросами.</p><p id="4bc59759-fa99-45e1-8188-4370ab9bab6e" class="">Сессии, с каждым клиентом, присваивается идентификатор сеанса.</p><p id="6b3b9145-73d1-41df-a7ab-5c52415a1071" class="">Данные сессии хранятся поверх файлов cookie.</p><p id="0b2ef13e-4fed-4b51-9d89-635e2d04f8ac" class="">Для этого шифрования приложению требуется SECRET_KEY.</p><p id="a451cbb3-7d2f-4b8a-86f2-0c3df8d04866" class="">Запись данных в сессию:</p><pre id="dd6a668d-bd5d-46cc-9f92-c6117860f64b" class="code code-wrap"><code>session[&quot;username&quot;] = &quot;Alexey&quot;</code></pre><p id="b1aea21b-d91a-4358-a6db-2ac42353b4c7" class="">Получение данных из сессии:</p><pre id="0c6ce052-0123-48b7-bbe6-bdaecdbc8c01" class="code code-wrap"><code>username = session.get(&quot;username&quot;)</code></pre><pre id="1b39f5d2-2974-44a7-8330-cf667b4ba382" class="code code-wrap"><code>username = session[&quot;username&quot;]</code></pre><p id="9af126f8-c324-41d1-b8f2-37d22523ae18" class="">Извлечение с удалением:</p><pre id="b41bedbb-495e-4504-9b55-cb78ddba28f5" class="code code-wrap"><code>username = session.pop(&quot;name&quot;)</code></pre><p id="ed6abcac-671a-48f5-b509-e493ea1ea559" class="">Удаление всех данных из сессии:</p><pre id="94bb6ee0-ae08-41af-8809-2ebf3f4f2962" class="code code-wrap"><code>session.clear()</code></pre><p id="05b0f4e5-2ba1-42c8-84db-938db45e9686" class="">Работа со списками в сессии:</p><pre id="e89caf7b-ff96-4485-92d3-855c6088efa0" class="code code-wrap"><code>cart = session.get(&quot;cart&quot;, [])
+cart.append(item)
+session[&#x27;cart&#x27;] = cart</code></pre><p id="54812abe-e46e-4b72-ba96-3bc623b0b46b" class="">В дальнейшем вам пригодится сессия для авторизации пользователе</p></div></article></body></html>

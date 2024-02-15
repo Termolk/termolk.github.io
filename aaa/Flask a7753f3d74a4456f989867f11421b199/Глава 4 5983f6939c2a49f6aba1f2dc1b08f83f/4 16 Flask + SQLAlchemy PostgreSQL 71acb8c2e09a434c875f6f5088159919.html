@@ -1,0 +1,653 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>4.16 Flask + SQLAlchemy: PostgreSQL</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="71acb8c2-e09a-434c-875f-6f5088159919" class="page sans"><header><h1 class="page-title">4.16 Flask + SQLAlchemy: PostgreSQL</h1></header><div class="page-body"><h2 id="35470c46-4618-4ab1-aee5-ef5a49d0bc8e" class=""><strong>Введение</strong></h2><p id="6ff897ee-4181-4b5c-a5ff-d15bcc32a0da" class="">Серьезному веб-приложению требуется серьезная СУБД. PostgreSQL - отлично подходит на эту роль, в отличие от SQLite,  которая слишком простая и пригодна только для небольших персональных приложений. MySQL - наиболее популярна, но ограничена лицензией и возможностями. PostgreSQL же является самой продвинутой из свободных СУБД. По скорости выполнения запросов она практически догнала MySQL, а по возможностям сильно опережает. Отмечу, что мы рассматривали только свободные традиционные СУБД.</p><blockquote id="63b854f3-534f-4f00-ad5d-d5fe19df4da6" class="">СУБД (система управления базами данных) - это набор программ для создания баз данных и работы с ними. База данных - это организованная структура данных, обычно представленная в файловой системе одним или более файлами.</blockquote><blockquote id="d8f95c52-bc3d-4ded-b087-718b61b340b1" class="">PostgreSQL - произносится как &quot;Пост-Грэс-Кью-Эл&quot; или сокращенно &quot;постгрес&quot;.</blockquote><p id="1eaafd7c-0a69-474b-9c2b-9e2942eeec8f" class="">В этом уроке мы научимся устанавливать PostgreSQL и организовывать доступ из приложения Flask с использованием Flask-SQLAlchemy.</p><h2 id="c4c939ee-dbb8-474a-b2d7-e667c1dc236d" class=""><strong>Установка PostgreSQL</strong></h2><p id="8fde2b71-470b-482d-9e4f-83ae48c43352" class="">Какую версию выбрать? На сегодня самой актуальной является 12 версия PostgreSQL.</p><p id="c7fe5d49-1d71-42ea-8e71-14cd4dad1b86" class="">Способ установки сервера PostgreSQL сильно зависит от операционной системы. Более подробную информацию можно найти по ссылке <a href="https://www.postgresql.org/download/">https://www.postgresql.org/download/</a></p><p id="fe8f9586-6181-4c98-b14a-729a9add1d32" class="">В большинстве Unix подобных операционных систем (Linux, BSD и т.д.) PostgreSQL Server устанавливается через менеджер пакетов. Возможна установка и из исходных кодов. Но для Windows и Mac OS существует бинарный интерактивный установщик. Он сильно облегчает установку начинающим разработчикам. Ссылка на скачивания программы установки: <a href="https://www.enterprisedb.com/downloads/postgres-postgresql-downloads">https://www.enterprisedb.com/downloads/postgres-postgresql-downloads</a></p><figure id="9464cf0d-c97a-4ea2-ad5a-bf117393f3cb" class="image"><a href="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Ffc91ebef-f60c-401d-a06f-ea80ecccdf31%2F2020-01-28_13-08-31.png?table=block&amp;id=b4e926c9-56d3-4e50-852f-5389d0442b32&amp;width=2880&amp;cache=v2"><img src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Ffc91ebef-f60c-401d-a06f-ea80ecccdf31%2F2020-01-28_13-08-31.png?table=block&amp;id=b4e926c9-56d3-4e50-852f-5389d0442b32&amp;width=2880&amp;cache=v2"/></a></figure><p id="957a58c4-35a7-45be-8c58-85bc863844b5" class="">Установщик есть только у Mac OS и Windows.</p><h3 id="af47bde3-3e34-4387-a85b-7e1efd4f983a" class=""><strong>Установка под Windows и Mac OS</strong></h3><p id="3591acc3-20b6-4eaa-b6ec-4c666fa94d01" class="">Скачаем установщик для нашей ОС и установим. Шаги для Mac OS и Windows похожи.</p><p id="85fa9fff-443d-47f4-ac55-afb985bb3982" class="">После запуска установщика появляется приветственное окно &quot;Мастера Установки PostgreSQL&quot;:</p><figure id="e35f1385-5dae-4096-933a-e303b9db1db5" class="image"><a href="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F9b18d2cb-7894-4ad5-bf2c-db611bf0be50%2F2020-01-28_12-56-32.png?table=block&amp;id=662315db-5a1e-48d3-9d1a-4ab8e281d8b2&amp;width=2880&amp;cache=v2"><img src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F9b18d2cb-7894-4ad5-bf2c-db611bf0be50%2F2020-01-28_12-56-32.png?table=block&amp;id=662315db-5a1e-48d3-9d1a-4ab8e281d8b2&amp;width=2880&amp;cache=v2"/></a></figure><p id="51f1926a-76ad-424d-a522-faa6b37d16df" class="">Выберем кнопку Next. Нам предлагают возможность выбрать место установки СУБД:</p><figure id="24db760d-6344-4fb7-8957-c6330cf5fa92" class="image"><a href="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F5ff314c9-16df-4190-a889-3efc77d30f5b%2F2020-01-28_12-56-45.png?table=block&amp;id=9318f428-9f38-4f0f-8d3e-f59571846dee&amp;width=2880&amp;cache=v2"><img src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F5ff314c9-16df-4190-a889-3efc77d30f5b%2F2020-01-28_12-56-45.png?table=block&amp;id=9318f428-9f38-4f0f-8d3e-f59571846dee&amp;width=2880&amp;cache=v2"/></a></figure><p id="2cfcf953-d17d-40cc-9d2a-5bed47043155" class="">Отмечу, что одновременно может быть установлено несколько версий сервера, по этой причине папка имеет двойную вложенность. Вложенная папка имеет имя по версии.</p><p id="8183d4c1-d94e-4109-b1fa-9f400ce5357a" class="">Менять не станем и перейдем по кнопке Next дальше. Теперь у нас есть возможность оставить нужные компоненты для установки:</p><figure id="bc946a82-94d4-452b-b439-d01a38b10519" class="image"><a href="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fb9fa0eb2-485f-4aa1-809c-379f91049078%2F2020-01-28_12-56-11.png?table=block&amp;id=d1be7515-3214-48c8-a5a2-a9abe3934c11&amp;width=2880&amp;cache=v2"><img src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fb9fa0eb2-485f-4aa1-809c-379f91049078%2F2020-01-28_12-56-11.png?table=block&amp;id=d1be7515-3214-48c8-a5a2-a9abe3934c11&amp;width=2880&amp;cache=v2"/></a></figure><ul id="dff2406d-38d7-4cd7-ab51-2f730d3f31bd" class="bulleted-list"><li>PostgreSQL Server - это сам PostgreSQL сервер.</li></ul><ul id="4d34a02b-fd70-4a31-a281-f8129432fc56" class="bulleted-list"><li>pgAdmin 4 - удобный графический инструмент для администрирования и разработки через веб интерфейс.</li></ul><ul id="42b00d72-dbf8-4c1c-82f2-de8e50b90084" class="bulleted-list"><li>Stack Builder - это программа позволяющая установить разные дополнения, не входящие в установку по умолчанию.</li></ul><ul id="6c512c9f-4323-45a5-8d33-37f983b59730" class="bulleted-list"><li>Command Line Tools - это утилиты командной строки, позволяющие работать с PostgreSQL сервером из консоли.</li></ul><p id="06faf694-3d3c-458c-8d75-f60c68a09a81" class="">Давайте оставим как есть и кликнем по кнопке Next. Новый экран мастера установки даёт нам выбор места для хранения данных, а именно самих баз данных и настроек сервера:</p><figure id="bfc6d920-ffcc-4862-90d1-b16c7464d537" class="image"><a href="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F3226bcf9-9938-4f5c-b848-de879181ec37%2F2020-01-28_12-57-06.png?table=block&amp;id=779672c0-c292-4699-b092-b5cfdd483c5c&amp;width=2880&amp;cache=v2"><img src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F3226bcf9-9938-4f5c-b848-de879181ec37%2F2020-01-28_12-57-06.png?table=block&amp;id=779672c0-c292-4699-b092-b5cfdd483c5c&amp;width=2880&amp;cache=v2"/></a></figure><p id="f126f7a3-f192-4530-84d3-9dd02ecbcd4b" class="">Основываясь на предполагаемом размере будущих данных и скорости носителя (например, у нас есть ещё один SSD) мы можем выбрать папку на другом диске.</p><p id="0306cab2-5ef5-4804-bde9-72578378e2cf" class="">Кликнем по кнопке Next и перейдем дальше:</p><figure id="b2990c38-3035-4e7e-9946-e9008c029ff2" class="image"><a href="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F1f5690a1-e210-40d6-87d4-04d0b95f0537%2F2020-01-28_12-57-41.png?table=block&amp;id=ed8925c1-56a0-41c9-890b-100069057bd6&amp;width=2880&amp;cache=v2"><img src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F1f5690a1-e210-40d6-87d4-04d0b95f0537%2F2020-01-28_12-57-41.png?table=block&amp;id=ed8925c1-56a0-41c9-890b-100069057bd6&amp;width=2880&amp;cache=v2"/></a></figure><p id="a1e43e81-cdd7-48a4-8834-742fe6ffeaf7" class="">Нам предложено указать пароль для суперпользователя &quot;postgres&quot;. Так как мы устанавливаем PostgreSQL для учебных целей, то можем задать не сильно сложный пароль, например, &quot;postgres&quot;.</p><p id="3b2b07bb-eae8-4001-97b9-7a8e34a04f36" class="">Выберем кнопку Next. Мастер установки предлагает указать порт доступа к серверу:</p><figure id="a2d524b8-0b0c-45de-916d-b1e990a13130" class="image"><a href="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fbe6a6797-f0e3-41e4-9fc1-9b852168e219%2F2020-01-28_12-58-08.png?table=block&amp;id=5202c08c-35f1-4322-be9e-834bd8676030&amp;width=2880&amp;cache=v2"><img src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fbe6a6797-f0e3-41e4-9fc1-9b852168e219%2F2020-01-28_12-58-08.png?table=block&amp;id=5202c08c-35f1-4322-be9e-834bd8676030&amp;width=2880&amp;cache=v2"/></a></figure><p id="ddfc0c29-fa21-4c25-ae8b-1a5c510adebc" class="">Можно поменять, если у нас установлено несколько разных версий PostgreSQL или порт занят другим приложением. Сейчас же мы оставим порт как есть и перейдем к следующему экрану мастера. Последней мастер установки предоставляет возможность выбора языковых настроек:</p><figure id="5d7d2714-ac2c-47d5-a0ff-a4b4283d557b" class="image"><a href="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Ffe0e4c6c-542d-4748-9626-5bbcb22f9dc6%2F2020-01-28_12-58-38.png?table=block&amp;id=6560b8bc-1b66-40a5-998a-fd667ab59360&amp;width=2880&amp;cache=v2"><img src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Ffe0e4c6c-542d-4748-9626-5bbcb22f9dc6%2F2020-01-28_12-58-38.png?table=block&amp;id=6560b8bc-1b66-40a5-998a-fd667ab59360&amp;width=2880&amp;cache=v2"/></a></figure><p id="07f7453b-9738-46c6-abd5-dbb494a1ab59" class="">По умолчанию строковые данные будут хранится в кодировке UTF-8. Языковые настройки повлияют на порядок сортировки текстовых записей, а также на форматирование даты, времени и денежных единиц при работе с клиентом. Если оставить как есть, то будут применены настройки из операционной системы. Можно также выбрать языковую настройку явно. После выбора проследуем дальше. Мастер отображает результат нашего выбора:</p><figure id="f1d736c4-643a-486a-92e3-a5cecbc897cb" class="image"><a href="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F4b7a43cf-a7f2-4fa4-b2ba-70f07f10cd1c%2F2020-01-28_12-59-04.png?table=block&amp;id=1e63fadd-63de-4995-84f7-f1ca0491683b&amp;width=2880&amp;cache=v2"><img src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F4b7a43cf-a7f2-4fa4-b2ba-70f07f10cd1c%2F2020-01-28_12-59-04.png?table=block&amp;id=1e63fadd-63de-4995-84f7-f1ca0491683b&amp;width=2880&amp;cache=v2"/></a></figure><p id="8b790ac9-f29d-4286-9100-fd5156281ecc" class="">Мы можем вернуться и внести изменения, используя кнопку Back.</p><p id="1c8d0932-2199-443d-9094-4eed6623c131" class="">Однако, продолжим установку дальше. Теперь мастер нас предупреждает, что настройка завершена и при переходе к следующему шагу начнется установка:</p><figure id="385394b5-d502-4552-af1b-295a3cf9e82b" class="image"><a href="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fa7da01b8-70f5-4ea1-8ae5-7aa11caaf44a%2F2020-01-28_12-59-27.png?table=block&amp;id=c200b86f-0841-43f9-adb6-ffbb0c4541ec&amp;width=2880&amp;cache=v2"><img src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fa7da01b8-70f5-4ea1-8ae5-7aa11caaf44a%2F2020-01-28_12-59-27.png?table=block&amp;id=c200b86f-0841-43f9-adb6-ffbb0c4541ec&amp;width=2880&amp;cache=v2"/></a></figure><p id="b0596f01-2303-4002-b510-5aa39b41e505" class="">Выберем кнопку Next, чтобы запустить установку:</p><figure id="6d881368-4085-45e4-b449-b82ebbbd5d69" class="image"><a href="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F8f530b3c-93e4-4fc5-8f29-7bb84c4b18e3%2F2020-01-28_12-59-44.png?table=block&amp;id=57f7fdaa-516f-404d-895c-b5ab2f2b9176&amp;width=2880&amp;cache=v2"><img src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F8f530b3c-93e4-4fc5-8f29-7bb84c4b18e3%2F2020-01-28_12-59-44.png?table=block&amp;id=57f7fdaa-516f-404d-895c-b5ab2f2b9176&amp;width=2880&amp;cache=v2"/></a></figure><p id="3ea335b7-2474-4ff1-abd7-f6e1f237ddeb" class="">Процесс установки займет некоторое время. При успехе нам отобразится окно завершения установки:</p><figure id="ac4685cd-b207-4c41-84ee-d8a0406aecfc" class="image"><a href="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F1357a01b-04fe-4e67-a1fb-8c6face8ec73%2F2020-01-28_13-04-27.png?table=block&amp;id=e1ee0f07-4018-4778-83dd-18fc09d7b65b&amp;width=2880&amp;cache=v2"><img src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F1357a01b-04fe-4e67-a1fb-8c6face8ec73%2F2020-01-28_13-04-27.png?table=block&amp;id=e1ee0f07-4018-4778-83dd-18fc09d7b65b&amp;width=2880&amp;cache=v2"/></a></figure><p id="9a98d402-4661-4782-92df-7e016633f6df" class="">Установка завершена, но, так как мы установили среди компонентов Stack Builder, нам предлагается продолжить с ним. Это можно сделать в любой момент, а значит, мы снимаем галочку и завершаем установку, кликнув по кнопке Finish. Поздравляю, мы установили PostgreSQL Server!</p><p id="5950a42a-769b-4e31-a39a-8ab688ddb28c" class="">Сервер уже работает. Убедиться в этом под Windows можно посмотрев список служб:</p><figure id="b12ce6a2-a732-4e92-96bc-2ea971faa421" class="image"><a href="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Ffedfbc38-3fe9-4db9-9363-61ea1e9f7326%2F2020-01-28_16-13-23.png?table=block&amp;id=314ae085-66a0-4a85-9685-16f0eff717e0&amp;width=2880&amp;cache=v2"><img src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Ffedfbc38-3fe9-4db9-9363-61ea1e9f7326%2F2020-01-28_16-13-23.png?table=block&amp;id=314ae085-66a0-4a85-9685-16f0eff717e0&amp;width=2880&amp;cache=v2"/></a></figure><p id="257f9613-a4a7-49bd-a766-f2357aab054a" class="">В меню же программ добавился новый раздел:</p><figure id="6d82e2b0-62b0-4601-8f3c-14256babe01e" class="image"><a href="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F2c11854c-97d8-4f93-9c95-91686f081b8f%2FUntitled.png?table=block&amp;id=45662e79-dea5-4934-9250-11637d70f4da&amp;width=2880&amp;cache=v2"><img src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F2c11854c-97d8-4f93-9c95-91686f081b8f%2FUntitled.png?table=block&amp;id=45662e79-dea5-4934-9250-11637d70f4da&amp;width=2880&amp;cache=v2"/></a></figure><p id="6f9a392c-8c14-4d6e-b8fc-4311b31abb0b" class="">Из него мы можем всегда запустить Stack Builder, для управления установленными компонентами. Но сейчас нас больше всего интересует pgAdmin 4. Давайте запустим его. Процесс запуска требует некоторого времени. После его завершения в трее панели Windows отобразится значок:</p><figure id="f745e489-707a-4bee-9118-408eea007cba" class="image"><a href="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F96d82176-0079-4e43-864d-6e1e543876e2%2F2020-01-28_17-33-33.png?table=block&amp;id=fd263d7f-e24a-4b2b-8bbc-b6f8fe9485c8&amp;width=2880&amp;cache=v2"><img src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F96d82176-0079-4e43-864d-6e1e543876e2%2F2020-01-28_17-33-33.png?table=block&amp;id=fd263d7f-e24a-4b2b-8bbc-b6f8fe9485c8&amp;width=2880&amp;cache=v2"/></a></figure><p id="cc0edc8b-7fc9-4c93-805d-6ceb7a7259ba" class="">А в браузере вкладка с предложением ввести пароль:</p><figure id="fc30949e-8dd9-491e-8e25-14a3e90db02c" class="image"><a href="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Ff34dd443-e719-4f91-87e4-c73aa9d5cdf8%2F2020-01-28_17-37-49.png?table=block&amp;id=42a5daa0-0bba-4790-b80a-425d7b4b756c&amp;width=2880&amp;cache=v2"><img src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Ff34dd443-e719-4f91-87e4-c73aa9d5cdf8%2F2020-01-28_17-37-49.png?table=block&amp;id=42a5daa0-0bba-4790-b80a-425d7b4b756c&amp;width=2880&amp;cache=v2"/></a></figure><p id="37252c29-5fc5-4003-af59-9b8ba43b9ff2" class="">Введем пароль, который мы указали для суперпользователя postgres. Теперь мы можем использовать визуальный редактор базы данных.</p><figure id="3d6a4be7-96fc-4e24-bd5d-ec01d08800ee" class="image"><a href="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fd48a5b27-5f26-4c52-9531-7569fe8f5dc6%2F2020-01-28_17-40-51.png?table=block&amp;id=260b5ab2-248c-4739-9a45-17f9715260a4&amp;width=2880&amp;cache=v2"><img src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fd48a5b27-5f26-4c52-9531-7569fe8f5dc6%2F2020-01-28_17-40-51.png?table=block&amp;id=260b5ab2-248c-4739-9a45-17f9715260a4&amp;width=2880&amp;cache=v2"/></a></figure><h3 id="ccb1a392-4ccb-4ac9-abf7-6140aea1e9bc" class=""><strong>Сброс забытого пароля пользователя postgres</strong></h3><p id="6c753160-6228-4155-9678-ab9ba1a56e09" class="">Бывают ситуации, когда не сохранил и забыл пароль главного пользователя postgres сервера PostgreSQL. Тогда остается его сбросить, то есть заменить на новый.</p><p id="5684215a-dd70-4700-bb1b-45abb4b4e815" class="">Пример сброса пароля сделаем под Windows, но идея для других систем та же. Различие в местоположении файла настроек доступа pg_hba.conf и способе перезапуска сервиса PostgreSQL.</p><p id="d0e45915-d3a8-445a-abc6-554203691c17" class="">Итак, изменим файл настроек доступа к PostgreSQL серверу pg_hba.conf. В Windows он находится в папке data, которую мы указали при установке. Если ничего не меняли, то для версии 12 сервера PostgreSQL путь будет C:\Program Files\PostgreSQL\12\data\pg_hba.conf</p><p id="03329d83-3b8b-4edb-8d3c-2e62537c25cc" class="">Откроем в текстовом редакторе и найдем строку:</p><pre id="8f752db0-e77c-4f9c-bf08-d568bc4d701e" class="code code-wrap"><code>host all all 127.0.0.1/32 md5</code></pre><p id="78a9157f-3705-4169-b8ac-2d5f45820ace" class="">Заменим её окончание md5 на trust:</p><pre id="b7237a13-d590-4f1e-a45f-a8f4c73b752b" class="code code-wrap"><code>host all all 127.0.0.1/32 trust</code></pre><p id="78b8d3ed-bbd0-4662-824c-cc03c0bc63b3" class="">Перезапустим службу сервера Postgres:</p><figure id="b50a1340-790c-417d-a6e3-266f1c33e1c1" class="image"><a href="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fcfb70d06-5f9b-46f4-810b-7ccd7c9e7c72%2Fpostgresql-restart.jpg?table=block&amp;id=3fa1be4c-8f07-4b1d-880a-345e376cc3cf&amp;width=2880&amp;cache=v2"><img src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fcfb70d06-5f9b-46f4-810b-7ccd7c9e7c72%2Fpostgresql-restart.jpg?table=block&amp;id=3fa1be4c-8f07-4b1d-880a-345e376cc3cf&amp;width=2880&amp;cache=v2"/></a></figure><p id="15886ddc-45b7-4edb-af9b-77ff51633beb" class="">Настало время указать новый пароль. Для этого в консоли Windows запустим утилиту psql от пользователя postgres (пароль при этом не будет запрошен) и изменим значение пароля:</p><pre id="87ec2b0a-4052-4609-a2b0-dc8109356209" class="code code-wrap"><code>&gt; psql -U postgres
+psql (12.1)
+ПРЕДУПРЕЖДЕНИЕ: Кодовая страница консоли (866) отличается от основной
+                страницы Windows (1251).
+                8-битовые (русские) символы могут отображаться некорректно.
+                Подробнее об этом смотрите документацию psql, раздел
+                &quot;Notes for Windows users&quot;.
+Введите &quot;help&quot;, чтобы получить справку.
+
+postgres=# ALTER USER postgres with password &#x27;very_secure_password&#x27;;</code></pre><p id="483ba9b2-5aaa-48fc-8914-7fedbc2d3338" class="">После изменения пароля командой, вернём строку файла настроек доступа pg_hba.conf:</p><pre id="7efe7eb7-5c47-4d9f-a1b1-b6a651e2ad40" class="code code-wrap"><code>host all all 127.0.0.1/32 trust</code></pre><p id="70210178-80ab-4720-9dbf-61ae87a32492" class="">к виду:</p><pre id="ac00b2a7-770e-46ad-8202-356ebe9fd288" class="code code-wrap"><code>host all all 127.0.0.1/32 md5</code></pre><p id="29ab84d1-f90c-438a-b61f-9719e5446873" class="">И снова перезапустить службу PostgreSQL сервера.</p><p id="2cc279fd-0a35-46e9-ad3b-c84c41e6637f" class="">Подключимся снова к серверу через утилиту psql, но только теперь для пользователя postgres нам придётся ввести наш новый пароль. Доступ пользователя postgres восстановлен.</p><p id="c3fe35ac-9ae4-40b5-a6b0-7b86fe1869dd" class="">Подытожим. У нас есть сервер и средства для работы с ним. Теперь нам нужно организовать доступ к серверу PostgreSQL из Python и Flask.</p><h2 id="e6616cea-a59d-46ec-9336-0d5c6564f904" class=""><strong>Получаем доступ к PostgreSQL из Python</strong></h2><p id="dea1b66f-9952-4ba1-8a0c-a2cf8ceea3e5" class="">Для доступа из Python к базам данных используется адаптер (adapter) или драйвер (driver). Другими словами, устоявшегося названия нет. Все зависит от используемого пакета или расширения. Мы будем работать с PostgreSQL через Flask-SQLAlchemy. В Flask-SQLAlchemy в URL подключения к базе данных и SQLAlchemy используется термин “драйвер”.</p><p id="4b849fc9-d4e0-4b6f-b4a8-dc237572665b" class="">Для доступа к PostgreSQL в SQLAlchemy (а значит и Flask-SQLAlchemy) могут быть использованы несколько разных драйверов. Список их представлен в документации SQLAlchemy по ссылке <a href="https://docs.sqlalchemy.org/en/13/dialects/postgresql.html#dialect-postgresql">https://docs.sqlalchemy.org/en/13/dialects/postgresql.html#dialect-postgresql</a> Нам предстоит выбор, но он прост. Выберем самый распространённый и развивающийся, а именно psycopg2.</p><blockquote id="4f514b1c-15f8-42c5-9e89-61e4b976d026" class="">Забавно, что разработчики psycopg2 называют свой драйвер адаптером.</blockquote><p id="c355273d-d7ac-4981-8bf7-e38295958707" class="">Ссылки для psycopg2:</p><ul id="798fc60a-d990-4a62-9c6b-0af6ace7a8f3" class="bulleted-list"><li>Сайт <a href="https://www.psycopg.org/">https://www.psycopg.org/</a></li></ul><ul id="bf843f06-5955-4ccd-bebd-9f3762da5754" class="bulleted-list"><li>Документация <a href="https://www.psycopg.org/docs/">https://www.psycopg.org/docs/</a></li></ul><ul id="59e40048-f101-41ee-b444-428e5c2e7f9e" class="bulleted-list"><li>Репозиторий <a href="https://github.com/psycopg/psycopg2">https://github.com/psycopg/psycopg2</a></li></ul><p id="a42ac6af-0b9f-4c99-9c42-ff6c5d900af9" class="">Существуют два способа установки psycopg2: со сборкой из исходников и в бинарном виде. Установка со сборкой из исходников обычно требуется при развертывании с учетом локальных библиотек на рабочем сервере. Вот команда pip:</p><pre id="1e3508bf-e870-4af6-8bd7-2b280b9f5a64" class="code code-wrap"><code>pip install psycopg2</code></pre><p id="31c94a3b-866b-4c1a-abef-8e20f27cddf4" class="">Но нам лучше подойдет установка готового пакета тоже командой pip:</p><pre id="d2d10bb4-1e96-4533-979e-116594bdd346" class="code code-wrap"><code> pip install psycopg2-binary</code></pre><p id="4353795e-1a75-4527-a73d-b41b03b202bb" class="">Только установив драйвер, мы уже можем работать с сервером PostgreSQL, используя стандартный DB API 2.0 Python. Но мы договорились, что для Flask используем Flask-SQLAlchemy, а, значит, организуем доступ к PostgreSQL из него.</p><h3 id="d2d07ef0-178f-47d2-9279-cea490a7bf84" class=""><strong>Доступ к PostgeSQL из Flask-SQLAlchemy</strong></h3><p id="428be22f-bfa7-486f-a3ed-40abb5f9fa09" class="">Для получения доступа к Postgres из Flask-SQLAlchemy достаточно задать правильный URL доступа и присвоить его параметру настроек SQLALCHEMY_DATABASE_URI, как мы это делали для SQLite. Но шаблон URL для Postgres выглядит сложнее, чем для SQLlite:</p><pre id="97084632-e9d7-45c9-855f-524b8e3211ee" class="code code-wrap"><code>&lt;Диалект БД&gt;+&lt;Драйвер&gt;://&lt;Имя пользователя&gt;:&lt;Пароль&gt;@&lt;Хост БД&gt;:&lt;Порт&gt;/&lt;Имя БД&gt;</code></pre><p id="3eee994e-3c9a-468c-9a4f-36d3797a1def" class="">&lt;Диалект БД&gt; - для PostgreSQL это postgresql.</p><p id="f90ba13a-8097-416b-9153-5473835611b3" class="">&lt;Драйвер&gt; - мы выбрали psycopg2.</p><p id="95f77dbd-301a-45d9-8556-cbe3b34f1dde" class="">&lt;Имя пользователя&gt; и &lt;Пароль&gt; - имя и пароль имеющего доступ к базе данных.</p><p id="24952a89-a5f6-48ed-a3b9-da249aef06c5" class="">&lt;Хост БД&gt; - имя или IP адрес хоста, на котором находится сервер Postgres. 127.0.0.1 - если он находится локально.</p><p id="5ad60363-b477-4197-a36f-cc2a11b5c70b" class="">&lt;Порт &lt;БД&gt; - порт сервера Postgres. По умолчанию - 5432.</p><p id="b85dfffa-7813-4279-bf61-c9ed78ee4d49" class="">&lt;Имя БД&gt; - имя базы данных на сервере.</p><p id="75b2e7d9-5cc2-4745-9532-90dced703cdd" class="">Вот пример URL:</p><pre id="bbf46176-e4d4-4b54-a6ee-ab6e99ae3d19" class="code code-wrap"><code>postgresql+psycopg2://postgres:postgres@127.0.0.1:5432/postgres</code></pre><p id="470b07dd-97a3-4155-a89f-e499db47352c" class="">Если сменить драйвер на pg8000, то доступ к той же базе данных от того же пользователя станет таким:</p><pre id="8f3e842b-c852-479c-97d5-16fdfb6e609c" class="code code-wrap"><code>postgresql+pg8000://postgres:postgres@127.0.0.1:5432/postgres</code></pre><p id="839077ee-ca3b-4900-af6c-34b1f73810eb" class="">На самом деле драйвер указывать не обязательно SQLAlchemy воспользуется самым распространенным для выбранного диалекта. Для Postgres это psycopg2. Тогда наш URL можно упростить до:</p><pre id="c55882c6-7db6-45ce-a78f-62afeed4cdcf" class="code code-wrap"><code>postgresql://postgres:postgres@127.0.0.1:5432/postgres</code></pre><p id="7c2fe109-85a6-43d2-b4be-1d08f0b54298" class="">URL есть, теперь его нужно передать в SQLALCHEMY_DATABASE_URI. Казалось бы, присвоил значение и порядок. Но это не так.</p><h3 id="2499887b-bdc0-4955-9902-75f79bf3ef46" class=""><strong>Получение URL настройки из переменной окружения</strong></h3><p id="9dfd56ba-028b-4020-aa72-b236d7a10c27" class="">При разработке серьезных приложений не принято хранить информацию о доступах в самом приложении. Обычно такая информация передаётся в приложение через переменные окружения. Работа с переменными окружения в системах Linux/MacOS и Windows различается.</p><p id="c2dcecb1-f7fb-41d7-8e9a-6b9759d56b2e" class="">Для создания переменных окружения в Linux/MacOSS используется команда export:</p><pre id="8081e8ea-cb22-463b-a984-ab6f3f6ab318" class="code code-wrap"><code>export DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:5432/postgres</code></pre><p id="900cccdf-1fcf-42e6-9d87-90e2f52d0268" class="">Просмотреть переменную окружения по имени можно использовав команду echo:</p><pre id="bf952844-f015-409e-bac7-f1f7032019b1" class="code code-wrap"><code>echo $DATABASE_URL</code></pre><p id="78058ffe-1224-472c-9114-9de20fd9846b" class="">Для просмотра всех переменных окружения используется команда printenv:</p><pre id="eca244b7-0b38-4048-a7b1-377480fe7ff6" class="code code-wrap"><code>printenv</code></pre><p id="620d7368-5429-4bdf-9bbc-1838de274161" class="">Теперь рассмотрим те же команды для Windows. Создание и изменение переменных окружения через консоль делается командой set с параметрами. Вот так будет выглядеть создание переменной DATABASE_URL в Windows:</p><pre id="d04217d7-012c-459e-a2d4-671da7633034" class="code code-wrap"><code>set DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:5432/postgres
+</code></pre><p id="5667a676-8eec-4ea7-8606-8e36331c5110" class="">Теперь мы можем посмотреть значение переменной DATABASE_URL в консоли Windows при помощи команды echo:</p><pre id="1a7e4e12-e8f8-4718-8e6c-8915d12957d1" class="code code-wrap"><code>echo %DATABASE_URL%</code></pre><p id="a27ea2a7-4b97-4048-9c6c-a9cfe7d617c8" class="">Для вывода всего списка переменных окружения с их значениями в консоли Windows выполнить команду set без параметров. Для удобства просмотра можно переопределить её вывод в текстовый файл и потом просмотреть его в удобном редакторе:</p><pre id="28faef8a-aeaa-46bd-9dbd-aaf5a69e89f0" class="code code-wrap"><code>set &gt; env.txt</code></pre><p id="7c9e3860-e6ca-4270-8f39-14854bcba486" class="">Мы научились создавать переменную среды DATABASE_URL для настройки доступа к базе данных. Давайте теперь воспользуемся ей в приложении для установки параметра настроек:</p><pre id="37e9434e-f1eb-4eca-b5c0-6a23006055a7" class="code code-wrap"><code>from flask import Flask
+import os
+
+app = Flask(__name__)
+# Присваиваем значение переменной окружения параметру настроек
+app.config[&quot;SQLALCHEMY_DATABASE_URI&quot;] = os.environ.get(&quot;DATABASE_URL&quot;)
+</code></pre><p id="f8535d86-f69f-4605-b0a7-cd59e1d580d9" class="">Значения других параметров настройки Flask-SQLAlchemy можно задать явно в коде приложения или файле настроек.</p><h3 id="06a4f4bb-ebbb-4b78-8b72-c2f684850920" class=""><strong>Использование PostgreSQL в приложении</strong></h3><p id="41c66b00-f9fb-4766-addf-f1b76016ea50" class="">Итак, мы настроили доступ к базе данных PostgreSQL. Теперь нужно добавить в неё таблицы. Это делается также как и с другими базами данных. Самый простой способ, но пригодный только для небольших персональных приложений, - внести правки через графический интерфейс. Для этого может подойти pgAdmin. Но лучше воспользоваться системой миграций. Изменение базы данных PostgreSQL через миграции ни отличается ничем от таких же действий с другими БД. Стоит только помнить, что если ранее использовалась другая СУБД, то нужно проверить модели и запросы на использование специфических типов полей и операторов работы с ними. Если же мы собираемся использовать какие-то особенности PostgreSQL, то за подробностями их реализации в SQLAlchemy нужно обратиться к документации: <a href="https://docs.sqlalchemy.org/en/13/dialects/postgresql.html">https://docs.sqlalchemy.org/en/13/dialects/postgresql.html</a></p><p id="4bff37dc-8f30-4ffa-8972-0815d76d9955" class="">Вот пример использования поля с типом JSON в модели:</p><pre id="0fa0bae3-a04e-448f-a02e-073e7cbe3d51" class="code code-wrap"><code>from app import db
+# Импортируем тип поля специфичный для PostgeSQLfrom sqlalchemy.dialects.postgresql import JSON
+
+class Result(db.Model):
+    __tablename__ = &#x27;results&#x27;
+
+    id = db.Column(db.Integer, primary_key=True)
+    url = db.Column(db.String())
+    # Используем тип JSON при объявлении полей таблицы
+    result_all = db.Column(JSON)
+    result_no_stop_words = db.Column(JSON)</code></pre><h2 id="cfc60458-df67-4f51-b699-6aee66d160a1" class=""><strong>Резюме</strong></h2><p id="ae9f77e6-169c-4179-b132-9e8ba0bfe633" class="">Дополнительную информацию можно найти по ссылкам:</p><p id="8f78d9ea-bcc0-4bbd-a070-ca1bae260342" class=""><a href="https://wiki.postgresql.org/wiki/Python">https://wiki.postgresql.org/wiki/Python</a></p><p id="cd355987-ba27-401d-8b86-d5fc85687e3a" class=""><a href="https://wiki.python.org/moin/PostgreSQL">https://wiki.python.org/moin/PostgreSQL</a></p><p id="f1148ae6-a3c6-4347-8752-24eec5f9cb7b" class=""><a href="https://github.com/MagicStack/asyncpg">https://github.com/MagicStack/asyncpg</a></p><p id="c9f2c00b-24f4-4589-83d8-91b411b117ba" class=""><a href="https://magicstack.github.io/asyncpg/current/index.html">https://magicstack.github.io/asyncpg/current/index.html</a></p><p id="0d744009-0a1d-41da-a22b-30bdd447c4c6" class=""><a href="https://github.com/CanopyTax/asyncpgsa">https://github.com/CanopyTax/asyncpgsa</a></p><p id="6295cdc8-5d19-40d5-97be-ff2ba47db0f2" class=""><a href="https://github.com/encode/databases">https://github.com/encode/databases</a></p></div></article></body></html>

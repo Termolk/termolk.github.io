@@ -1,0 +1,640 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>2.15 GitHub – оформление репозитория</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="3defa6d6-692b-43d4-9b56-a46e56815be9" class="page sans"><header><h1 class="page-title">2.15 GitHub – оформление репозитория</h1></header><div class="page-body"><p id="8a9f46af-fbf8-4ee9-b525-19f1dab15984" class="">Чтобы работать в команде и не сильно портить жизнь другим разработчикам, полезно знать простые правила публикации вашего кода в GitHub:</p><ul id="78d3fb0c-59c7-4aed-b798-bcbc52431665" class="bulleted-list"><li>Не отправлять конфиденциальные данные в публичный репозиторий.</li></ul><ul id="4e0074b4-b617-42aa-bff4-3fd8ffff0f2e" class="bulleted-list"><li>Не перегружать репозиторий тяжелыми и ненужными коллегам пользовательскими файлами.</li></ul><ul id="fcbda07c-40e4-44a6-996a-2f93f4005c72" class="bulleted-list"><li>Оставлять описания и инструкции.</li></ul><p id="8780da80-d396-475e-9143-66b87a530b6f" class=""><strong>В этом топике вы научитесь правильному оформлению вашего репозитория на GitHub.</strong></p><h1 id="27114019-9e88-4eb7-bc39-55119f41c20a" class=""><strong>Знакомство с gitignore</strong></h1><p id="53a0667c-6b25-447c-929d-ddc10a1a3765" class="">Прежде чем добавлять код своего проекта в git-репозиторий, следует убедиться, что вы создали файл с описанием игнорируемых файлов и папок. Данный файл должен иметь пустое имя и расширение <code>.gitignore</code>.</p><p id="bbc29590-0104-499b-ac10-a5df438dcc87" class="">Содержимое gitignore-файла состоит из специальных поисковых шаблонов или, как их ещё называют, glob-шаблонов, посредством которых описываются имена элементов репозитория. Например, шаблон <code>*.py</code> описывает все файлы, имеющие расширение <code>py</code>, шаблон <code>/media/</code> — папку с соответствующим названием, а шаблон <code>[a-z].png</code> — все PNG-изображения с именем, состоящим из одного буквенного символа.</p><p id="aa855fc9-53e2-416c-8277-ed184fd94859" class="">Вот основные правила по оформлению gitignore:</p><ul id="f510eb08-3b98-4de7-b183-532003186b4d" class="bulleted-list"><li>комментарий обозначается символом <code>#</code>;</li></ul><ul id="b9e5ea47-6073-442d-9113-e236548b24ac" class="bulleted-list"><li>восклицательный знак <code>!</code> означает логическое НЕ, то есть описывает те элементы репозитория, которые игнорировать не нужно;</li></ul><ul id="0b122955-7213-49de-b4aa-cb5ccbbd2875" class="bulleted-list"><li>символ <code>/</code> указывает на конкретную директорию;</li></ul><ul id="047538b4-51bd-4ae7-b0a4-4fb99cd38cf4" class="bulleted-list"><li>запись <code>/directory_name/*</code> означает игнорирование всех файлов, но не подпапок указанной директории;</li></ul><ul id="ae4f9b05-298e-4ec7-b273-b5fe79d847c8" class="bulleted-list"><li>стандартные шаблоны применяются рекурсивно для всего дерева проекта: например, шаблон <code>templates/</code> будет применяться для всех папок проекта с данным именем, а шаблон <code>/templates/</code> — только для корневой.</li></ul><h1 id="a6c0274d-81ce-4b5e-bbb7-a7ada0ff1d17" class=""><strong>Генерация gitignore</strong></h1><p id="54c63b48-4dfd-4865-af7a-cdc1cf6a213c" class="">Поскольку разработчики из раза в раз в зависимости от технологического стека создают примерно одинаковые gitignore-файлы, уже давно существуют способы их генерации с перечнем дефолтных настроек.</p><p id="2d53f99f-f998-456b-b5c6-16ee15b63eb0" class="">Самый простой способ — воспользоваться функцией PyCharm.</p><figure id="a4bed5c2-95fd-45b8-8b5a-82e77db78d63" class="image"><a href="https://ucarecdn.com/3423ffc3-dfbb-4650-bdf7-d2bdb3425a07/"><img src="https://ucarecdn.com/3423ffc3-dfbb-4650-bdf7-d2bdb3425a07/"/></a></figure><figure id="aedf3795-6256-485a-bb57-944f7e0ddc25" class="image"><a href="https://ucarecdn.com/f2ce19ef-30ea-4c7a-93c4-62548aaa88d5/"><img src="https://ucarecdn.com/f2ce19ef-30ea-4c7a-93c4-62548aaa88d5/"/></a></figure><p id="30c616ff-b887-4ce3-822a-5e4ac059bcc2" class="">Если же по каким-то причинам данный способ вас не устраивает, можно воспользоваться следующим <a href="https://www.gitignore.io/">ресурсом</a>.</p><figure id="82e47803-454d-4026-a7a0-a3fce1553040" class="image"><a href="https://ucarecdn.com/5fb34f8f-e6f9-452a-a1b0-6a88855a1ec5/"><img src="https://ucarecdn.com/5fb34f8f-e6f9-452a-a1b0-6a88855a1ec5/"/></a></figure><p id="def54892-300a-46fd-afe9-dd7c5aa04b06" class="">Или же можно скачать готовый gitignore-файл по <a href="https://github.com/github/gitignore">этой</a> ссылке.</p><h1 id="8aaead24-544e-450d-ac23-b345ea7f5037" class=""><strong>gitignore и окружение</strong></h1><p id="91d2495d-9a62-4153-b584-eaa60ce1c52f" class="">В нашем случае, помимо стандартного списка игнорируемых элементов проекта, в сгенерированный gitignore следует добавить:</p><ul id="5ba54ea9-9570-4eb3-ae37-50fdb3e3c07d" class="bulleted-list"><li>папку с виртуальным окружением, если её имя отличается от стандартных <code>env</code> и <code>venv</code>;</li></ul><ul id="9d61bf60-215c-4bae-8a92-3f67d9cc9955" class="bulleted-list"><li>директорию с настройками нашей среды разработки <code>.idea</code> или <code>.vscode</code>;</li></ul><ul id="499f895c-0835-464b-9413-f2d7a9500190" class="bulleted-list"><li>директорию с медиа (обычно в Django используют <code>media</code>, во Flask – <code>static</code>)</li></ul><ul id="bf0bd112-3bfe-48a3-a6cf-fed0442c0ecc" class="bulleted-list"><li>файлы с конфигурациями проекта (об этом дальше);</li></ul><ul id="123a5883-9841-4418-b886-2a257ac51dbe" class="bulleted-list"><li>и пользователям MacOS — <code>*/.DS_Store</code>.</li></ul><p id="894f2382-963d-4a28-be83-b88eb7d70e2e" class="">Это нужно для того, чтобы наши локальные настройки и изображения не попали к коллеге или преподавателю.</p><p id="09a18c5f-5453-43b5-a38e-330fdc2cb1e2" class="">Кроме всего перечисленного, в gitignore-файле также обычно указываются файлы с <code>environments</code> вашего приложения, они же — переменные окружения или переменные среды. Подробнее о том, что это такое вы можете прочитать <a href="https://ru.hexlet.io/courses/cli-basics/lessons/environment-variables/theory_unit">здесь</a>. А для работы с ними в Python вы можете воспользоваться <a href="https://docs.python.org/3/library/os.html#file-names-command-line-arguments-and-environment-variables">стандартной библиотекой</a> <code>os</code>.</p><h1 id="58ff9eee-011c-4bc3-9d63-3d10d14807c4" class=""><strong>g</strong><strong>itignore и безопасность</strong></h1><p id="8d610901-5d0e-474b-85c5-ba434521c1df" class="">Представьте, что вы запускаете крутой open source проект, который привлекает к себе внимание ИТ-сообщества, а также различных недоброжелателей. Если они увидят в вашем GitHub-репозитории настройки подключения к БД, например, то жить вашему проекту останется недолго.</p><p id="88bf3454-749c-4d61-8706-009cec0440e7" class=""><strong>Хранить публично конфигурации вашего приложения, ключи доступа, пароли и настройки подключения к другим сервисам небезопасно!</strong></p><p id="8e62ad3c-4127-4801-bc79-d69deff22357" class="">В рамках учебных проектов это не возбраняется, даже приветствуется, чтобы преподавателю было проще проверить вашу работу. Но в будущем не забывайте о том, что при работе с Django или Flask ваш файл настроек не должен содержать приватных данных.</p><h1 id="f26b012a-c221-4ddb-8fc3-76bd772558ea" class=""><strong>Readme</strong></h1><p id="c18f278b-7214-475a-a20f-2cd800fd6b27" class="">В завершение темы оформления вашего репозитория поговорим о таком важном файле как <code>README</code>. Обычно в его оформлении используется язык <code>Markdown</code>, подробнее о котором вы можете узнать <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet">отсюда</a>.</p><p id="a0bcf4ab-0862-4d8c-850d-87513704479f" class="">Если вы разрабатываете что-то для массового использования, например, другими разработчиками, в этом файле как минимум следует кратко описать суть вашего проекта, процесс установки и предоставить примеры использования. В качестве образца можете использовать <code>README</code> одной относительно свежей и крутой <a href="https://github.com/samuelcolvin/pydantic">python-библиотеки</a> <code>pydantic</code>.</p><p id="6d9e3eb8-f83d-46b9-9ae6-5beb5c04e454" class="">Если же вы разрабатываете что-то коммерческое, скрытое от глаз публики и доступное только вашим коллегам, позаботьтесь о них: опишите по пунктам процесс развёртывания вашего приложения на локальной машине. Отдельным пунктом укажите переменные окружения, которые в вашем приложении используются. Перечислите зависимости (библиотеки и сервисы), которые необходимы для корректной работы вашего приложения.</p><p id="91c56d36-ef9a-4f8a-98b8-37995c89da62" class="">И вообще, не стесняйтесь подробно документировать свои проекты — когда-нибудь кому-нибудь ваша документация обязательно поможет!</p><p id="2e9039cb-49a6-42f8-9a65-2553524e1195" class="">Пример <code>README.md</code>:</p><pre id="3bd9a0b5-e5e0-4da1-b064-0b0943c3e7a0" class="code code-wrap"><code># Stepik project
+
+Training project for [a course on the Stepik](&lt;https://stepik.org/course/63298&gt;).
+
+## Environment variables* ALLOWED_HOSTS;
+* DB_HOST;
+* DB_PORT;
+* DB_USERNAME;
+* DB_PASSWORD;
+* DB_NAME.
+
+## Dependencies
+
+All requirements are listed in the file: `requirements.txt`.</code></pre><h1 id="a17c5184-8298-4354-b959-026fc7a23fad" class=""><strong>Резюме</strong></h1><h2 id="f8addb6c-a203-49ae-b384-c35651349e56" class=""><strong>gitignore</strong></h2><p id="5a4aeb16-0373-410f-8c07-dd1c85c01c72" class="">Файл с описанием игнорируемых файлов и папок должен иметь пустое имя и расширение <code>.gitignore</code>.</p><ul id="0600a0e9-559d-4e1a-89e8-41fb3f89ed55" class="bulleted-list"><li>комментарий обозначается символом <code>#</code>;</li></ul><ul id="e5d00ce5-1306-4376-b485-710996c3bced" class="bulleted-list"><li>восклицательный знак <code>!</code> означает логическое НЕ, то есть описывает те элементы репозитория, которые игнорировать не нужно;</li></ul><ul id="e4af31ab-1d49-451f-a0fa-cd4d31685fcb" class="bulleted-list"><li>символ <code>/</code> указывает на конкретную директорию;</li></ul><ul id="774e2378-803a-4a72-b212-d8d3fca41e5b" class="bulleted-list"><li>запись <code>/directory_name/*</code> означает игнорирование всех файлов, но не подпапок указанной директории;</li></ul><ul id="81b15b3f-375f-4ee6-a656-94dcf1165181" class="bulleted-list"><li>стандартные шаблоны применяются рекурсивно для всего дерева проекта: например, шаблон <code>templates/</code> будет применяться для всех папок проекта с данным именем, а шаблон <code>/templates/</code> — только для корневой.</li></ul><p id="65a0e98e-1c3f-4b51-af5e-be1296991a61" class=""><strong>В сгенерированный gitignore следует добавить:</strong></p><ul id="e4dc2893-0402-48a9-bc7c-9771b617667f" class="bulleted-list"><li>папку с виртуальным окружением, если её имя отличается от стандартных <code>env</code> и <code>venv</code>;</li></ul><ul id="bb1355e4-0dc5-4392-a238-d433e25ab20a" class="bulleted-list"><li>директорию с настройками вашей среды разработки <code>.idea</code> или <code>.vscode</code>;</li></ul><ul id="33ef09b6-061c-47ea-9c9d-bd1237df3284" class="bulleted-list"><li>директорию с медиа (обычно в Django используют <code>media</code>);</li></ul><ul id="df310731-4ac1-4e75-a452-49de9fd44b26" class="bulleted-list"><li>файлы с конфигурациями проекта (об этом дальше);</li></ul><ul id="3a04d70f-9111-45a6-89f2-8286e3b8858f" class="bulleted-list"><li>и пользователям MacOS — <code>*/.DS_Store</code>.</li></ul><ul id="4d07c7c9-3c95-41c1-8d9f-e3a7dd1e6012" class="bulleted-list"><li>В gitignore-файле также обычно указываются файлы с environments вашего приложения.</li></ul><p id="e18cd2df-1bed-40d1-9b6b-2ffd77b60692" class=""><strong>Для генерации файла с перечнем дефолтных настроек:</strong></p><ul id="63c26a18-500f-4566-8ec4-a1b56172f888" class="bulleted-list"><li>Можно воспользоваться функцией PyCharm.</li></ul><ul id="03fef4a2-8e4b-437c-b077-f6a4ea4c861d" class="bulleted-list"><li>Можно воспользоваться <a href="https://gitignore.io/">ресурсом</a>.</li></ul><ul id="c5b671de-c35a-4a50-8ee2-49300f6ad0ad" class="bulleted-list"><li>Можно <a href="https://github.com/github/gitignore">скачать</a> готовый gitignore-файл.</li></ul><p id="ca9bc3da-025c-4393-82a2-317bad451863" class=""><strong>Хранить публично конфигурации вашего приложения, ключи доступа, пароли и настройки подключения к другим сервисам небезопасно!</strong></p><h2 id="d0aa7d8f-6a18-4921-a4af-3ef874f1da3b" class=""><strong>Readme</strong></h2><p id="0521000c-1fa5-4b92-868f-ca4e6e7b1437" class="">Если вы разрабатываете  вместе с другими разработчиками,  следует описать суть проекта, процесс установки и примеры использования. В оформлении README.md используется язык Markdown, подробнее о котором вы можете узнать <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet">отсюда</a>.</p></div></article></body></html>

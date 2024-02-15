@@ -1,0 +1,677 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>1.24 Jinja – Основы шаблонизации + переменные</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="5595227a-0def-473f-88c7-99cb316998c9" class="page sans"><header><h1 class="page-title">1.24 Jinja – Основы шаблонизации + переменные</h1></header><div class="page-body"><h1 id="a0bbd364-3acb-440d-917b-f43033b1e5ea" class=""><strong>Jinja – Основы шаблонизации</strong></h1><p id="5b6704e6-9882-43f1-a743-9785bd6ae39a" class="">Если вы использовали html-строки внутри Python, то замечали: читать код, где перемешаны два языка не очень удобно, особенно, когда html становится огромным. Шаблонизаторы позволяют нам хранить html-шаблоны отдельно от логики и данных, и выводить в нужных местах переменные, списки и словари.</p><p id="9768a6f7-834b-4e09-95de-efbaa17b2506" class="">Если на сайте есть статья с заголовком, текстом и автором, шаблонизатор примет эти переменные и сгенерит страничку со статьей. Если у вас на сайте есть меню, шаблонизатор примет список словарей и создаст на его основе нужные ссылки. Если на сайте есть список тегов, шаблонизатор примет список и создаст на его основе теговое облако. Вот так:</p><figure id="41431227-ac18-4a3b-b5b7-380cf7b8aa33" class="image"><a href="https://ucarecdn.com/6e760a94-6ae0-4fbb-b891-2a36c5ff0636/"><img src="https://ucarecdn.com/6e760a94-6ae0-4fbb-b891-2a36c5ff0636/"/></a></figure><h2 id="bd01afba-3b6b-4240-9950-7609eccbb218" class=""><strong>Обычно шаблонизаторы умеют:</strong></h2><p id="8b16fd26-ed98-40bf-8d3d-17bf8e4cbe40" class="">– выводить значения <strong>переменных</strong> в html-шаблоне,</p><p id="b5a6270a-498f-408c-a117-13e328a6b5e7" class="">– форматировать <strong>значения</strong> (округлять, делать большие буквы и.т.д.),</p><p id="0727fdb8-f8ac-4bec-a43e-6557c3b3f167" class="">– реализовывать <strong>условия</strong> внутри html-шаблона,</p><p id="ca601564-9d85-4e05-9ed7-b5ebf512b3ed" class="">– реализовывать <strong>циклы</strong> внутри html-шаблона,</p><p id="529fc60c-6546-4bce-9537-8368d8e93137" class="">– выводить результат запуска стандартных и пользовательских <strong>функций</strong> в html-шаблоне.</p><h2 id="b3047582-769d-4f7d-908a-a2d8c9566e62" class=""><strong>В этом топике вы научитесь:</strong></h2><p id="13ef0367-5f63-4681-a62b-15bf5c03f605" class="">– подключать Jinja,</p><p id="aebcde68-633d-47c7-a6eb-8e607b773913" class="">– создавать простые шаблоны,</p><p id="e03058f5-c5b0-43bb-bbf6-00de3ea8c803" class="">– передавать переменные в шаблонизатор,</p><p id="3d71ca12-d2cf-4e5b-80c6-7bcd774c66aa" class="">– использовать Jinjа вместе с Flask.</p><h1 id="e9046902-f45d-4882-9a26-6569770f74d2" class=""><strong>Что мы знаем о генерации строк</strong></h1><p id="7d337110-2671-4264-93cb-a7b8edca5e17" class="">Если вам нужно добавить вычисленные значения в html код на python, у вас есть несколько вариантов это сделать.</p><p id="49a16b9e-c1ef-4c99-9593-884444942202" class="">1. Первый способ – слияние строк:</p><pre id="b1e6a26a-e6af-4513-935e-6f27aad23d17" class="code code-wrap"><code>name = &quot;Steven&quot;
+print (&quot;&lt;h1&gt;Hello &quot;+name+&quot;&lt;/h1&gt;&quot; )
+
+# &gt;&gt; Hello Steven</code></pre><p id="90c0587d-0e84-44b2-888a-0318f24e72c8" class="">2. Второй способ – форматирование строк:</p><pre id="e5d6279f-2465-4620-af10-c32766272e58" class="code code-wrap"><code>name = &quot;Steven&quot;&quot;&lt;h1&gt;Hello {}&lt;/h1&gt;&quot;.format(name)
+
+# &gt;&gt; Hello Steven</code></pre><p id="a7a4d573-07ad-46dd-90b4-c3158f33e125" class="">3. Третий способ – F-строки:</p><pre id="1178afee-f1ef-4df2-ad10-bfff35abcff2" class="code code-wrap"><code>name = &quot;Steven&quot;
+print ( f&quot;&lt;h1&gt;Hello {name}&lt;/h1&gt;&quot; )
+
+# &gt;&gt; Hello Steven</code></pre><p id="9fd04a5f-aeb5-4486-ad4f-d3410dbc4c96" class="">Однако, даже при использовании форматирования, если вы создаете HTML строку для передачи пользователю, основной файл проекта будет загроможден тегами, а если в коде встречаются условия или циклы, логика и строки для вывода будут так перемешаны, что их неудобно будет читать и редактировать. Радикальное решение – разделить логику (функции и операторы python) и представление (теги) по разным файлам. Для этого мы сначала вычисляем и готовим все переменные, списки и словари, затем передаем их в шаблон, где шаблонизатор ставит их в специальные места и собирает (рендерит) готовый html документ.</p><p id="dd6e1f6a-c5e4-4a7e-a015-39d789d0f31e" class="">Именно этим и занимаются шаблонизаторы, вроде Jinja. Давайте познакомимся с ним!</p><h1 id="59682336-d883-4892-8ce0-0224217a94cc" class=""><strong>Использование файлов шаблонов</strong></h1><p id="78a5cb7e-9068-4e66-883c-ec7dea4b2726" class="">Давайте научимся хранить шаблоны в отдельных html файлах и загружать их при необходимости.</p><p id="5bd77cd9-6ad5-41ad-9486-65918347396a" class="">По умолчанию, Flask будет искать шаблоны в папке &quot;templates&quot;</p><p id="581abf1d-cd6d-47bb-b0e2-99f3bdd3422d" class="">– Создадим в нашей папке проекта папку <strong>templates</strong>.– Создадим в папке <strong>templates</strong> файл <strong>test.html</strong>.– Создадим в <strong>test.html</strong> простой шаблон с текстом.</p><pre id="6df1ad90-c2f8-41cb-95d4-a29926acde03" class="code code-wrap"><code>&lt;h1&gt;Привет, я могу содержать весь твой HTML-код!&lt;/h1&gt;</code></pre><p id="80f90626-8d5d-43a8-8c6d-7a42ed93bc58" class="">Хорошая новость! Если вы используете Flask, вам не нужно подключать Jinja.Просто добавьте render_template при импорте Flask.Скопируйте и выполните следующий код!</p><pre id="aa7b3443-807a-4206-beae-0e4a64fc25db" class="code code-wrap"><code>from flask import Flask, render_template # подключаем render_template, который включает функции для Jinja
+
+app = Flask(__name__)
+
+@app.route(&quot;/&quot;)
+def template():
+    output = render_template(&quot;test.html&quot;) # рендерим шаблон return output # возвращаем то, что отрендерилось
+
+app.run()</code></pre><p id="903e29f7-4120-44be-b09b-5dfead219aea" class="">Запустите ваше приложение. Вот, что должно получиться:</p><figure id="399ff5ea-1e5a-4515-aefb-b588fa232589" class="image"><a href="https://ucarecdn.com/d279c69b-986a-4451-bed3-1954598d7a96/"><img src="https://ucarecdn.com/d279c69b-986a-4451-bed3-1954598d7a96/"/></a></figure><p id="b4659968-5ef7-4fac-b68c-d5cc09c8c61d" class="">Теперь вы знаете, как избавиться от всего этого HTML кода в главном файле приложения. Круто, правда?</p><p id="86239295-7533-4c1c-b3b4-02a9f55ce783" class="">Дальше мы научимся работать с переменными.</p><h1 id="4b087af6-a529-4667-89dc-8ae95e0175ff" class=""><strong>Использование переменных в файле шаблона</strong></h1><p id="84e1d25f-b925-43d8-9296-8da2e9bb5968" class="">В прошлом шаге мы создали в папке <strong>templates файл шаблона</strong> <strong>test.html</strong> простой шаблон.</p><p id="454274b3-d668-4797-a14e-99eb8f5d0e33" class="">Отредактируем его, заменив текст на:</p><pre id="741805aa-d547-45f4-b251-5213f89ba95a" class="code code-wrap"><code>&lt;h1&gt;Hello {{name}}, welcome to the {{place}}&lt;/h1&gt;</code></pre><p id="cbca2b69-6b32-478a-aac3-2dc32478457e" class="">Теперь вернемся к главному файлу нашего приложения и отредактируем его, передав переменные в шаблон!</p><pre id="8ab58839-5fa1-4432-bd57-75054cb9d11d" class="code code-wrap"><code>from flask import Flask, render_template
+
+app = Flask(__name__)
+
+@app.route(&quot;/&quot;)
+def template():
+    output = render_template(&#x27;test.html&#x27;,name=&quot;Alex&quot;,place=&quot;Lab&quot;) # рендерим шаблон, передавая переменныеreturn output
+
+app.run()</code></pre><p id="b7f243ed-34b4-4f62-93af-e4697126608e" class="">У вас должно появиться что-то такое:</p><figure id="9e59658b-3b45-45ec-8092-6c6ea083c46a" class="image"><a href="https://ucarecdn.com/37385026-e1ca-4fab-80e6-f6862d1aaa01/"><img src="https://ucarecdn.com/37385026-e1ca-4fab-80e6-f6862d1aaa01/"/></a></figure><p id="dfe45cf2-c2e4-4ade-bcad-5eee68b94a91" class="">Отлично, вы научились передавать переменные шаблонизатору!</p><p id="d8584b4d-d5ad-4c92-8fe7-47de71d6c72b" class="">Впереди создание нескольких шаблонов для нескольких роутов и передача словарей и списков!</p><h1 id="b8960df3-ccfa-41a1-ae6d-a60cc96a3c53" class=""><strong>Несколько шаблонов</strong></h1><p id="de0d5133-8cff-480f-a6c6-9e26bb813ed1" class="">Для простоты примера не будем использовать переменные. Так бывает – у контентных страниц, например, /about, логики может вообще не быть! Сначала создайте в папке два файла с шаблонами:</p><pre id="9f542ebd-cee1-4e10-82b8-b50b715540b1" class="code code-wrap"><code> ### index.html
+&lt;h1&gt;Здесь будет главная страница&lt;/h1&gt;
+&lt;a href=&quot;/about&quot;&gt; О проекте &lt;/a&gt;
+
+### about.html
+&lt;h1&gt;Здесь будет страница &quot;О сервисе&quot;&lt;/h1&gt;
+&lt;a href=&quot;/&quot;&gt; На главную &lt;/a&gt;</code></pre><p id="b3089f43-bbcb-43ab-bbed-81057f483021" class="">Затем измените главный файл <strong>app.py</strong> так:</p><pre id="bd4c620a-5484-4434-9fa9-1b56ea244e5d" class="code code-wrap"><code>from flask import Flask, render_template
+
+app = Flask(__name__)
+
+@app.route(&#x27;/&#x27;)
+def main():
+    return render_template(&#x27;index.html&#x27;)
+
+
+@app.route(&#x27;/about&#x27;)
+def about():
+    return render_template(&#x27;about.html&#x27;)
+
+
+app.run()</code></pre><p id="c6fb0367-8f61-4ddb-83bc-75fe53f1cf05" class="">Должна получиться примерно такая структура:</p><p id="ce78e2f5-0f67-4001-9d2a-9abe0d22f150" class="">Project_folder</p><p id="dc6d4fee-3d28-4c6b-aa62-248e54d1a982" class="">– templates</p><p id="b0a3802d-6ba5-40e5-a0c6-e4d604328ef1" class="">  –– index.html</p><p id="a9653157-1fa6-4fd6-bd4a-e0340730efdd" class="">  –– about.html</p><p id="2f467cc5-0930-4e02-93fe-fe67dccc418d" class="">– app.py</p><p id="47f63b69-21e0-4464-8de1-4f0c025bd554" class="">Запустите приложение.</p><p id="b10d0bd4-817c-4d92-85ff-a6f933712a7f" class="">Вы увидите две страницы, соединенные ссылками, отлично!</p><h1 id="74249572-ee10-43ba-9b8f-d9254a91d87b" class=""><strong>Переменные, списки и словари</strong></h1><p id="8fc0e9c9-aa8d-4885-8309-2f9397f24251" class="">Поскольку мы не всегда работаем только со строковыми, численными или логическими переменными, но также со словарями или списками, для них также предусмотрены специальные элементы разметки.</p><h2 id="13a9eae3-f851-4e7d-9e2e-6c6487758738" class=""><strong>Переменная</strong></h2><p id="742ec7bf-f02c-4ce8-97f2-edffb8e9bc0b" class="">Чтобы использовать переменную в шаблонах, добавьте конструкцию {{ имя_переменной }} в html коде.</p><p id="8e77d5bb-3ed9-4589-80fb-9b722cf05b3d" class="">Предположим, вы передаете в шаблонизатор переменные title и description.</p><p id="3df93694-7eb6-46f9-a200-045d3b6e71db" class="">Тогда просто обратитесь к переменной по имени. Вам не нужно использовать print. Фигурные скобки и есть print.</p><h2 id="e3ce8cc6-32ce-4722-9751-a3472c2a2ac5" class=""><strong>Список</strong></h2><p id="4249275b-24a6-443a-a89c-7fb8f2c68fc7" class="">Чтобы использовать список в шаблонах, добавьте конструкцию <code>{{ Список[индекс] }}</code> в html коде.</p><p id="b72a8d6a-0773-4c8d-9544-eda205957a71" class="">Предположим, вы передаете в шаблонизатор список students.</p><p id="f08c208d-c2fc-410d-ac67-a00a2e13a723" class="">Конечно, в реальных проектах так не делают, предпочитая проходить списки циклом, мы рассмотрим позже как это делать, но пример все равно работает:</p><pre id="31bb3725-6f00-436b-8113-56774a73680f" class="code code-wrap"><code>&lt;ul&gt;
+  &lt;li&gt;{{ students[0] }}&lt;/li&gt;
+  &lt;li&gt;{{ students[1] }}&lt;/li&gt;
+  &lt;li&gt;{{ students[2] }}&lt;/li&gt;
+&lt;/ul&gt;</code></pre><h2 id="38f71a34-99da-45cd-917b-5b6e268fdc21" class=""><strong>Словарь</strong></h2><p id="b8f6786f-452d-43d6-8c12-012a7bc3cc6d" class="">Чтобы использовать словарь в шаблонах, добавьте конструкцию <code>{{ имя_словаря.ключ }}</code> или <code>{{ имя_словаря[&#x27;ключ&#x27;] }}</code>  в html коде. В шаблоне две эти записи делают одно и то же, берут значение по ключу &quot;ключ&quot; из словаря. Запись через точку это синтаксический сахар шаблонизатора, его можно использовать только в шаблоне.</p><p id="6ca6f606-7cc5-4896-af59-20c645032361" class="">Предположим, вы передаете в шаблонизатор словарь page с ключами title и description.</p><p id="68e211f2-982c-4289-8ca3-78bd0972ae84" class="">Тогда используйте выражение с точкой:</p><pre id="a196babf-a29d-4317-b6bc-8d2dcea5ce35" class="code code-wrap"><code>&lt;h2&gt;{{ page.title }}&lt;/h2&gt;
+&lt;p&gt;{{ page.description }}&lt;/p&gt;</code></pre><p id="328ab984-e058-4777-aa76-5cd42001388b" class="">Или можно записать то же самое без сахара.</p><pre id="0f03ecec-c2dc-4b49-879d-f853d2af29a9" class="code code-wrap"><code>&lt;h2&gt;{{ page[&#x27;title&#x27;] }}&lt;/h2&gt;
+&lt;p&gt;{{ page[&#x27;description&#x27;] }}&lt;/p&gt;</code></pre><p id="e02d3f76-dcc9-4917-8b5e-6ef4bfc4e6a8" class="">Какой синтаксис использовать — вопрос вкуса и предпочтения программиста.</p><h2 id="4f769258-ec86-4e32-8900-0d49d107f618" class=""><strong>Области видимости</strong></h2><p id="2a1c8275-b254-4212-b107-5bdeaaff0e79" class="">Обратите внимание, переменную нужно <strong>явно объявить и передать в шаблон</strong>. Переменные, не переданные в шаблонизатор явно, недоступны для вывода внутри шаблона.</p><p id="a5048113-2506-4c05-a4d6-20e9ec14e544" class="">Например, в этом примере мы передаем в шаблонизатор переменную <strong>name</strong> со значением <strong>Steven</strong>:</p><pre id="c2077c30-4c0b-4d29-9c32-2844d11a6d26" class="code code-wrap"><code>output = render_template(&quot;hello.html&quot;, name=&quot;Steven&quot;)</code></pre><p id="18da4424-e92f-4352-aac4-d297820c5c62" class="">В этом примере, мы передаем в шаблонизатор список с элементами 122, 344, 720:</p><pre id="86278a2b-647f-420d-995e-24087f1352ff" class="code code-wrap"><code>output = render_template(&#x27;test.html&#x27;, mylist=[122, 344, 720])</code></pre><p id="854b4784-8f67-4487-be6b-7783883b5efa" class="">А в этом примере – словарь:</p><pre id="5209d7ba-edb8-4f91-ae53-02b237114d29" class="code code-wrap"><code>output = render_template(&#x27;test.html&#x27;, cat={&quot;angry&quot;:False, &quot;color&quot;:&quot;grey&quot;, &quot;name&quot;:&quot;Sofia&quot;})</code></pre><figure id="3059f22d-98b7-4015-a19c-2f44f10eed33"><div class="source"><a href="https://docs.google.com/forms/d/15eB-KEdBdqC6Bvf_LRl8hUX1oD8ABgPXJFAYZ-R5X64">https://docs.google.com/forms/d/15eB-KEdBdqC6Bvf_LRl8hUX1oD8ABgPXJFAYZ-R5X64</a></div></figure><h1 id="96f3de04-8def-4b55-8e77-ff8876f5fd3a" class=""><strong>Резюме</strong></h1><p id="df66f015-26a9-439b-81cb-2455d480ddeb" class="">Шаблонизаторы позволяют удобно вынести HTML из основного файла.Шаблон – это HTML-файл с добавлением специальной разметки.Jinja – шаблонизатор, встроенный во Flask.<strong>Специальная разметка может содержать:</strong>– Переменные.– Ветвление.– Циклы.– Вызов функций.</p><p id="5aea6ce7-1437-44c6-9575-d221b872feaa" class=""><strong>Для вызова Jinja для обработки файла</strong>:</p><p id="2af14751-35a8-4362-b284-38decdcb33d5" class="">– подключите <strong>from flask import Flask</strong>, <strong>render_template</strong>;</p><p id="6d5f1df7-6eea-4c01-9b6d-b8e1b7d25cb7" class="">– используйте return <strong>render_template</strong>(шаблон, переменные).</p><p id="5f9d7217-bb95-4681-a5d2-f7fb6b15b72f" class=""><strong>Чтобы использовать переменную, используйте конструкцию:</strong></p><pre id="92cfe6f5-103d-4d7c-84a9-283b186dc627" class="code code-wrap"><code>{{ variable1 }} {{ variable2 }}</code></pre><p id="90051330-efe3-4eb9-8690-8ab81487af5d" class=""><strong>Чтобы использовать список, используйте конструкцию:</strong></p><pre id="caa3037d-decd-46ba-b12a-042c8983ac2c" class="code code-wrap"><code>{{ list[0] }} {{ list[1] }}</code></pre><p id="01955d77-2b5c-4a6e-92c1-8e1283b22b8d" class=""><strong>Чтобы использовать словарь, используйте конструкцию:</strong></p><pre id="b5d6922c-62c6-4524-8d57-a495d5b01141" class="code code-wrap"><code>{{ dict.key1 }} {{ dict.key2 }}</code></pre></div></article></body></html>

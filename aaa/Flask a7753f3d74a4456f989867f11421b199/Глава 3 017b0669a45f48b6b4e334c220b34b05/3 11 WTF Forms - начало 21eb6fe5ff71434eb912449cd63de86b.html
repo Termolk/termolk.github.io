@@ -1,0 +1,698 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>3.11 WTF Forms - начало</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="21eb6fe5-ff71-434e-b912-449cd63de86b" class="page sans"><header><h1 class="page-title">3.11 WTF Forms - начало</h1></header><div class="page-body"><p id="400d2434-d2ae-46cf-b3c6-693e8004c639" class="">
+</p><p id="adc9e43c-ea65-470d-af54-de97e60aed9f" class="">Нашему сайту нужно не только выводить данные, но и принимать их через html-формы.</p><p id="8f96cced-601b-4667-ae6e-a80b339bd2d5" class="">Для удобной работы с HTML-формами есть библиотека, облегчающая эту задачу - WTForms.</p><p id="6037f3d0-a1b1-4a27-9a46-f2b0e094bb75" class="">Впереди у вас  3 топика на работу с формами.</p><p id="d10a3d95-2fe9-4db0-9b04-ff770e4af004" class=""><strong>Как это работает?</strong></p><p id="1a98c44b-7770-41f9-8eba-177346f67b2b" class="">1. Вы описываете форму, создавая класс с полями, где свойства класса это поля формы, например так:</p><pre id="5ed6ab17-94cb-4475-945d-14aebc4c2507" class="code code-wrap"><code># Этот код в app.py
+class userForm(FlaskForm):
+    name = StringField(&#x27;Имя пользователя&#x27;)
+    phone = StringField(&#x27;Телефон пользователя&#x27;)</code></pre><p id="3eb7e20d-3030-466c-aee2-f1e8e9f4a717" class="">2. Вы создаете экземпляр класса и передаете его в шаблон, например так:</p><pre id="f06e5259-8c5e-41fb-b5e5-c177c700c63b" class="code code-wrap"><code>#Этот код внутри функции представления
+
+form = userForm()
+
+return render_template(&quot;template.html&quot;, form=form)</code></pre><p id="1cb143f2-98d0-4ea8-85a8-da68577d6055" class="">3. Вы выводите эти поля в шаблонах, попутно настраивая их и стилизуя, например, так:</p><pre id="0431d15c-04db-42bb-9ea6-cf339dd5d3d8" class="code code-wrap"><code># Этот код в шаблоне template.html
+
+Имя:{{ form.name }}
+Телефон:{{ form.phone(class_=&quot;form-control&quot;) }}</code></pre><p id="bf9d44ef-6d27-42dc-998f-16febcfd8f66" class="">4. После отправки данные попадают сразу в объект формы и мы можем их получить, например, так:</p><pre id="dd1e2b83-0ea6-41ae-a9d2-1d1d6aaa7356" class="code code-wrap"><code>#Этот код внутри функции представления
+
+form = userForm()
+
+name_value = form.name.data
+phone_value = form.phone.data</code></pre><p id="0e80706a-89b4-4ebe-a0d3-448e0e2ff249" class=""><strong>В этом топике научитесь:</strong></p><p id="72a4fce4-bf63-4d92-b35f-3cea59ff019f" class="">Устанавливать и подключать WTForms.</p><p id="4dd5d9f7-5c14-4ab8-a215-1df9d53f8bd5" class="">Объявлять классы форм.</p><p id="4de4421a-ddd7-4f76-b070-040b1f9f638d" class="">Выводить формы в шаблоны Jinja.</p><p id="701f699e-6064-4c0b-b05a-2334a334bb4d" class="">Использовать все возможные типы полей.<strong>В следующих топиках:</strong></p><p id="1359b75c-5277-4bf6-866d-1ac020b3357b" class="">Получать данные</p><p id="1064078f-d513-4d42-b7d5-c02424019f5a" class="">Валидировать их</p><p id="66729b90-927d-4d53-bf3c-a0af1338a386" class="">Выводить сообщения об ошибках</p><ul id="1b3a9af0-9a0d-4b68-b928-e9672abed694" class="bulleted-list"><li>--</li></ul><p id="f1c02e6d-435d-4fa8-b0ee-827e2a2ae437" class="">Полную документацию по WTForms можно найти здесь:<a href="https://wtforms.readthedocs.io/en/stable/index.html">https://wtforms.readthedocs.io/en/stable/index.html</a></p><h2 id="43185475-081a-45cd-a4ca-0d9796c6eb1f" class=""><strong>Установка WTForms</strong></h2><p id="e0cf3b5b-8c12-4c7e-b48c-1f42249ae9e9" class="">WTForms для Flask состоит из двух библиотек: WTForms и ее обертка Flask-WTF.</p><p id="013b747f-cbc6-4d79-ad11-406ae4776736" class="">Но для установки нам понадобится инсталлировать только одну библиотеку, вторая автоматически установится из зависимостей. Выполните следующую команду в консоли:</p><pre id="512ae860-edb6-4f5e-9d66-7d258bf3635d" class="code code-wrap"><code>pip install Flask-WTF</code></pre><h2 id="058a92ee-944e-42f1-b64c-69d52ba59ebb" class=""><strong>Подключение модулей</strong></h2><p id="c55dd5fc-f2d3-4ada-b661-57ee4ef85c99" class="">Особенность WTForms - каждый тип поля подключается отдельно, не забудьте об этом, когда будете собирать вашу форму</p><pre id="186ac04c-dceb-45e7-9dad-18462ff01935" class="code code-wrap"><code>from flask_wtf import FlaskForm
+from wtforms import StringField</code></pre><h2 id="1461da60-0f3a-4276-b63f-7a176db8b04c" class=""><strong>Класс формы, поля формы</strong></h2><p id="0938ef6e-30cb-4ba6-9c29-21a5b08b16fe" class="">Любая HTML-форма состоит из полей, которые могут иметь разный тип: текст, число, чекбокс, выпадающий список.Поля ответственны за отображение переменных и преобразование их значений в HTML.</p><p id="853a9d72-d5d7-45d1-8791-8e52c303c83a" class="">Для объявления класса формы нужно импортировать базовый класс <strong>flask_wtf.FlaskForm,</strong> а также классы полей формы из пакета wtforms.</p><p id="54049b9e-55f9-4ae5-8aeb-739e5075db37" class="">В примере ниже описание формы с одним полем типа строка:</p><pre id="750a5453-7b4a-4447-a898-b9f863759a56" class="code code-wrap"><code>from flask_wtf import FlaskForm
+from wtforms import StringField
+
+class MyForm(FlaskForm):
+    name = StringField(&#x27;name&#x27;)
+</code></pre><p id="1ad800c4-d3f0-4cca-be04-61b9946d04ce" class="">Обязательным параметром/аргументом является также имя поля. Например, в поле &quot;name&quot; в примере выше передано название &quot;name&quot;.</p><h2 id="0f1adbca-3a4e-4235-8056-2a7ee3e1a2f6" class=""><strong>Строковые поля</strong></h2><p id="0d7622f2-71ff-4858-9770-51e3164f95f3" class=""><strong>StringField</strong>  -  поле &lt;input type = &#x27;text&#x27;&gt; HTML-формы.</p><pre id="815d0024-2892-4bdd-93f9-aa49ff2e73f6" class="code code-wrap"><code>name = StringField(&#x27;Имя&#x27;)</code></pre><p id="7d11183d-3caf-4b11-95ca-06128851fb23" class=""><strong>IntegerField</strong>  -  поле TextField для целых чисел.</p><pre id="7bf30446-82a1-40f2-beb8-9de59577063c" class="code code-wrap"><code>age = IntegerField(&#x27;Возраст&#x27;)</code></pre><p id="0945fe0a-a52c-430f-bac7-37ecd90af60a" class=""><strong>TextAreaField</strong> -  поле &lt;textarea&gt; HTML-формы.</p><pre id="4a98790f-2328-43d6-81ff-14c30911b3e2" class="code code-wrap"><code>bio = TextAreaField(&#x27;Информация обо мне&#x27;)</code></pre><p id="270248ec-5960-40c0-94fd-5f972aad3b04" class=""><strong>PasswordField</strong>  -  поле &lt;input type = &#x27;password&#x27;&gt; HTML-формы.</p><pre id="9dfa7876-fab1-4a2f-8176-5fe67ee86a07" class="code code-wrap"><code>password = PasswordField(&#x27;Ваш пароль&#x27;)</code></pre><h2 id="dcebab6b-e0ec-4676-ae63-35d24f0544ae" class=""><strong>Поля для выбора</strong></h2><p id="daf6e7b9-2d9a-4f9b-b0bd-2250fcffbdf9" class=""><strong>RadioField</strong>  -   поле &lt;input type = &#x27;radio&#x27;&gt; HTML-формы.<em>Поле </em><em><strong>RadioField</strong></em><em> должно принимать, как аргумент, варианты для выбора, где первое значение будет использоваться в форме, а второе будет отображаться у пользователя.</em></p><pre id="6160d938-a1b3-404f-97a1-117947cf58e8" class="code code-wrap"><code>certification = RadioField(
+	&#x27;certification&#x27;, 
+	choices = [(&quot;key1&quot;,&quot;Значение 1&quot;),(&quot;key2&quot;,&quot;Значение 2&quot;)],
+)</code></pre><p id="f3942c6c-df99-4700-ac28-648af14fb1b4" class=""><strong>SelectField</strong>  -  поле &lt;select&gt; HTML-формы<em>Поле </em><em><strong>SelectField </strong></em><em>для выбора принимает парные аргументы, где первое значение будет использоваться в форме, а второе будет отображаться у пользователя.</em></p><pre id="a20aca3b-4b75-465e-9d34-65a53e1b4769" class="code code-wrap"><code>language = SelectField(&#x27;language&#x27;,choices=[(&#x27;cpp&#x27;, &#x27;C++&#x27;), (&#x27;py&#x27;, &#x27;Python&#x27;)])</code></pre><p id="96dec332-e6ce-455c-9267-638b02153436" class=""><strong>BooleanField</strong>-   поле &lt;input type = &#x27;checkbox&#x27;&gt; HTML-формы.</p><pre id="3f84956d-7112-412b-9e3e-ce585faed32e" class="code code-wrap"><code>iagree = BooleanField(&#x27;Я согласен с правилами обработки данных&#x27;)</code></pre><h2 id="785a99ab-1518-43c6-903a-889beaf04276" class=""><strong>Служебные поля</strong></h2><p id="0d481947-19a4-4ae3-9a20-fb1e80987a8d" class=""><strong>SubmitField  -  Представляет поле &lt;input type = &#x27;submit&#x27;&gt; HTML-формы.</strong></p><pre id="262ca5d6-5847-4b5e-bd52-5ae3f8633bcf" class="code code-wrap"><code>submit = SubmitField(&#x27;Поехали!&#x27;)</code></pre><p id="3bf1afba-9072-4241-8f92-b6e28b509da9" class=""><strong>HiddenField  -  Представляет поле &lt;input type = &#x27;hidden&#x27;&gt; HTML-формы.</strong></p><pre id="bc90bc2b-3516-458a-aa21-9f76fc4337d3" class="code code-wrap"><code>submit = HiddenField(&#x27;Поехали!&#x27;,default = &quot;433&quot;)</code></pre><h2 id="75e2b9cf-a316-47f2-918c-4bc0f4db844c" class=""><strong>Некоторые примеры форм:</strong></h2><pre id="720f778b-64fb-4857-a0fb-032451e09389" class="code code-wrap"><code>#Форма аутентификации
+class AuthForm(FlaskForm):
+    login = StringField(&#x27;Ваш логин&#x27;)
+    password = PasswordField(&#x27;Ваш пароль&#x27;)
+    submit = SubmitField(&#x27;Вход в систему&#x27;)</code></pre><pre id="ab809031-788a-4da9-bf8b-1fced1984ea5" class="code code-wrap"><code>#Форма сообщения об ошибке
+class AuthForm(FlaskForm):
+    login = StringField(&#x27;Ваш логин&#x27;)
+    page = StringField(&#x27;Страница, где произошла ошибка&#x27;)
+    expected = TextAreaField(&#x27;Ожидаемое поведение&#x27;)
+    real = TextAreaField(&#x27;Реальное поведение&#x27;)
+    submit = SubmitField(&#x27;Отправить сообщение&#x27;)
+</code></pre><pre id="718539ac-02ad-4dd0-90c0-fc0f7776e4bd" class="code code-wrap"><code>#Форма покупки билета
+class AuthForm(FlaskForm):
+    name = DateField(&#x27;Имя&#x27;)
+    email = StringField(&#x27;Электронная почта&#x27;)
+    type = SelectField(&#x27;Тип билета&#x27;,choices=[(&quot;std&quot;,&quot;Стандарт&quot;), (&quot;prm&quot;,&quot;Премиум&quot;])
+    iagree = BooleanField(&#x27;Я принимаю правила&#x27;)
+    submit = SubmitField(&#x27;Перейти к оплате&#x27;)</code></pre><h2 id="9dfa85ae-b9ba-4b97-8564-e2a37522f403" class=""><strong>Вывод формы в шаблоне Jinja</strong></h2><p id="127eedc7-1a2e-430a-909d-49e124708f46" class="">Для передачи формы в шаблон достаточно</p><p id="219f16a6-ccd9-448f-8100-eab2abc2fb67" class="">1. Создать инстанс* формы в роуте</p><p id="a62bbc00-257b-467e-a1dc-71b66fa1e919" class="">2. Передать его в шаблон</p><p id="fd599bd1-06bd-40c2-962c-ea212c464d06" class="">3. Вывести его в шаблоне</p><ul id="c469118f-7678-4acd-a308-ae9b548acbb5" class="bulleted-list"><li><em>Инстанс — экземпляр класса в объектно-ориентированном программировании.</em></li></ul><pre id="d1e5da1c-80a6-46de-97eb-5523252d3271" class="code code-wrap"><code>class MyForm(FlaskForm):
+    name = StringField(&#x27;Имя пользователя&#x27;)
+
+@app.route(&#x27;/myform&#x27;, methods=[&#x27;GET&#x27;,&#x27;POST&#x27;])
+def myform():
+    form = MyForm() #создание инстанса
+		return render_template(&#x27;myform.html&#x27;, form=form)
+</code></pre><p id="51e48315-868b-4067-b31d-dc9150e098da" class="">В шаблонах форма представляется через свойства своих полей.</p><p id="17a8e659-ba20-4e30-9290-51e0d5134484" class="">Каждое поле имеет несколько таких свойств:</p><p id="63b14e69-7034-4ca0-ae73-4585c5ab174e" class=""><strong>{{ form.name }}</strong> - тег формы, выведет &lt;input..&gt;</p><p id="391ec6fd-e3c0-445e-b1ab-437193c05ed5" class=""><strong>{{ form.name.label}}</strong> - метка поля</p><pre id="ff0dc0bc-edc4-4129-b83c-0f0ce349a7ee" class="code code-wrap"><code>&lt;form method=&quot;POST&quot; action=&quot;{{ url_for(&#x27;myform&#x27;) }}&quot;&gt;
+
+    ...
+    {{ form.name.label }}         &lt;!-- вывод метку поля формы --&gt;
+    {{ form.name }}               &lt;!-- вывод HTML-тега формы --&gt;
+    ...
+    &lt;input type=&quot;submit&quot; value=&quot;Сохранить&quot;&gt;&lt;/form&gt;</code></pre><h2 id="75da0361-9be6-4f69-9a4b-b49064ab4263" class=""><strong>Настройка классов для элементов</strong></h2><p id="ee8e418e-4ea9-4e84-a705-d57dbe7a8dba" class="">Если вы используете готовую верстку, а не пишете ее с нуля одновременно с бекендом (надеемся, вы не делаете так), первый вопрос, который возникнет у вас – как задать классы для элементов формы.</p><p id="d4ef9035-c3e2-445a-853e-083134bc7f2d" class="">Если вы хотите добавить класс к полю ввода, просто используйте class_:</p><pre id="aef31fd3-7a67-4ece-b560-57bb63f71d51" class="code code-wrap"><code>{{ form.email(class_=&quot;form-control&quot;) }}</code></pre><p id="a218e77c-62e0-4828-b1b3-10f5966ccdb1" class="">Если вы хотите добавить класс к лейблу – тоже используйте class_:</p><pre id="6f23e8b4-8b73-413f-a846-1adebfe90c6c" class="code code-wrap"><code>{{ form.email.label(class_=&quot;form-control&quot;) }}</code></pre><h2 id="8ea3edc3-fe00-4d8b-806e-f3f27486b0d4" class=""><strong>Безопасность WTFrom - CSRF-токен</strong></h2><p id="5ef5079e-38a9-4655-a5d2-a22e1ae5e9f3" class="">Одина из самых опасных и распространенных атак на HTML-формы - отправка данных с поддельных сайтов или через внешние JS-скрипты незащищенные роуты - CSRF. Для минимизации этих рисков были придуманы CSRF-токены. Принцип их работы простой, при генерации формы в шаблон формы или заголовки HTTP-ответа вставляется уникальный, одноразовый, криптографически подписанный токен. CSRF-токен также предотвращает повторную отправку формы со старым токеном.</p><p id="33b881f7-8f73-4ce1-9f80-4f1da77ea6ac" class="">Данные, отправленные HTML-формой всегда должны передавать этот токен, иначе, они не будут восприниматься WTForms. Другими словами, чтобы отправить данные полей формы, нужно получить сгенерированный CSRF-токен, и отправить его вместе с полями формы.</p><p id="840b28a5-3651-4bb5-bd95-8f6015a57230" class="">Для включения функции защиты от CSRF, нужно указать приватный ключ-фразу в параметрах Flask-приложения, как в примере ниже (всегда создавайте новую ключ-фразу для нового приложения, и держите ее в секрете):</p><pre id="0f546aa9-18ce-47c0-8023-fa7aecad4bd6" class="code code-wrap"><code>...
+app = Flask(__name__)
+app.secret_key = &#x27;my-super-secret-phrase-I-dont-tell-this-to-nobody&#x27;
+...</code></pre><p id="800485e3-2afd-4d31-9cdb-4211ba149363" class="">Чтобы вывести CSRF в шаблоне, добавьте <strong>внутри формы</strong> так:</p><pre id="d30dc674-5269-45dd-971f-9fe0fcfc8af9" class="code code-wrap"><code>{{ form.csrf_token }}         &lt;!-- вывод токена CSFR --&gt;</code></pre><h2 id="caed89d0-a182-4619-8426-597feeafbe49" class=""><strong>Резюме</strong></h2><p id="5698cb0c-30bc-4b51-9c31-0382001c2ff6" class="">WTForms -  класс с полями, которые нужно импортировать из wtforms</p><p id="dd0448c6-9368-4d94-a990-bd80130ba442" class=""><strong>1. Описание формы</strong></p><pre id="3d4c479b-2cfa-4a5f-99d1-3c7eb503ce85" class="code code-wrap"><code>from flask_wtf import FlaskForm
+from wtforms import StringField, IntegerField, SubmitField
+
+class MyForm(FlaskForm):
+    name = StringField(&#x27;Имя&#x27;)
+    email = StringField(&#x27;E-mail&#x27;)
+    promo = StringField(&#x27;Промо-код&#x27;)
+    age = IntegerField(&#x27;Возраст&#x27;)
+    submit = SubmitField()</code></pre><p id="4e9a7a19-186a-470c-8327-e25901e02504" class=""><strong>2. Работа с формой в представлениях:</strong></p><pre id="03444254-05d7-46d2-b39c-bd3fe7075ebf" class="code code-wrap"><code>@app.route(&#x27;/myform/&#x27;, methods=[&#x27;GET&#x27;,&#x27;POST&#x27;])
+def render_myform():
+
+    form = MyForm()
+    return render_template(&#x27;user.html&#x27;, form=form)
+</code></pre><p id="b288c874-1788-431d-a9cb-50f30ac918b1" class=""><strong>3. Вывод формы в шаблон:</strong></p><pre id="39953e7c-2dcd-4db2-ae68-b7a044b05c80" class="code code-wrap"><code>{{ form.name()}}</code></pre><p id="98228e7f-d2b4-4b27-8852-3ca5b3905be6" class=""><strong>Использование классов для элемента ввода:</strong></p><pre id="fb39791a-f5e4-4b16-913e-ef6461658fa9" class="code code-wrap"><code>{{ form.name(class_=&#x27;blue-box&#x27;)}}</code></pre><p id="d3dff0d3-3a5d-4822-8615-18d58971eea4" class=""><strong>Вывод подписи к форме:</strong></p><pre id="bd43d37f-d91f-4814-adc0-e5406e2c80c5" class="code code-wrap"><code>{{ form.name.label }}</code></pre><p id="d6e9fd48-b33f-4ebd-a697-c0515d420c73" class=""><strong>Вывод CSRF-токена в форме:</strong></p><pre id="d4b61672-a065-4402-9300-225573423f82" class="code code-wrap"><code>{{ form.csrf_token }}</code></pre></div></article></body></html>

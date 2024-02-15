@@ -1,0 +1,641 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>4.8 Создание схемы базы данных</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="c60bd1ac-3375-4d52-8b9a-b3775376b236" class="page sans"><header><h1 class="page-title">4.8 Создание схемы базы данных</h1></header><div class="page-body"><p id="382c5fa8-4834-4ccb-b623-e971b4c47e46" class="">
+</p><p id="464f3b0f-3259-48f6-b912-3e741504b0fe" class="">Правильно спроектированная база данных обеспечивает приложение актуальной информацией, упрощает его написание, поддержку и влияет на быстродействие. Поскольку правильный дизайн необходим, имеет смысл потратить время для создания хорошей схемы данных. А еще, показав свой проект базы данных старшим товарищам, вы сможете получить дельные советы до начала разработки!</p><figure id="c5e4044d-aa16-4f1e-ad95-30773c132f27" class="image"><a href="https://ucarecdn.com/633e198a-4b29-46d6-ae3a-8013a28bde17/"><img src="https://ucarecdn.com/633e198a-4b29-46d6-ae3a-8013a28bde17/"/></a></figure><p id="508e0dc0-db0d-487b-9f29-7924ca7e369e" class=""><strong>В этом топике вы изучите</strong></p><ul id="cf060e32-fea5-4e9c-ae87-8e3115410614" class="bulleted-list"><li>Некоторые термины базы данных.</li></ul><ul id="ec7dad99-5e26-4d44-bfee-470090d3f1e7" class="bulleted-list"><li>Процесс проектирования.</li></ul><ul id="0dabe8fc-002d-48a0-bc63-4921d63ca81a" class="bulleted-list"><li>Инструменты визуализации.</li></ul><p id="6bab7658-5ffe-4652-9f82-578e6931f707" class="">
+</p><p id="2f19924c-9072-4b62-b6e8-b98b066126f1" class="">Частично основано на <a href="https://support.office.com/en-us/article/database-design-basics-eb2159cf-1e30-401a-8084-bd4f9c9ca1f5">статье от Microsoft</a> .</p><h2 id="9ed962b7-6ed9-48ae-ab2a-5f99f17bca35" class=""><strong>Термины</strong></h2><p id="33196547-b4d9-4c51-a764-3f2ddc265694" class="">База данных организует вашу информацию в виде таблиц: списков, строк и столбцов, напоминающих блокнот или электронную таблицу.</p><h3 id="7efc8606-9702-4c3f-9488-0b6f5dcde45f" class=""><strong>Таблицы и сущности</strong></h3><p id="f9ddfd2b-7f69-4bab-8a65-8dfb097a84e2" class="">В простой базе данных у вас может быть всего одна <strong>таблица</strong> (например, покупки в спиcке покупок). Для большинства баз данных потребуется больше. Например, у вас может быть таблица с информацией о товарах, таблица с информацией о заказах и таблица с информацией о покупателях. Товары и заказы иногда называют <strong>сущностями</strong>.</p><h3 id="ae6831cb-0b6b-4d1f-9a08-f06b9d5579fc" class=""><strong>Записи и поля</strong></h3><p id="812fc406-4528-4ec5-955a-123dddbabc76" class="">Каждая строка таблицы называется <strong>записью</strong>, а каждый столбец - <strong>полем</strong>. Запись - это значимый и последовательный способ объединения информации о чем-либо. Поле - это отдельный элемент информации - тип элемента, который появляется в каждой записи. Например, в таблице «Продукты» каждая строка или запись будет содержать информацию об одном продукте. Каждый столбец или поле содержит информацию определенного типа об этом продукте, например его название или цену.</p><h2 id="9b0f885f-c6c3-4299-9db1-ce7d3044cc17" class=""><strong>Процесс проектирования</strong></h2><p id="45882c6e-7101-49b5-94c3-26b0ed99ccc3" class="">Процесс проектирования устроен примерно так:</p><p id="7bdcec5f-0711-488d-8e03-de907ddf4d25" class=""><strong>1. Определите цель вашей базы данных</strong></p><p id="07d75892-56ee-4640-9dbf-f27770b5dc9a" class="">Например, наша база предназначена для системы управления заказами (или заявками на курсы). Ее цель – хранить заказы, отдавать их менеджерам и обновлять данные заказов.</p><p id="3a84a97b-bcac-443f-afc2-32ad776f1890" class=""><strong>2. Соберите все типы информации. Разделите на таблицы.</strong></p><p id="2575134b-0d58-410e-866a-9926f8e4c102" class="">Например, если вы пишете систему управления заказами, у вас скорее всего будут такие сущности, как &quot;продукты&quot;, &quot;заказы&quot;, &quot;сотрудники&quot;, &quot;туры&quot;, &quot;сообщения&quot;.</p><p id="23739525-7660-4840-aa2c-39985b9fe1d3" class=""><strong>3. Превратите информационные элементы в столбцы</strong></p><p id="a16c6e51-d29f-4c63-aac3-a3dd1523e372" class="">Решите, какую информацию вы хотите хранить в каждой таблице. Каждый элемент становится полем и отображается в виде столбца в таблице.</p><p id="15b141b5-8130-490e-b5ff-c5d02c013ffd" class="">Например, таблица «Сотрудники» может включать поля «фамилия» и «дата найма».</p><p id="a2f7b4d5-1a02-44be-90eb-94db1f47546d" class="">Например, таблица «Сообщения» может включать поля «отправитель», «получатель», «текст сообщения».</p><p id="7db78176-6d78-4327-b289-ff6b2a27de3d" class=""><strong>4. Укажите первичные ключи</strong></p><p id="9ed25d77-fc8f-40a8-829c-b8a5a9470161" class="">Выберите первичный ключ каждой таблицы. Первичный ключ - это столбец, который используется для уникальной идентификации каждой строки.</p><p id="71f0e4df-9630-4762-a222-b7328aca0320" class="">Например, ID продукта или ID заказа.</p><p id="9b303b4c-1817-4f3d-8905-232cc1ecabe3" class=""><strong>5. Установите отношения между таблицами</strong></p><p id="9023e750-800f-4d4c-9327-9b2cc39371dd" class="">Посмотрите на каждую таблицу и решите, как данные в одной таблице связаны с данными в других таблицах. При необходимости добавьте поля в таблицы или создайте новые таблицы, чтобы уточнить отношения.</p><p id="fd0828ba-a35c-479d-bd9c-10dd0dc36547" class="">Например, таблица «сообщения» связана с «пользователями», так как у каждого сообщения есть отправитель.Например, таблица «заказы» связана с «клиентами», так как у каждого заказа есть заказчик.</p><p id="01c304cc-d5e7-4f63-9156-43ec8e1f594f" class=""><strong>6. Уточните свой дизайн</strong></p><p id="df5b82a0-ab13-49ce-b366-bf06cc0c5658" class="">Проанализируйте свой дизайн на наличие ошибок. Создайте таблицы и добавьте несколько записей образцов данных. Посмотрите, сможете ли вы получить желаемые результаты из ваших таблиц. Внесите коррективы в дизайн, по мере необходимости.</p><p id="1229cf92-1bf5-4a0e-b13f-4f64d075332f" class="">Например, после создания первых данных вы заметили, что в таблице «сообщения» не хватает «прочитанности» сообщения, а в таблице «пользователи» - аватарки. Добавьте их на этом шаге!</p><h2 id="155d15be-5900-428c-af88-a8b8cb56e693" class=""><strong>Правила выбора названий таблиц и атрибутов</strong></h2><h3 id="3848fe21-3402-4826-9c9f-2799b7848943" class=""><strong>Наименования таблиц и моделей</strong></h3><p id="456c49e3-b1ac-415c-825a-a6a5e9864589" class="">Название таблицы соответствует тому, что лежит в одном ее ряду. Например, для таблицы с преподавателями в одном ее ряду лежит преподаватель (teacher), поэтому таблица может называться teacher.</p><p id="960df310-1591-4064-b049-3ff223ac0507" class="">Класс модели в алхимии, который ее описывает, должен называться Teacher:</p><pre id="4676d2a1-a3ee-43e9-a6a7-2adfa6d7aece" class="code code-wrap"><code>class Teacher(db.Model):
+
+   __tablename__ = &quot;teacher&quot;
+  id = db.Column(db.Integer(primary_key=True))</code></pre><p id="1b5a57d4-6aef-428d-97fa-3493c609aeb1" class="">Если вы старинный поклонник SQL и предпочитаете, чтобы названия таблиц всегда шли во множественном числе, укажите это при определении названия таблицы:</p><pre id="ea43ebc3-7ba3-4233-8854-26c20ca96aff" class="code code-wrap"><code>class Teacher(db.Model):
+   __tablename__ = &quot;teachers&quot;
+  id = db.Column(db.Integer(primary_key=True))
+</code></pre><h3 id="1a724f11-8df3-4789-b3ba-3b4fab9e8b14" class=""><strong>Наименования атрибутов</strong></h3><p id="4f2e281b-82f0-4dd5-bd73-e9c74134cff8" class="">Названия атрибутов идут в snake_case <a href="https://en.wikipedia.org/wiki/Snake_case">https://en.wikipedia.org/wiki/Snake_case</a>. Если один из атрибутов это Foreign key, например, для таблицы object, то атрибут для него называется object_id.</p><p id="3704618d-fa62-45f6-855d-3c4c064f01ef" class="">Если у нас есть модели преподавателя и урока и у каждого урока есть один учитель, но у каждого учителя несколько уроков, это должно быть понятно из названий.</p><p id="f34bbde1-dda5-4b9b-a492-9e9c9f7e2118" class=""><strong>В модели Lesson будет:</strong></p><pre id="56882f8c-879b-45ad-bbd3-42fd690774f6" class="code code-wrap"><code>class Lesson(db.Model):
+    ...
+    teacher_id = db.Column(db.Integer, db.ForeignKey(&quot;teacher.id&quot;))
+    teacher = db.relationship(&quot;Teacher&quot;)  # без S</code></pre><p id="f8a9c980-5f13-4e23-8727-7be87e42ebb8" class=""><strong>В модели Teacher  будет:</strong></p><pre id="f04ab47e-70a3-4088-88fb-86059b4974f0" class="code code-wrap"><code>class Teacher(db.Model):
+    ...
+    lessons = db.relationship(&quot;Lesson&quot;) # c S</code></pre><p id="3411e32e-b685-433e-95e1-a6b39fffef3c" class="">Прежде, чем назвать поле, дважды спросите себя, в единственном или множественном числе будет его содержимое.</p><h2 id="02afdf15-418c-4f0e-8ecc-87dcf66540c6" class=""><strong>Схема базы данных</strong></h2><p id="86106215-e4ac-49a1-ad20-4bb0c107e3ef" class="">Хотя текстового описания моделей обычно достаточно, хорошая практика – визуализировать схему базы данных в виде диаграммы. Это особенно полезно, пока вы не начали &quot;думать таблицами&quot;.</p><p id="b817a727-93f2-46d1-bf51-94bc847d4067" class="">Во-первых, это делает базу более наглядной для вас.</p><p id="8ee50e9a-5f4f-4c49-9118-c97459b0a359" class="">Во-вторых, так вы можете показать промежуточный вариант коллегам или наставнику и быстро внести правки еще до того, как таблицы описаны и данные загружены.</p><p id="3133978e-b75a-42fe-beb9-f6bc25b9348c" class="">Наконец, база данных выглядит не такой страшной, когда помещается на трети экрана. :)</p><h2 id="09fe712e-2d17-46ff-b44b-3707fa5de124" class=""><strong>Выбираем инструмент:</strong></h2><p id="106278b0-d767-496c-986e-2a3def5b1e35" class="">Мы будем использовать инструмент dbdesigner.net, это типичный инструмент.</p><p id="a9e0c52a-f188-46ff-b551-f30b9ec9d2f0" class="">Зарегистрируйтесь, создайте новую базу и добавляйте таблицы с помощью Insert&gt;table</p><figure id="6c696763-3c88-4568-b4d8-855e78c9e53d" class="image"><a href="https://ucarecdn.com/633e198a-4b29-46d6-ae3a-8013a28bde17/"><img src="https://ucarecdn.com/633e198a-4b29-46d6-ae3a-8013a28bde17/"/></a></figure><p id="7a36511e-d640-462a-90bd-7183ccb630e6" class="">Вы можете использовать для проектирования базы и другие инструменты:</p><p id="5599d152-dbc6-4345-8b4f-4c23f8c6a87d" class=""><a href="https://sqldbm.com/Home/">sqldbm.com</a></p><figure id="a141f8a6-a1bd-45b8-bfaf-193409d70f4f" class="image"><a href="https://www.holistics.io/blog/content/images/2018/08/SqlDBM-database-diagram.png"><img src="https://www.holistics.io/blog/content/images/2018/08/SqlDBM-database-diagram.png"/></a></figure><p id="824be005-1e2a-4e56-85fd-229bc9ba981b" class=""><a href="https://www.draw.io/">draw.io</a></p><figure id="6aea72bd-cbef-46e7-98aa-6e199e485428" class="image"><a href="https://www.holistics.io/blog/content/images/2018/08/draw.io-database-diagram-1.png"><img src="https://www.holistics.io/blog/content/images/2018/08/draw.io-database-diagram-1.png"/></a></figure><p id="88d8fa0d-1863-4610-8a0a-e439f508f00a" class=""><a href="https://www.lucidchart.com/">lucidchart.com</a></p><figure id="2369c998-43e6-465e-8377-7e331a3173db" class="image"><a href="https://www.holistics.io/blog/content/images/2018/08/lucidchart-database-diagram.png"><img src="https://www.holistics.io/blog/content/images/2018/08/lucidchart-database-diagram.png"/></a></figure><p id="d7595d16-54fd-409b-b9b2-2e6c256386e9" class="">Выбор инструмента по душе – важная часть становления разработчика.</p><p id="a580bb9f-e416-4ef9-a0bc-8833b17efc93" class="">Выбирайте тот инструмент, который нравится больше и следите за новыми инструментами.</p><p id="4bbe1c84-3dc1-4970-8935-5ff48d70e438" class="">Если вы нашли еще подходящие инструменты – напишите в комментарии.</p><h2 id="df94bd00-cdca-4ed3-9b1f-e3d6a8f591d4" class="">Р<strong>исуем схему</strong></h2><p id="de4bf298-ffc6-4cef-8a32-40f72d5f57bf" class="">Пора нарисовать схему.</p><p id="7acfc4dc-433b-43c4-be69-bad8e4f4b2f8" class="">Для примера спроектируем схему для мессенджера.</p><p id="51487cdd-31c1-4ba4-b398-a78ffb16c903" class="">Зарегистрируйтесь на dbdesigner.net .</p><p id="bf0bfefe-9360-46fd-b02e-f54f278df0c2" class="">Создайте новую базу и добавляйте таблицы с помощью Insert&gt;table .</p><p id="c8e86a10-13a2-4e0b-925c-e75cc57c8b1b" class=""><strong>1. Определяем цель</strong></p><p id="316760c0-1fb3-4d77-b7c6-74a03eee0edb" class="">Цель нашей базы – хранить сообщения пользователей, чтобы показывать их в диалогах.</p><p id="7bdefbe7-1164-45f6-917b-71f2c65c5e3d" class="">У каждого сообщения будет текст и отправитель, нам точно пригодятся пользователи.</p><p id="f0a1b0f4-3594-4028-9bde-a260c3a1ffa6" class="">Значит у нас будут Сообщения и Пользователи</p><p id="6c84563b-3f8e-414c-b4dc-4c2d59b267c4" class=""><strong>2. Создаем таблицы</strong></p><p id="5ed953f5-cfb1-485b-9600-857eeedcb737" class="">У нас будет по таблице для каждой сущности, Выбираем имена для таблиц:</p><p id="abbec35e-8889-4de7-8c70-6586faca8ad3" class="">– messages для сообщений,– users для пользователей.</p><figure id="56c8280c-9911-47c4-b4cd-e46f9db0d704" class="image"><a href="https://ucarecdn.com/fd32b99e-360b-4910-91ac-a146d35da040/"><img src="https://ucarecdn.com/fd32b99e-360b-4910-91ac-a146d35da040/"/></a></figure><p id="252e494b-ffd3-475e-a151-1bf15fd1fa6d" class=""><strong>3. Создаем поля и определяем их типы</strong></p><p id="0023c8e7-cd84-4960-b0c7-80f07ca09474" class="">У сообщения нас интересует:</p><p id="96fb79ea-1c82-4e19-a946-849059f4ed11" class="">– отправитель,</p><p id="296fd5c0-22e1-4627-8ee3-d5ea16db1b58" class="">– получатель,</p><p id="cae3d91f-8112-4c13-a650-c46c4a0df698" class="">– текст сообщения,</p><p id="5fd02930-8c0b-4f23-ba99-0625173c3ef5" class="">– время, когда оно отправлено.</p><p id="87c764cf-4185-4b1c-b7aa-6904491c6e93" class="">У пользователя нас интересуют:</p><p id="c3d8b7cb-be47-40ff-bee4-dbe7e66ed921" class="">– имя,</p><p id="3ad047a1-5f3e-4f5c-b6b5-671307a30ad8" class="">– фамилия.</p><p id="ca063fdf-3942-4d8b-9732-f6a95f7a9ccc" class="">Каждому полю зададим нужный подходящий тип данных.</p><p id="53d55900-428a-4c5f-b218-3a019e8f1813" class="">Каждой таблице добавим id – будущий первичный ключ.</p><p id="72987125-dcfb-47b4-8574-eb507a0e2cc4" class="">Можно было бы добавить еще данных, но для начала хватит и этих.</p><figure id="9c7bf1ff-cc65-4aa7-9fa9-d7da4d657e71" class="image"><a href="https://ucarecdn.com/a4d7262c-d76d-476e-9135-e091720b735c/"><img src="https://ucarecdn.com/a4d7262c-d76d-476e-9135-e091720b735c/"/></a></figure><p id="0196e391-5e15-4a60-af0b-a4b922130933" class=""><strong>4. Создаем отношения между таблицами</strong></p><p id="19e5182a-7c97-4a41-985a-5a979d77a171" class="">Если подумать, информацию о пользователе непрактично хранить в таблице с сообщениями.</p><p id="14f49fa8-bfa1-4c49-9ad0-c3483124446d" class="">Записи могут быть такими:</p><div id="23890b67-742f-4a7d-aab9-474353e42a0f" class="collection-content"><h4 class="collection-title"></h4><table class="collection-content"><thead><tr><th><span class="icon property-icon"><svg viewBox="0 0 14 14" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.4);flex-shrink:0;-webkit-backface-visibility:hidden" class="typesNumber"><path d="M4.46191,0 C3.8667,0 3.38428,0.482422 3.38428,1.07751 L3.38428,3.38425 L1.07764,3.38425 C0.482422,3.38425 0,3.86667 0,4.46179 C0,5.05688 0.482422,5.53931 1.07764,5.53931 L3.38428,5.53931 L3.38428,8.46063 L1.07764,8.46063 C0.482422,8.46063 0,8.94308 0,9.53818 C0,10.1333 0.482422,10.6157 1.07764,10.6157 L3.38428,10.6157 L3.38428,12.9224 C3.38428,13.5175 3.8667,13.9999 4.46191,13.9999 C5.05664,13.9999 5.53906,13.5175 5.53906,12.9224 L5.53906,10.6157 L8.46045,10.6157 L8.46045,12.9224 C8.46045,13.5175 8.94287,13.9999 9.53809,13.9999 C10.1333,13.9999 10.6157,13.5175 10.6157,12.9224 L10.6157,10.6157 L12.9224,10.6157 C13.5176,10.6157 14,10.1333 14,9.53818 C14,8.94308 13.5176,8.46063 12.9224,8.46063 L10.6157,8.46063 L10.6157,5.53931 L12.9224,5.53931 C13.5176,5.53931 14,5.05688 14,4.46179 C14,3.86667 13.5176,3.38425 12.9224,3.38425 L10.6157,3.38425 L10.6157,1.07751 C10.6157,0.482422 10.1333,0 9.53809,0 C8.94287,0 8.46045,0.482422 8.46045,1.07751 L8.46045,3.38425 L5.53906,3.38425 L5.53906,1.07751 C5.53906,0.482422 5.05664,0 4.46191,0 Z M5.53906,8.46063 L5.53906,5.53931 L8.46045,5.53931 L8.46045,8.46063 L5.53906,8.46063 Z"></path></svg></span>id</th><th><span class="icon property-icon"><svg viewBox="0 0 14 14" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.4);flex-shrink:0;-webkit-backface-visibility:hidden" class="typesTitle"><path d="M7.73943662,8.6971831 C7.77640845,8.7834507 7.81338028,8.8943662 7.81338028,9.00528169 C7.81338028,9.49823944 7.40669014,9.89260563 6.91373239,9.89260563 C6.53169014,9.89260563 6.19894366,9.64612676 6.08802817,9.30105634 L5.75528169,8.33978873 L2.05809859,8.33978873 L1.72535211,9.30105634 C1.61443662,9.64612676 1.2693662,9.89260563 0.887323944,9.89260563 C0.394366197,9.89260563 0,9.49823944 0,9.00528169 C0,8.8943662 0.0246478873,8.7834507 0.0616197183,8.6971831 L2.46478873,2.48591549 C2.68661972,1.90669014 3.24119718,1.5 3.90669014,1.5 C4.55985915,1.5 5.12676056,1.90669014 5.34859155,2.48591549 L7.73943662,8.6971831 Z M2.60035211,6.82394366 L5.21302817,6.82394366 L3.90669014,3.10211268 L2.60035211,6.82394366 Z M11.3996479,3.70598592 C12.7552817,3.70598592 14,4.24823944 14,5.96126761 L14,9.07922535 C14,9.52288732 13.6549296,9.89260563 13.2112676,9.89260563 C12.8169014,9.89260563 12.471831,9.59683099 12.4225352,9.19014085 C12.028169,9.6584507 11.3257042,9.95422535 10.5492958,9.95422535 C9.60035211,9.95422535 8.47887324,9.31338028 8.47887324,7.98239437 C8.47887324,6.58978873 9.60035211,6.08450704 10.5492958,6.08450704 C11.3380282,6.08450704 12.040493,6.33098592 12.4348592,6.81161972 L12.4348592,5.98591549 C12.4348592,5.38204225 11.9172535,4.98767606 11.1285211,4.98767606 C10.6602113,4.98767606 10.2411972,5.11091549 9.80985915,5.38204225 C9.72359155,5.43133803 9.61267606,5.46830986 9.50176056,5.46830986 C9.18133803,5.46830986 8.91021127,5.1971831 8.91021127,4.86443662 C8.91021127,4.64260563 9.0334507,4.44542254 9.19366197,4.34683099 C9.87147887,3.90316901 10.6232394,3.70598592 11.3996479,3.70598592 Z M11.1778169,8.8943662 C11.6830986,8.8943662 12.1760563,8.72183099 12.4348592,8.37676056 L12.4348592,7.63732394 C12.1760563,7.29225352 11.6830986,7.11971831 11.1778169,7.11971831 C10.5616197,7.11971831 10.056338,7.45246479 10.056338,8.0193662 C10.056338,8.57394366 10.5616197,8.8943662 11.1778169,8.8943662 Z M0.65625,11.125 L13.34375,11.125 C13.7061869,11.125 14,11.4188131 14,11.78125 C14,12.1436869 13.7061869,12.4375 13.34375,12.4375 L0.65625,12.4375 C0.293813133,12.4375 4.43857149e-17,12.1436869 0,11.78125 C-4.43857149e-17,11.4188131 0.293813133,11.125 0.65625,11.125 Z"></path></svg></span>sender</th><th><span class="icon property-icon"><svg viewBox="0 0 14 14" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.4);flex-shrink:0;-webkit-backface-visibility:hidden" class="typesText"><path d="M7,4.56818 C7,4.29204 6.77614,4.06818 6.5,4.06818 L0.5,4.06818 C0.223858,4.06818 0,4.29204 0,4.56818 L0,5.61364 C0,5.88978 0.223858,6.11364 0.5,6.11364 L6.5,6.11364 C6.77614,6.11364 7,5.88978 7,5.61364 L7,4.56818 Z M0.5,1 C0.223858,1 0,1.223858 0,1.5 L0,2.54545 C0,2.8216 0.223858,3.04545 0.5,3.04545 L12.5,3.04545 C12.7761,3.04545 13,2.8216 13,2.54545 L13,1.5 C13,1.223858 12.7761,1 12.5,1 L0.5,1 Z M0,8.68182 C0,8.95796 0.223858,9.18182 0.5,9.18182 L11.5,9.18182 C11.7761,9.18182 12,8.95796 12,8.68182 L12,7.63636 C12,7.36022 11.7761,7.13636 11.5,7.13636 L0.5,7.13636 C0.223858,7.13636 0,7.36022 0,7.63636 L0,8.68182 Z M0,11.75 C0,12.0261 0.223858,12.25 0.5,12.25 L9.5,12.25 C9.77614,12.25 10,12.0261 10,11.75 L10,10.70455 C10,10.4284 9.77614,10.20455 9.5,10.20455 L0.5,10.20455 C0.223858,10.20455 0,10.4284 0,10.70455 L0,11.75 Z"></path></svg></span>receiver</th><th><span class="icon property-icon"><svg viewBox="0 0 14 14" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.4);flex-shrink:0;-webkit-backface-visibility:hidden" class="typesText"><path d="M7,4.56818 C7,4.29204 6.77614,4.06818 6.5,4.06818 L0.5,4.06818 C0.223858,4.06818 0,4.29204 0,4.56818 L0,5.61364 C0,5.88978 0.223858,6.11364 0.5,6.11364 L6.5,6.11364 C6.77614,6.11364 7,5.88978 7,5.61364 L7,4.56818 Z M0.5,1 C0.223858,1 0,1.223858 0,1.5 L0,2.54545 C0,2.8216 0.223858,3.04545 0.5,3.04545 L12.5,3.04545 C12.7761,3.04545 13,2.8216 13,2.54545 L13,1.5 C13,1.223858 12.7761,1 12.5,1 L0.5,1 Z M0,8.68182 C0,8.95796 0.223858,9.18182 0.5,9.18182 L11.5,9.18182 C11.7761,9.18182 12,8.95796 12,8.68182 L12,7.63636 C12,7.36022 11.7761,7.13636 11.5,7.13636 L0.5,7.13636 C0.223858,7.13636 0,7.36022 0,7.63636 L0,8.68182 Z M0,11.75 C0,12.0261 0.223858,12.25 0.5,12.25 L9.5,12.25 C9.77614,12.25 10,12.0261 10,11.75 L10,10.70455 C10,10.4284 9.77614,10.20455 9.5,10.20455 L0.5,10.20455 C0.223858,10.20455 0,10.4284 0,10.70455 L0,11.75 Z"></path></svg></span>text</th><th><span class="icon property-icon"><svg viewBox="0 0 14 14" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.4);flex-shrink:0;-webkit-backface-visibility:hidden" class="typesText"><path d="M7,4.56818 C7,4.29204 6.77614,4.06818 6.5,4.06818 L0.5,4.06818 C0.223858,4.06818 0,4.29204 0,4.56818 L0,5.61364 C0,5.88978 0.223858,6.11364 0.5,6.11364 L6.5,6.11364 C6.77614,6.11364 7,5.88978 7,5.61364 L7,4.56818 Z M0.5,1 C0.223858,1 0,1.223858 0,1.5 L0,2.54545 C0,2.8216 0.223858,3.04545 0.5,3.04545 L12.5,3.04545 C12.7761,3.04545 13,2.8216 13,2.54545 L13,1.5 C13,1.223858 12.7761,1 12.5,1 L0.5,1 Z M0,8.68182 C0,8.95796 0.223858,9.18182 0.5,9.18182 L11.5,9.18182 C11.7761,9.18182 12,8.95796 12,8.68182 L12,7.63636 C12,7.36022 11.7761,7.13636 11.5,7.13636 L0.5,7.13636 C0.223858,7.13636 0,7.36022 0,7.63636 L0,8.68182 Z M0,11.75 C0,12.0261 0.223858,12.25 0.5,12.25 L9.5,12.25 C9.77614,12.25 10,12.0261 10,11.75 L10,10.70455 C10,10.4284 9.77614,10.20455 9.5,10.20455 L0.5,10.20455 C0.223858,10.20455 0,10.4284 0,10.70455 L0,11.75 Z"></path></svg></span>datetime</th></tr></thead><tbody><tr id="7f721472-db8d-4e7d-a996-8ff11bddcfdf"><td class="cell-x\AH">78</td><td class="cell-title"><a href="4%208%20%D0%A1%D0%BE%D0%B7%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5%20%D1%81%D1%85%D0%B5%D0%BC%D1%8B%20%D0%B1%D0%B0%D0%B7%D1%8B%20%D0%B4%D0%B0%D0%BD%D0%BD%D1%8B%D1%85%20c60bd1ac33754d528b9ab3775376b236/Untitled%20Database%2023890b67742f4a7daab9474353e42a0f/%D0%9B%D0%B0%D0%B7%D0%B0%D1%80%D1%8C%20%D0%A4%D0%B5%D0%B4%D0%BE%D1%80%D0%BE%D0%B2%207f721472db8d4e7da9968ff11bddcfdf.html">Лазарь Федоров</a></td><td class="cell-k@fg">Серафим Андреевич</td><td class="cell-BHf^">Добрый день!</td><td class="cell-dT`r">12:23</td></tr><tr id="b32348b9-2d0f-40d6-8c0c-6a801989c60a"><td class="cell-x\AH">79</td><td class="cell-title"><a href="4%208%20%D0%A1%D0%BE%D0%B7%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5%20%D1%81%D1%85%D0%B5%D0%BC%D1%8B%20%D0%B1%D0%B0%D0%B7%D1%8B%20%D0%B4%D0%B0%D0%BD%D0%BD%D1%8B%D1%85%20c60bd1ac33754d528b9ab3775376b236/Untitled%20Database%2023890b67742f4a7daab9474353e42a0f/%D0%9B%D0%B0%D0%B7%D0%B0%D1%80%D1%8C%20%D0%A4%D0%B5%D0%B4%D0%BE%D1%80%D0%BE%D0%B2%20b32348b92d0f40d68c0c6a801989c60a.html">Лазарь Федоров</a></td><td class="cell-k@fg">Серафим Андреевич</td><td class="cell-BHf^">Успели ли вы почитать наши отчеты?</td><td class="cell-dT`r">12:23</td></tr><tr id="47491b11-cd93-4265-85fa-6eab45f1d6b2"><td class="cell-x\AH">80</td><td class="cell-title"><a href="4%208%20%D0%A1%D0%BE%D0%B7%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5%20%D1%81%D1%85%D0%B5%D0%BC%D1%8B%20%D0%B1%D0%B0%D0%B7%D1%8B%20%D0%B4%D0%B0%D0%BD%D0%BD%D1%8B%D1%85%20c60bd1ac33754d528b9ab3775376b236/Untitled%20Database%2023890b67742f4a7daab9474353e42a0f/%D0%A1%D0%B5%D1%80%D0%B0%D1%84%D0%B8%D0%BC%20%D0%90%D0%BD%D0%B4%D1%80%D0%B5%D0%B5%D0%B2%2047491b11cd93426585fa6eab45f1d6b2.html">Серафим Андреев</a></td><td class="cell-k@fg">Лазарь Федорович</td><td class="cell-BHf^">И вам добрый!</td><td class="cell-dT`r">12:56</td></tr><tr id="57f49861-9377-4c8c-82ad-b45ca22d4b82"><td class="cell-x\AH">81</td><td class="cell-title"><a href="4%208%20%D0%A1%D0%BE%D0%B7%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5%20%D1%81%D1%85%D0%B5%D0%BC%D1%8B%20%D0%B1%D0%B0%D0%B7%D1%8B%20%D0%B4%D0%B0%D0%BD%D0%BD%D1%8B%D1%85%20c60bd1ac33754d528b9ab3775376b236/Untitled%20Database%2023890b67742f4a7daab9474353e42a0f/%D0%A1%D0%B5%D1%80%D0%B0%D1%84%D0%B8%D0%BC%20%D0%90%D0%BD%D0%B4%D1%80%D0%B5%D0%B5%D0%B2%2057f4986193774c8c82adb45ca22d4b82.html">Серафим Андреев</a></td><td class="cell-k@fg">Лазарь Федорович</td><td class="cell-BHf^">Да, как раз обсуждаем с коллегами!</td><td class="cell-dT`r">12:56</td></tr></tbody></table></div><p id="4523536d-3b2c-4046-a73e-6c5348fb5c30" class="">Как видно, хранение в полном виде отправителя и получателя - не самая лучшая идея.</p><p id="21ee5ea3-78a6-4387-b75e-eecc63a18682" class="">Поэтому мы будем хранить не имена и фамилии отправителя и получателя, а ссылки на их строки в таблице пользователей.</p><p id="2e4b1bb4-a77d-4aec-bee9-6061dd02581f" class="">Например, наша таблица пользователей выглядит вот так:</p><div id="aa4fbd5d-1df7-4384-8ad7-f6cbbcd2f42f" class="collection-content"><h4 class="collection-title"></h4><table class="collection-content"><thead><tr><th><span class="icon property-icon"><svg viewBox="0 0 14 14" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.4);flex-shrink:0;-webkit-backface-visibility:hidden" class="typesNumber"><path d="M4.46191,0 C3.8667,0 3.38428,0.482422 3.38428,1.07751 L3.38428,3.38425 L1.07764,3.38425 C0.482422,3.38425 0,3.86667 0,4.46179 C0,5.05688 0.482422,5.53931 1.07764,5.53931 L3.38428,5.53931 L3.38428,8.46063 L1.07764,8.46063 C0.482422,8.46063 0,8.94308 0,9.53818 C0,10.1333 0.482422,10.6157 1.07764,10.6157 L3.38428,10.6157 L3.38428,12.9224 C3.38428,13.5175 3.8667,13.9999 4.46191,13.9999 C5.05664,13.9999 5.53906,13.5175 5.53906,12.9224 L5.53906,10.6157 L8.46045,10.6157 L8.46045,12.9224 C8.46045,13.5175 8.94287,13.9999 9.53809,13.9999 C10.1333,13.9999 10.6157,13.5175 10.6157,12.9224 L10.6157,10.6157 L12.9224,10.6157 C13.5176,10.6157 14,10.1333 14,9.53818 C14,8.94308 13.5176,8.46063 12.9224,8.46063 L10.6157,8.46063 L10.6157,5.53931 L12.9224,5.53931 C13.5176,5.53931 14,5.05688 14,4.46179 C14,3.86667 13.5176,3.38425 12.9224,3.38425 L10.6157,3.38425 L10.6157,1.07751 C10.6157,0.482422 10.1333,0 9.53809,0 C8.94287,0 8.46045,0.482422 8.46045,1.07751 L8.46045,3.38425 L5.53906,3.38425 L5.53906,1.07751 C5.53906,0.482422 5.05664,0 4.46191,0 Z M5.53906,8.46063 L5.53906,5.53931 L8.46045,5.53931 L8.46045,8.46063 L5.53906,8.46063 Z"></path></svg></span>id</th><th><span class="icon property-icon"><svg viewBox="0 0 14 14" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.4);flex-shrink:0;-webkit-backface-visibility:hidden" class="typesTitle"><path d="M7.73943662,8.6971831 C7.77640845,8.7834507 7.81338028,8.8943662 7.81338028,9.00528169 C7.81338028,9.49823944 7.40669014,9.89260563 6.91373239,9.89260563 C6.53169014,9.89260563 6.19894366,9.64612676 6.08802817,9.30105634 L5.75528169,8.33978873 L2.05809859,8.33978873 L1.72535211,9.30105634 C1.61443662,9.64612676 1.2693662,9.89260563 0.887323944,9.89260563 C0.394366197,9.89260563 0,9.49823944 0,9.00528169 C0,8.8943662 0.0246478873,8.7834507 0.0616197183,8.6971831 L2.46478873,2.48591549 C2.68661972,1.90669014 3.24119718,1.5 3.90669014,1.5 C4.55985915,1.5 5.12676056,1.90669014 5.34859155,2.48591549 L7.73943662,8.6971831 Z M2.60035211,6.82394366 L5.21302817,6.82394366 L3.90669014,3.10211268 L2.60035211,6.82394366 Z M11.3996479,3.70598592 C12.7552817,3.70598592 14,4.24823944 14,5.96126761 L14,9.07922535 C14,9.52288732 13.6549296,9.89260563 13.2112676,9.89260563 C12.8169014,9.89260563 12.471831,9.59683099 12.4225352,9.19014085 C12.028169,9.6584507 11.3257042,9.95422535 10.5492958,9.95422535 C9.60035211,9.95422535 8.47887324,9.31338028 8.47887324,7.98239437 C8.47887324,6.58978873 9.60035211,6.08450704 10.5492958,6.08450704 C11.3380282,6.08450704 12.040493,6.33098592 12.4348592,6.81161972 L12.4348592,5.98591549 C12.4348592,5.38204225 11.9172535,4.98767606 11.1285211,4.98767606 C10.6602113,4.98767606 10.2411972,5.11091549 9.80985915,5.38204225 C9.72359155,5.43133803 9.61267606,5.46830986 9.50176056,5.46830986 C9.18133803,5.46830986 8.91021127,5.1971831 8.91021127,4.86443662 C8.91021127,4.64260563 9.0334507,4.44542254 9.19366197,4.34683099 C9.87147887,3.90316901 10.6232394,3.70598592 11.3996479,3.70598592 Z M11.1778169,8.8943662 C11.6830986,8.8943662 12.1760563,8.72183099 12.4348592,8.37676056 L12.4348592,7.63732394 C12.1760563,7.29225352 11.6830986,7.11971831 11.1778169,7.11971831 C10.5616197,7.11971831 10.056338,7.45246479 10.056338,8.0193662 C10.056338,8.57394366 10.5616197,8.8943662 11.1778169,8.8943662 Z M0.65625,11.125 L13.34375,11.125 C13.7061869,11.125 14,11.4188131 14,11.78125 C14,12.1436869 13.7061869,12.4375 13.34375,12.4375 L0.65625,12.4375 C0.293813133,12.4375 4.43857149e-17,12.1436869 0,11.78125 C-4.43857149e-17,11.4188131 0.293813133,11.125 0.65625,11.125 Z"></path></svg></span>name</th><th><span class="icon property-icon"><svg viewBox="0 0 14 14" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.4);flex-shrink:0;-webkit-backface-visibility:hidden" class="typesText"><path d="M7,4.56818 C7,4.29204 6.77614,4.06818 6.5,4.06818 L0.5,4.06818 C0.223858,4.06818 0,4.29204 0,4.56818 L0,5.61364 C0,5.88978 0.223858,6.11364 0.5,6.11364 L6.5,6.11364 C6.77614,6.11364 7,5.88978 7,5.61364 L7,4.56818 Z M0.5,1 C0.223858,1 0,1.223858 0,1.5 L0,2.54545 C0,2.8216 0.223858,3.04545 0.5,3.04545 L12.5,3.04545 C12.7761,3.04545 13,2.8216 13,2.54545 L13,1.5 C13,1.223858 12.7761,1 12.5,1 L0.5,1 Z M0,8.68182 C0,8.95796 0.223858,9.18182 0.5,9.18182 L11.5,9.18182 C11.7761,9.18182 12,8.95796 12,8.68182 L12,7.63636 C12,7.36022 11.7761,7.13636 11.5,7.13636 L0.5,7.13636 C0.223858,7.13636 0,7.36022 0,7.63636 L0,8.68182 Z M0,11.75 C0,12.0261 0.223858,12.25 0.5,12.25 L9.5,12.25 C9.77614,12.25 10,12.0261 10,11.75 L10,10.70455 C10,10.4284 9.77614,10.20455 9.5,10.20455 L0.5,10.20455 C0.223858,10.20455 0,10.4284 0,10.70455 L0,11.75 Z"></path></svg></span>surname</th></tr></thead><tbody><tr id="20ec3620-5964-446c-8080-83a4f9af5a7c"><td class="cell-UgIa">25</td><td class="cell-title"><a href="4%208%20%D0%A1%D0%BE%D0%B7%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5%20%D1%81%D1%85%D0%B5%D0%BC%D1%8B%20%D0%B1%D0%B0%D0%B7%D1%8B%20%D0%B4%D0%B0%D0%BD%D0%BD%D1%8B%D1%85%20c60bd1ac33754d528b9ab3775376b236/Untitled%20Database%20aa4fbd5d1df743848ad7f6cbbcd2f42f/%D0%A1%D0%B5%D1%80%D0%B0%D1%84%D0%B8%D0%BC%2020ec36205964446c808083a4f9af5a7c.html">Серафим</a></td><td class="cell-w]oZ">Андреев</td></tr><tr id="5376e97a-b348-425e-bf53-36dc0d6dad8f"><td class="cell-UgIa">33</td><td class="cell-title"><a href="4%208%20%D0%A1%D0%BE%D0%B7%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5%20%D1%81%D1%85%D0%B5%D0%BC%D1%8B%20%D0%B1%D0%B0%D0%B7%D1%8B%20%D0%B4%D0%B0%D0%BD%D0%BD%D1%8B%D1%85%20c60bd1ac33754d528b9ab3775376b236/Untitled%20Database%20aa4fbd5d1df743848ad7f6cbbcd2f42f/%D0%9B%D0%B0%D0%B7%D0%B0%D1%80%D1%8C%205376e97ab348425ebf5336dc0d6dad8f.html">Лазарь</a></td><td class="cell-w]oZ">Федоров</td></tr></tbody></table></div><p id="5724cb9d-618c-43fe-9c5b-2a35bdc6f808" class="">Теперь перепишем таблицу сообщений, используя вместо имен id из таблицы users:</p><div id="b938b927-6912-4f5d-be3c-b7b22b48e81e" class="collection-content"><h4 class="collection-title"></h4><table class="collection-content"><thead><tr><th><span class="icon property-icon"><svg viewBox="0 0 14 14" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.4);flex-shrink:0;-webkit-backface-visibility:hidden" class="typesNumber"><path d="M4.46191,0 C3.8667,0 3.38428,0.482422 3.38428,1.07751 L3.38428,3.38425 L1.07764,3.38425 C0.482422,3.38425 0,3.86667 0,4.46179 C0,5.05688 0.482422,5.53931 1.07764,5.53931 L3.38428,5.53931 L3.38428,8.46063 L1.07764,8.46063 C0.482422,8.46063 0,8.94308 0,9.53818 C0,10.1333 0.482422,10.6157 1.07764,10.6157 L3.38428,10.6157 L3.38428,12.9224 C3.38428,13.5175 3.8667,13.9999 4.46191,13.9999 C5.05664,13.9999 5.53906,13.5175 5.53906,12.9224 L5.53906,10.6157 L8.46045,10.6157 L8.46045,12.9224 C8.46045,13.5175 8.94287,13.9999 9.53809,13.9999 C10.1333,13.9999 10.6157,13.5175 10.6157,12.9224 L10.6157,10.6157 L12.9224,10.6157 C13.5176,10.6157 14,10.1333 14,9.53818 C14,8.94308 13.5176,8.46063 12.9224,8.46063 L10.6157,8.46063 L10.6157,5.53931 L12.9224,5.53931 C13.5176,5.53931 14,5.05688 14,4.46179 C14,3.86667 13.5176,3.38425 12.9224,3.38425 L10.6157,3.38425 L10.6157,1.07751 C10.6157,0.482422 10.1333,0 9.53809,0 C8.94287,0 8.46045,0.482422 8.46045,1.07751 L8.46045,3.38425 L5.53906,3.38425 L5.53906,1.07751 C5.53906,0.482422 5.05664,0 4.46191,0 Z M5.53906,8.46063 L5.53906,5.53931 L8.46045,5.53931 L8.46045,8.46063 L5.53906,8.46063 Z"></path></svg></span>id</th><th><span class="icon property-icon"><svg viewBox="0 0 14 14" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.4);flex-shrink:0;-webkit-backface-visibility:hidden" class="typesNumber"><path d="M4.46191,0 C3.8667,0 3.38428,0.482422 3.38428,1.07751 L3.38428,3.38425 L1.07764,3.38425 C0.482422,3.38425 0,3.86667 0,4.46179 C0,5.05688 0.482422,5.53931 1.07764,5.53931 L3.38428,5.53931 L3.38428,8.46063 L1.07764,8.46063 C0.482422,8.46063 0,8.94308 0,9.53818 C0,10.1333 0.482422,10.6157 1.07764,10.6157 L3.38428,10.6157 L3.38428,12.9224 C3.38428,13.5175 3.8667,13.9999 4.46191,13.9999 C5.05664,13.9999 5.53906,13.5175 5.53906,12.9224 L5.53906,10.6157 L8.46045,10.6157 L8.46045,12.9224 C8.46045,13.5175 8.94287,13.9999 9.53809,13.9999 C10.1333,13.9999 10.6157,13.5175 10.6157,12.9224 L10.6157,10.6157 L12.9224,10.6157 C13.5176,10.6157 14,10.1333 14,9.53818 C14,8.94308 13.5176,8.46063 12.9224,8.46063 L10.6157,8.46063 L10.6157,5.53931 L12.9224,5.53931 C13.5176,5.53931 14,5.05688 14,4.46179 C14,3.86667 13.5176,3.38425 12.9224,3.38425 L10.6157,3.38425 L10.6157,1.07751 C10.6157,0.482422 10.1333,0 9.53809,0 C8.94287,0 8.46045,0.482422 8.46045,1.07751 L8.46045,3.38425 L5.53906,3.38425 L5.53906,1.07751 C5.53906,0.482422 5.05664,0 4.46191,0 Z M5.53906,8.46063 L5.53906,5.53931 L8.46045,5.53931 L8.46045,8.46063 L5.53906,8.46063 Z"></path></svg></span>sender</th><th><span class="icon property-icon"><svg viewBox="0 0 14 14" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.4);flex-shrink:0;-webkit-backface-visibility:hidden" class="typesNumber"><path d="M4.46191,0 C3.8667,0 3.38428,0.482422 3.38428,1.07751 L3.38428,3.38425 L1.07764,3.38425 C0.482422,3.38425 0,3.86667 0,4.46179 C0,5.05688 0.482422,5.53931 1.07764,5.53931 L3.38428,5.53931 L3.38428,8.46063 L1.07764,8.46063 C0.482422,8.46063 0,8.94308 0,9.53818 C0,10.1333 0.482422,10.6157 1.07764,10.6157 L3.38428,10.6157 L3.38428,12.9224 C3.38428,13.5175 3.8667,13.9999 4.46191,13.9999 C5.05664,13.9999 5.53906,13.5175 5.53906,12.9224 L5.53906,10.6157 L8.46045,10.6157 L8.46045,12.9224 C8.46045,13.5175 8.94287,13.9999 9.53809,13.9999 C10.1333,13.9999 10.6157,13.5175 10.6157,12.9224 L10.6157,10.6157 L12.9224,10.6157 C13.5176,10.6157 14,10.1333 14,9.53818 C14,8.94308 13.5176,8.46063 12.9224,8.46063 L10.6157,8.46063 L10.6157,5.53931 L12.9224,5.53931 C13.5176,5.53931 14,5.05688 14,4.46179 C14,3.86667 13.5176,3.38425 12.9224,3.38425 L10.6157,3.38425 L10.6157,1.07751 C10.6157,0.482422 10.1333,0 9.53809,0 C8.94287,0 8.46045,0.482422 8.46045,1.07751 L8.46045,3.38425 L5.53906,3.38425 L5.53906,1.07751 C5.53906,0.482422 5.05664,0 4.46191,0 Z M5.53906,8.46063 L5.53906,5.53931 L8.46045,5.53931 L8.46045,8.46063 L5.53906,8.46063 Z"></path></svg></span>receiver</th><th><span class="icon property-icon"><svg viewBox="0 0 14 14" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.4);flex-shrink:0;-webkit-backface-visibility:hidden" class="typesTitle"><path d="M7.73943662,8.6971831 C7.77640845,8.7834507 7.81338028,8.8943662 7.81338028,9.00528169 C7.81338028,9.49823944 7.40669014,9.89260563 6.91373239,9.89260563 C6.53169014,9.89260563 6.19894366,9.64612676 6.08802817,9.30105634 L5.75528169,8.33978873 L2.05809859,8.33978873 L1.72535211,9.30105634 C1.61443662,9.64612676 1.2693662,9.89260563 0.887323944,9.89260563 C0.394366197,9.89260563 0,9.49823944 0,9.00528169 C0,8.8943662 0.0246478873,8.7834507 0.0616197183,8.6971831 L2.46478873,2.48591549 C2.68661972,1.90669014 3.24119718,1.5 3.90669014,1.5 C4.55985915,1.5 5.12676056,1.90669014 5.34859155,2.48591549 L7.73943662,8.6971831 Z M2.60035211,6.82394366 L5.21302817,6.82394366 L3.90669014,3.10211268 L2.60035211,6.82394366 Z M11.3996479,3.70598592 C12.7552817,3.70598592 14,4.24823944 14,5.96126761 L14,9.07922535 C14,9.52288732 13.6549296,9.89260563 13.2112676,9.89260563 C12.8169014,9.89260563 12.471831,9.59683099 12.4225352,9.19014085 C12.028169,9.6584507 11.3257042,9.95422535 10.5492958,9.95422535 C9.60035211,9.95422535 8.47887324,9.31338028 8.47887324,7.98239437 C8.47887324,6.58978873 9.60035211,6.08450704 10.5492958,6.08450704 C11.3380282,6.08450704 12.040493,6.33098592 12.4348592,6.81161972 L12.4348592,5.98591549 C12.4348592,5.38204225 11.9172535,4.98767606 11.1285211,4.98767606 C10.6602113,4.98767606 10.2411972,5.11091549 9.80985915,5.38204225 C9.72359155,5.43133803 9.61267606,5.46830986 9.50176056,5.46830986 C9.18133803,5.46830986 8.91021127,5.1971831 8.91021127,4.86443662 C8.91021127,4.64260563 9.0334507,4.44542254 9.19366197,4.34683099 C9.87147887,3.90316901 10.6232394,3.70598592 11.3996479,3.70598592 Z M11.1778169,8.8943662 C11.6830986,8.8943662 12.1760563,8.72183099 12.4348592,8.37676056 L12.4348592,7.63732394 C12.1760563,7.29225352 11.6830986,7.11971831 11.1778169,7.11971831 C10.5616197,7.11971831 10.056338,7.45246479 10.056338,8.0193662 C10.056338,8.57394366 10.5616197,8.8943662 11.1778169,8.8943662 Z M0.65625,11.125 L13.34375,11.125 C13.7061869,11.125 14,11.4188131 14,11.78125 C14,12.1436869 13.7061869,12.4375 13.34375,12.4375 L0.65625,12.4375 C0.293813133,12.4375 4.43857149e-17,12.1436869 0,11.78125 C-4.43857149e-17,11.4188131 0.293813133,11.125 0.65625,11.125 Z"></path></svg></span>text</th><th><span class="icon property-icon"><svg viewBox="0 0 14 14" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.4);flex-shrink:0;-webkit-backface-visibility:hidden" class="typesText"><path d="M7,4.56818 C7,4.29204 6.77614,4.06818 6.5,4.06818 L0.5,4.06818 C0.223858,4.06818 0,4.29204 0,4.56818 L0,5.61364 C0,5.88978 0.223858,6.11364 0.5,6.11364 L6.5,6.11364 C6.77614,6.11364 7,5.88978 7,5.61364 L7,4.56818 Z M0.5,1 C0.223858,1 0,1.223858 0,1.5 L0,2.54545 C0,2.8216 0.223858,3.04545 0.5,3.04545 L12.5,3.04545 C12.7761,3.04545 13,2.8216 13,2.54545 L13,1.5 C13,1.223858 12.7761,1 12.5,1 L0.5,1 Z M0,8.68182 C0,8.95796 0.223858,9.18182 0.5,9.18182 L11.5,9.18182 C11.7761,9.18182 12,8.95796 12,8.68182 L12,7.63636 C12,7.36022 11.7761,7.13636 11.5,7.13636 L0.5,7.13636 C0.223858,7.13636 0,7.36022 0,7.63636 L0,8.68182 Z M0,11.75 C0,12.0261 0.223858,12.25 0.5,12.25 L9.5,12.25 C9.77614,12.25 10,12.0261 10,11.75 L10,10.70455 C10,10.4284 9.77614,10.20455 9.5,10.20455 L0.5,10.20455 C0.223858,10.20455 0,10.4284 0,10.70455 L0,11.75 Z"></path></svg></span>datetime</th></tr></thead><tbody><tr id="1ebc388d-189a-42d6-826c-fe31a3f66102"><td class="cell-:h{|">78</td><td class="cell-vZv:">33</td><td class="cell-OC~{">25</td><td class="cell-title"><a href="4%208%20%D0%A1%D0%BE%D0%B7%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5%20%D1%81%D1%85%D0%B5%D0%BC%D1%8B%20%D0%B1%D0%B0%D0%B7%D1%8B%20%D0%B4%D0%B0%D0%BD%D0%BD%D1%8B%D1%85%20c60bd1ac33754d528b9ab3775376b236/Untitled%20Database%20b938b92769124f5dbe3cb7b22b48e81e/%D0%94%D0%BE%D0%B1%D1%80%D1%8B%D0%B8%CC%86%20%D0%B4%D0%B5%D0%BD%D1%8C!%201ebc388d189a42d6826cfe31a3f66102.html">Добрый день!</a></td><td class="cell-^?ii">12:23</td></tr><tr id="7fdc01d3-8cda-426c-a63a-3e1bc25f8293"><td class="cell-:h{|">79</td><td class="cell-vZv:">33</td><td class="cell-OC~{">25</td><td class="cell-title"><a href="4%208%20%D0%A1%D0%BE%D0%B7%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5%20%D1%81%D1%85%D0%B5%D0%BC%D1%8B%20%D0%B1%D0%B0%D0%B7%D1%8B%20%D0%B4%D0%B0%D0%BD%D0%BD%D1%8B%D1%85%20c60bd1ac33754d528b9ab3775376b236/Untitled%20Database%20b938b92769124f5dbe3cb7b22b48e81e/%D0%A3%D1%81%D0%BF%D0%B5%D0%BB%D0%B8%20%D0%BB%D0%B8%20%D0%B2%D1%8B%20%D0%BF%D0%BE%D1%87%D0%B8%D1%82%D0%B0%D1%82%D1%8C%20%D0%BD%D0%B0%D1%88%D0%B8%20%D0%BE%D1%82%D1%87%D0%B5%D1%82%D1%8B%207fdc01d38cda426ca63a3e1bc25f8293.html">Успели ли вы почитать наши отчеты?</a></td><td class="cell-^?ii">12:23</td></tr><tr id="7653eb84-365b-482c-a900-fd7580d7889b"><td class="cell-:h{|">80</td><td class="cell-vZv:">25</td><td class="cell-OC~{">33</td><td class="cell-title"><a href="4%208%20%D0%A1%D0%BE%D0%B7%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5%20%D1%81%D1%85%D0%B5%D0%BC%D1%8B%20%D0%B1%D0%B0%D0%B7%D1%8B%20%D0%B4%D0%B0%D0%BD%D0%BD%D1%8B%D1%85%20c60bd1ac33754d528b9ab3775376b236/Untitled%20Database%20b938b92769124f5dbe3cb7b22b48e81e/%D0%98%20%D0%B2%D0%B0%D0%BC%20%D0%B4%D0%BE%D0%B1%D1%80%D1%8B%D0%B8%CC%86!%207653eb84365b482ca900fd7580d7889b.html">И вам добрый!</a></td><td class="cell-^?ii">12:56</td></tr><tr id="c0a4a114-e6e2-4c89-bad9-08507030a6dc"><td class="cell-:h{|">81</td><td class="cell-vZv:">25</td><td class="cell-OC~{">33</td><td class="cell-title"><a href="4%208%20%D0%A1%D0%BE%D0%B7%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5%20%D1%81%D1%85%D0%B5%D0%BC%D1%8B%20%D0%B1%D0%B0%D0%B7%D1%8B%20%D0%B4%D0%B0%D0%BD%D0%BD%D1%8B%D1%85%20c60bd1ac33754d528b9ab3775376b236/Untitled%20Database%20b938b92769124f5dbe3cb7b22b48e81e/%D0%94%D0%B0,%20%D0%BA%D0%B0%D0%BA%20%D1%80%D0%B0%D0%B7%20%D0%BE%D0%B1%D1%81%D1%83%D0%B6%D0%B4%D0%B0%D0%B5%D0%BC%20%D1%81%20%D0%BA%D0%BE%D0%BB%D0%BB%D0%B5%D0%B3%D0%B0%D0%BC%D0%B8!%20c0a4a114e6e24c89bad908507030a6dc.html">Да, как раз обсуждаем с коллегами!</a></td><td class="cell-^?ii">12:56</td></tr></tbody></table></div><p id="654d13fb-cfe4-40fc-8643-e2c08bd6b6c0" class="">Свяжем две таблицы отношениями:</p><figure id="a12688fa-1636-4c30-af9d-5c2c3b3af98b" class="image"><a href="https://ucarecdn.com/85513402-7e61-40ab-b374-d0c85be7f1a4/"><img src="https://ucarecdn.com/85513402-7e61-40ab-b374-d0c85be7f1a4/"/></a></figure><p id="c10b3b92-7b01-44fd-bbca-da3208324281" class="">Для этого нажмите на &quot;карандашик&quot;, проставьте чекбокс &quot;Foreign Key&quot; и выберите таблицу и ее поле, c которым вы хотите связаться отношениями.</p><figure id="dc395c7d-dc4c-4eed-ac39-a36cdac99f4c" class="image"><a href="https://ucarecdn.com/05c9aba0-921a-4e17-92a5-3c79db7d93a2/"><img src="https://ucarecdn.com/05c9aba0-921a-4e17-92a5-3c79db7d93a2/"/></a></figure><p id="4f7535ac-7a75-4012-9c19-266edfe7f619" class=""><strong>5. Определим первичные ключи</strong></p><p id="d63ffdd8-8f5e-42b0-9268-2881650d9e5c" class="">Для нашей таблицы это несложная задача, поскольку у нас есть только один первичный ключ в каждой таблице.</p><figure id="c6cae0b6-3e6e-4bf1-9673-e62e9e15b6a7" class="image"><a href="https://ucarecdn.com/c730d58b-1773-49a7-9dda-6514dcd9e659/"><img src="https://ucarecdn.com/c730d58b-1773-49a7-9dda-6514dcd9e659/"/></a></figure><h3 id="b902e4e4-accb-4f3c-94c4-ccd0c6a08cd4" class=""><strong>Готово!</strong></h3><p id="3157e28d-c92b-4dfd-8240-d72123302ae2" class="">На основе такой схемы можно однозначно создать модели!</p><h2 id="2a1ea5ef-dc98-41a9-bea7-513a00a4a540" class=""><strong>Резюме</strong></h2><p id="330e40ee-584a-426c-8d6b-40008ad9c5a5" class="">Правильный дизайн БД сэкономит время и избавит от необходимости переделывать структуру на ходу.</p><p id="900cda80-9a62-4b50-a652-e7c372e4b233" class="">Продумайте дизайн БД до того, как писать код моделей.</p><p id="9c644ef1-e516-478b-be02-bc9d7fc144bf" class="">Используйте специальные инструменты для дизайна БД :)</p><p id="17369fe0-d39a-453c-99b4-9ae9a5ae85da" class="">
+</p></div></article></body></html>

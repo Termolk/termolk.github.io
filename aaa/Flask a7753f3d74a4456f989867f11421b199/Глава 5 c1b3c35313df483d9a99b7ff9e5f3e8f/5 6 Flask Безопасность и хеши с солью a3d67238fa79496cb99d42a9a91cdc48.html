@@ -1,0 +1,880 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>5.6 Flask: Безопасность и хеши с солью</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="a3d67238-fa79-496c-b99d-42a9a91cdc48" class="page sans"><header><h1 class="page-title">5.6 Flask: Безопасность и хеши с солью</h1></header><div class="page-body"><p id="64cecdc8-99b7-4e17-bb96-399c389d8f15" class="">Безопасность веб-приложения зависит от защищенности пользователей. А защищенность пользователей сильно зависит от защищенности их паролей. От чего зависит защищенность паролей мы узнаем в этом уроке.</p><h3 id="de184c5c-4348-4a88-92d3-6427be0b9f1e" class=""><strong>Вы научитесь:</strong></h3><ul id="310758fb-59b2-4ffc-8f88-b094bdf8df1b" class="bulleted-list"><li>хранить пароли правильно;</li></ul><ul id="572708a1-35a6-4f3c-b0b8-507be1deba41" class="bulleted-list"><li>менять пароли;</li></ul><ul id="2e5996b8-6c52-4803-b03e-e358a5860daf" class="bulleted-list"><li>управлять сложностью паролей.</li></ul><h2 id="ea2d48a8-2d6e-4cd9-b169-9d0ff51ae13a" class=""><strong>Сохраним пароль правильно</strong></h2><p id="d244c321-aae1-4d12-bc1c-061a539534b4" class="">Защищенность паролей в первую очередь зависит от их безопасного хранения. Даже самый сложный пароль не спасет, если его можно узнать.</p><p id="8cb1b600-6c41-4cd0-b9fa-b6db1a9c9b7d" class="">Создавая наше приложение с аутентификацией и авторизацией, мы хранили пароли как есть. Это не правильно! У нас есть хранилище пользователей - файл базы данных SQLite. Если злоумышленник получит к нему доступ, то он легко может получить информацию о пользователях и паролях.</p><figure id="7d01f6f0-9681-4e38-9a2b-e948f681fd0f" class="image"><a href="https://ucarecdn.com/978b7316-7c9b-431f-9e98-6f0886e75b45/"><img src="https://ucarecdn.com/978b7316-7c9b-431f-9e98-6f0886e75b45/"/></a></figure><p id="2098347f-aa78-499c-b4c1-432859cfc850" class="">Как тогда хранить пароль? Хорошо бы его изменить, так чтобы он стал не узнаваем. Ещё лучше, если станет невозможно вернуть его в первоначальный вид.</p><p id="ee12b796-a732-47d8-8bf8-26f2c63b9db3" class="">&quot;Но тогда пароль введенный пользователем не будет равен тому что хранится у нас!&quot; - можете заметить вы. Это не страшно, если можно преобразовать вводимый пароль тем же способом к тому же виду, что и сохраненный ранее. Сравнение сработает.</p><p id="92b21df9-533d-4e2d-8c88-d974d2dacf58" class="">Значения пользовательских паролей не должен знать даже администратор сайта и служба поддержки. Достаточно чтобы пароль мог сменить и восстановить сам пользователь.</p><p id="f75791cf-d75a-4f7d-ab55-d228df7b88bd" class="">Преобразование пароля в не восстановимый вид называется односторонним хешированием. Для этого есть специальные алгоритмы. Пожалуй, самый знаменитый из них: <strong>md5</strong>. Он реализован и в Python в модуле <strong>hashlib</strong>:</p><pre id="afc12ded-efef-4034-b273-77b3cd1a4ba5" class="code code-wrap"><code>from hashlib import md5
+
+password = b&quot;1234&quot;
+hash_obj = md5(password)
+print(hash_obj.hexdigest()) # 81dc9bdb52d04dc20036dbd8313ed055</code></pre><p id="00de7e00-cfb0-4d99-a767-36edba5ac6a3" class="">Это не единственная функция хеширования в модуле. Есть и другие. Отметим только, что эти функции работают с байтовыми строками. Если же у нас просто строка с юникод символами, то её нужно преобразовывать в байтовую:</p><pre id="ecf88d37-3b3e-4bbd-a403-b91e32e29b90" class="code code-wrap"><code># Без преобразования
+password = &quot;пароль&quot;
+hash_obj = md5(password)
+print(hash_obj.hexdigest())
+&quot;&quot;&quot;
+Получим:
+Traceback (most recent call last):
+  File &quot;test.py&quot;, line 8, in &lt;module&gt;
+    hash_obj = hashlib.md5(password)
+TypeError: Unicode-objects must be encoded before hashing
+&quot;&quot;&quot;
+
+hash_obj = md5(password.encode()) # Преобразуем в байтовую строку
+print(hash_obj.hexdigest()) # e242f36f4f95f12966da8fa2efd59992</code></pre><p id="50702149-7dc1-4f35-b416-645987ea66d7" class="">Впрочем, мы отвлеклись.</p><p id="405bce49-abe4-4a92-bc8a-93f7a280a418" class="">Важно: В реальном мире хранение паролей в md5 считается устаревшей, небезопасной практикой. Мы используем md5 исключительно в иллюстративных целях. Безопасный способ мы рассматриваем вот <a href="https://stepik.org/lesson/300657/step/9?unit=282515">тут</a>.</p><h3 id="bbcab5be-447d-4002-889e-e3c260e9d00f" class=""><strong>Взломаем хеш пароля</strong></h3><p id="acfab7a7-2634-4c2a-950f-f4f0113e2862" class="">Пытливый разработчик тут же может предложить способ взлома и для этого решения. Можно, перебирая последовательность символов, генерировать хеши и сравнивать с существующим образцом. Да, это требует времени, но работает. Вот пример: пусть наш пароль - число в промежутке от 1 до 1 000 000 в виде строки без пробелов и нулей (&quot;1&quot;, &quot;2&quot;,.. &quot;999999&quot;, &quot;1000000&quot;). Найдем его по хешу:</p><pre id="4f5572eb-558f-46bf-9455-76ebfbb8ab7b" class="code code-wrap"><code>from hashlib import md5
+from time import monotonic
+
+# Наш пароль
+password = &quot;999999&quot;# Хеш пароля
+password_hash = md5(password.encode()).hexdigest()
+
+# Начало перебора
+start_time = monotonic()
+
+# Перебираем числаfor src in range(1, 1000000):
+    # Создаем образец хеша
+    sample_hash = md5(str(src).encode())
+    # Сравниваем с хешем пароляif password_hash == sample_hash.hexdigest():
+    	# Пароль найден
+        print(f&quot;Пароль: {src}&quot;)
+        breakelse:
+    print(&quot;Пароль не найден&quot;)
+# Выводим время поиска
+print(f&quot;На поиск потрачено: {monotonic() - start_time} сек.&quot;)
+# Мой результат: # Пароль: 999999# Затрачено: 1.5449999999982538 сек.</code></pre><p id="66ef2445-157e-4e5e-be1e-8ce93cd6868b" class="">Наш алгоритм работает с небольшим числом вариантов пароля, а потому он столь молниеносен. Но даже его можно оптимизировать, если сохранить и проиндексировать пары хеша и пароля. Сейчас размеры дисков позволяют создавать большие хранилища данных не дорого. И такие базы хешей существуют на самом деле. Данный способ взлома называется перебором по словарю. В качестве словаря выступают не сами пароли, а их хеши.</p><p id="9c4fe274-ef96-4fde-bf52-08d3bab0170b" class="">Хранилища соответствий хешей последовательностям символов называют &quot;радужными таблицами&quot;.</p><p id="cf709a47-1a73-4d90-acde-4a84865394b3" class="">Так для чего тогда нужно хеширование пароля? Чтобы исключить прямой доступ злоумышленника. В вопросах безопасности - время имеет очень большое значение. Кроме того хеши - это первая линия обороны от дурака. Тот, кто пытался восстановить забытый пароль админа сайта хоть одной из современных CMS может вспомнить, как он напрягся видя в поле password таблицы пользователей длинную последовательность непонятных символов.</p><h3 id="29b652d2-0e90-4783-9a4a-45e970454ebc" class=""><strong>Защитим пароль дважды</strong></h3><p id="af3f55e3-d12e-4267-b974-e0158aa20eef" class="">Давайте защитим пароль от перебора и поиска по &quot;радужным таблицам&quot;. Для этого добавим к паролю пользователя какую-нибудь случайную последовательность, которая исказит результат хеширования. К тому же для пароля каждого пользователя можно использовать свою последовательность. Это значит, что даже одинаковые пароли в базе данных будут различаться.</p><p id="c7e47db6-49c2-4fef-85e6-46f15227e76b" class="">Последовательность, добавляемую к паролю, принято называть &quot;солью&quot; (salt). К ней предъявляются следующие требования: она должна быть достаточно длинной, случайной и сохранена для проверки вводимых паролей.</p><p id="f51b94f1-323e-4a62-9a46-ae324d5c8d96" class="">Проверяем наше решение:</p><pre id="ea02de20-5289-49e4-a9f9-456249783be5" class="code code-wrap"><code>password = &quot;999999&quot;
+solt = &quot;999&quot;
+hash_obj = md5((password + solt).encode())
+password_hash = hash_obj.hexdigest()
+
+start_time = monotonic()
+
+# Пусть даже мы знаем длину пароля с &quot;солью&quot;for src in range(1, 1000000000):
+    sample_hash = md5(str(src).encode())
+    if password_hash == sample_hash.hexdigest():
+        print(f&quot;Пароль: {src}&quot;)
+        breakelse:
+    print(&quot;Пароль не найден&quot;)
+
+print(f&quot;Затрачено: {monotonic() - start_time} сек.&quot;)</code></pre><p id="27228ac3-60ca-4184-b8f7-916ced63ce03" class="">Я подождал пять минут и прервал работу скрипта. Уже в таком виде перебор становится накладным занятием. Количество вариантов перебора можно посчитать. Пусть минимальная длина пароля 8 символов, длина соли 8 символов (так мы избавимся от коротких строк), используются латинские буквы в нижнем и верхнем регистре и некоторые символы из таблицы ASCII и только часть сочетаний двух байтов символов ASCII для русских UTF-8 букв, тогда... Оставим эту задачу заинтересованным, а сами займемся более полезной практикой.</p><h3 id="bb9156e0-f032-4b3d-a3d3-e9afc76fdd15" class=""><strong>Использование функций пакета Werkzeug в Flask</strong></h3><p id="2bd03f99-fb67-4538-901b-330fd13f48cf" class="">Давайте добавим хеширование в наше приложение из раздела аутентификации и авторизации. Мы не станем писать криптографические функции и функцию проверки. За нас это уже сделали, те кто лучше нас понимает криптографию. Достаточно просто грамотно использовать, то что есть.</p><p id="4f638f89-f179-45f9-bba0-0bb870b8a502" class="">Что же мы изменим в нашем приложении? Из-за особенностей хеширования увеличится размер поля пароля и изменится его название. Мы теперь храним хеш пароля. Ещё добавятся два метода в модель пользователя. Первый, для хеширования пароля при его присвоении. Второй, для сравнения введенного пользователем текстового пароля с хранимым хешем. Сами функции мы возьмем из пакета Werkzeug, который ставится вместе с Flask как зависимость. Если же его не оказалось, то легко можно поставить командой pip. Вот наши изменения модели пользователя:</p><pre id="39a04f10-79b5-4da2-a2d6-b23e3b11a376" class="code code-wrap"><code># Импортируем функции для хеширования и проверки пароляfrom werkzeug.security import generate_password_hash, check_password_hash
+
+class User(db.Model):
+    __tablename__ = &#x27;users&#x27;
+
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(32), nullable=False, unique=True)
+    # Изменим название и длину поля для пароля
+    password_hash = db.Column(db.String(128), nullable=False)
+    role = db.Column(db.String(32), nullable=False)
+
+    @propertydef password(self):# Запретим прямое обращение к паролюraise AttributeError(&quot;Вам не нужно знать пароль!&quot;)
+
+    @password.setterdef password(self, password):# Устанавливаем пароль через этот метод
+    	self.password_hash = generate_password_hash(password)
+
+    def password_valid(self, password):# Проверяем пароль через этот метод# Функция check_password_hash превращает password в хеш и сравнивает с хранимымreturn check_password_hash(self.password_hash, password)</code></pre><p id="e7eb7d2f-3dd2-429c-b913-c39c2f387a39" class="">Мы заменили сравнение паролей на метод модели, поэтому поправим функцию аутентификации:</p><pre id="00acb6cc-d40c-4c8a-90f8-60492170292f" class="code code-wrap"><code>@app.route(&quot;/login&quot;, methods=[&quot;GET&quot;, &quot;POST&quot;])def login():
+
+...
+        user = User.query.filter_by(username=form.username.data).first()
+    	# Теперь пароль проверяется методом password_validif user and user.password_valid(form.password.data):
+            session[&quot;user&quot;] = {
+    			&quot;id&quot;: user.id,
+    			&quot;username&quot;: user.username,
+    			&quot;role&quot;: user.role,
+    		}
+            return redirect(&quot;/&quot;)
+         else:
+    		 form.username.errors.append(&quot;Не верное имя или пароль&quot;)
+     return render_template(&quot;page_login.html&quot;, form=form)</code></pre><p id="3353bc4c-fd80-4ba3-b796-0a898fbefe28" class="">После изменений пересоздадим базу данных. Для этого мы удалим старую и выполним действия описанные в уроке &quot;Аутентификация и авторизация&quot; в разделе &quot;Подготовка базы данных&quot; второй части урока.</p><p id="1d2d3544-8c3b-4c2f-8326-2951545a18ff" class="">Зарегистрируем нового пользователя и посмотрим на пароль. Вот так примерно он выглядит:</p><figure id="2356cdc0-c7ac-4760-8625-8a43fad89692" class="image"><a href="https://ucarecdn.com/5af904bd-9b5c-41a8-8bc4-79e58c37173a/"><img src="https://ucarecdn.com/5af904bd-9b5c-41a8-8bc4-79e58c37173a/"/></a></figure><p id="c15ad80b-cd4d-41c1-9e12-cc3b264bbd4b" class="">В обсуждении мы упоминали &quot;соль&quot;, но при этом не видели её в коде. Все просто. Использованные нами функции сами решают данную задачу. Они и &quot;соль&quot; уникальную создадут, и сохранят её в части хеша для проверки. По умолчанию длина &quot;соли&quot; 8 символов.</p><h2 id="934cef9c-d1f6-4c92-8850-8e72a849a20a" class=""><strong>Смена пароля</strong></h2><p id="fa755bb2-991b-40a6-a557-dd1e4ee696d5" class="">Защищенность паролей зависит от возможности их смены. Скомпрометировать пароль не страшно, страшно его не сменить!</p><p id="d40acb3e-0700-4db9-9810-5a3a6b186e31" class="">У пользователя должна быть возможность изменения пароля. Обычно это форма в разделе личного профиля. Добавим эту возможность и в наше приложение.</p><p id="2fb01257-ea1e-45f9-a18d-37c6eecd42aa" class="">Добавим описание формы с двумя полями. Полем пароля и его подтверждения (файл app.py):</p><pre id="ca7d1b9b-4124-40ad-bd15-ef1442305ce2" class="code code-wrap"><code>class ChangePasswordForm(FlaskForm):
+    password = PasswordField(
+        &quot;Пароль:&quot;,
+        validators=[
+            DataRequired(),
+            Length(min=8, message=&quot;Пароль должен быть не менее 8 символов&quot;),
+            EqualTo(&#x27;confirm_password&#x27;, message=&quot;Пароли не одинаковые&quot;)
+        ]
+    )
+    confirm_password = PasswordField(&quot;Пароль ещё раз:&quot;)</code></pre><p id="f8152383-b67d-4531-8fba-d91f31151a6a" class="">Добавим шаблон с формой (файл templates/change_password.html):</p><pre id="ca534010-f81b-4d3a-a07f-3ff18a8084f5" class="code code-wrap"><code>
+{% for field in form.errors %}
+    {% for error in form.errors[field] %}
+    &lt;div style=&quot;color:red;&quot;&gt;
+    	{{error}}
+    &lt;/div&gt;
+    {% endfor %}
+{% endfor %}
+
+&lt;form action=&quot;/change-password&quot; method=&quot;post&quot;&gt;
+    {{ form.hidden_tag() }}
+
+    {{ form.password.label }}
+    {{ form.password() }}
+
+    {{ form.confirm_password.label }}
+    {{ form.confirm_password() }}
+
+    &lt;button type=&quot;submit&quot;&gt;Сохранить&lt;/button&gt;&lt;/form&gt;</code></pre><p id="ed6a3f11-85eb-48e7-909e-9ab285d94de5" class="">Добавим функцию обработки запросов отображения формы и смены пароля:</p><pre id="7ecfb363-2469-4237-92d1-96c22610c757" class="code code-wrap"><code>@app.route(&quot;/change-password&quot;, methods=[&quot;GET&quot;, &quot;POST&quot;])def change_password():
+    form = ChangePasswordForm()
+
+    if request.method == &quot;POST&quot;:
+        if form.validate_on_submit():
+            # Обновляем пароль у текущего пользователя
+            user = User.query.filter_by(id=session[&quot;user&quot;][&quot;id&quot;]).first()
+            user.password = form.password.data
+            db.session.add(user)
+            db.session.commit()
+            return redirect(&quot;/change-password&quot;)
+
+    return render_template(&quot;change_password.html&quot;, form=form)</code></pre><p id="7b057eb9-4d2e-4f24-b4dc-0e53dfa0719d" class="">Тестируем. Наш код работает.</p><h2 id="b222dc34-bca9-4836-9788-78520be6c8aa" class=""><strong>Сложность пароля</strong></h2><p id="27ba774c-dea4-48ab-9700-da793d464498" class="">Если пароль невозможно украсть, то можно попытаться его подобрать, делая запросы аутентификации. Для ограничения подбора существует несколько подходов. Самый простой из них — это заставить пользователя придумать достаточно сложный пароль.</p><p id="9e8bb5f3-1cec-4153-962a-e3669d683e1f" class="">Список требований к сложности пароля может содержать спорные пункты. Мы ограничимся следующими:</p><ul id="2b17264d-1f9d-48c9-b62c-d85fd56f2883" class="bulleted-list"><li>Минимальная длина пароля — 8 символов.</li></ul><ul id="b97b68d4-68d7-44d3-9638-2e73ddc09a14" class="bulleted-list"><li>Должен содержать буквы латинского алфавита как в нижнем, так и верхнем регистре.</li></ul><ul id="accfd298-5494-45c9-92b7-02b7e9fe1d23" class="bulleted-list"><li>Пароль должен содержать цифры.</li></ul><p id="f67d5c6a-83d4-45f3-93d3-94bf535f33bc" class="">Список небольшой, но вполне достаточный. Давайте добавим проверки для всех пунктов.</p><p id="6b9d5d23-fe3c-4816-8d03-d978696dd241" class="">Если обратиться к коду форм регистрации и смены пароля, то заметим, что минимальная длина пароля у нас уже проверяется. Если мы захотим увеличить минимальную длину, то нам просто нужно будет изменить значение параметра min:</p><pre id="bfa92c78-1311-419f-91a0-de849a358547" class="code code-wrap"><code>class RegistrationForm(FlaskForm):
+...
+    password = PasswordField(
+    	&quot;Пароль:&quot;,
+    	validators=[
+            DataRequired(),
+            # Пароль не менее 8 символов
+            Length(min=8, message=&quot;Пароль должен быть не менее 8 символов&quot;),
+            EqualTo(&#x27;confirm_password&#x27;, message=&quot;Пароли не одинаковые&quot;)
+    	]
+    )
+...
+
+class ChangePasswordForm(FlaskForm):
+    password = PasswordField(
+        &quot;Пароль:&quot;,
+        validators=[
+            DataRequired(),
+    	    # Пароль не менее 8 символов
+            Length(min=8, message=&quot;Пароль должен быть не менее 8 символов&quot;),
+            EqualTo(&#x27;confirm_password&#x27;, message=&quot;Пароли не одинаковые&quot;)
+        ]
+    )
+...</code></pre><p id="16fb06c3-c90e-4eb6-aacb-17a44a968a34" class="">При разработке приложений магические числа, вроде нашей 8, следует выносить в константы (в Python — это переменные в верхнем регистре) с понятным названием (например, PASSWORD_MIN_LENGTH = 8). И это не только для понимания их назначения. В коде выше уже две точки для изменения (не считая сообщений об ошибке). И если мы в будущем начнем менять в одном месте, то можем пропустить второе. После выноса значения в константу достаточно поправить значение в одном месте. Пока в учебных целях оставим все как есть.</p><p id="f0382564-87c2-4325-9d64-2ed34a863ac0" class="">Поздравляем, первый пункт выполнен!</p><p id="bfa8505c-72c3-4496-bb75-787089e20b80" class="">Теперь проверим пароль на латинские буквы как в нижнем, так и в верхнем регистре. Самый простой способ составить два регулярных выражения:</p><pre id="fe689a60-4f52-40b1-800e-a9878bbfbe66" class="code code-wrap"><code>import re
+# Наша функция проверкиdef password_check(password):# Правило: хоть одна латинская буква в нижнем регистре
+    patern1 = re.compile(&#x27;[a-z]+&#x27;)
+    # Правило: хоть одна латинская буква в верхнем регистре
+    patern2 = re.compile(&#x27;[A-Z]+&#x27;)
+    # Сработали оба правилаif (patern1.search(password) and
+        patern2.search(password)):
+        return True# Одно из правил не сработалоreturn False# Проверием её на списке паролей
+passwords = [
+    &quot;aaaaa&quot;,
+    &quot;AAAAA&quot;,
+    &quot;aAaaa&quot;,
+    &quot;AaAAA&quot;,
+]
+
+for password in passwords:
+    if password_check(password):
+        print(f&quot;Пароль \\&quot;{password}\\&quot; допустимый&quot;)
+    else:
+        print(f&quot;Пароль \\&quot;{password}\\&quot; не допустимый&quot;)
+
+&quot;&quot;&quot;
+Результат выполнения кода:
+
+Пароль &quot;aaaaa&quot; не допустимый
+Пароль &quot;AAAAA&quot; не допустимый
+Пароль &quot;aAaaa&quot; допустимый
+Пароль &quot;AaAAA&quot; допустимый
+&quot;&quot;&quot;</code></pre><p id="07c1b058-810e-4892-977c-151aebbf2737" class="">Добавим проверку на наличие хоть одной цифры. Для этого доработаем нашу функцию:</p><pre id="30b454ae-e9f3-400e-989a-349530a1b8a3" class="code code-wrap"><code>def password_check(password):
+    patern1 = re.compile(&#x27;[a-z]+&#x27;)
+    patern2 = re.compile(&#x27;[A-Z]+&#x27;)
+    # Правило: хоть одна цифра
+    patern3 = re.compile(&#x27;\\d+&#x27;)
+    # Сработали все правилаif (patern1.search(password) and
+        patern2.search(password) and
+        patern3.search(password)):
+        return True# Одно из правил не сработалоreturn False# Проверием её на списке паролей
+passwords = [
+    &quot;aaaaa&quot;,
+    &quot;AAAAA&quot;,
+    &quot;aAaaa&quot;,
+    &quot;AaAAA&quot;,
+    &quot;aaaaa1&quot;,
+    &quot;1AAAAA&quot;,
+    &quot;AA1AAA&quot;,
+    &quot;1aAaaa&quot;,
+    &quot;Aa3AAA&quot;,
+    &quot;Aa3AAA2&quot;,
+    &quot;2aAa2aa&quot;,
+    &quot;Aa3AAA3&quot;,
+]
+
+for password in passwords:
+    if password_check(password):
+        print(f&quot;Пароль \\&quot;{password}\\&quot; допустимый&quot;)
+    else:
+        print(f&quot;Пароль \\&quot;{password}\\&quot; недопустимый&quot;)
+
+&quot;&quot;&quot;
+Результат выполнения:
+
+Пароль &quot;aaaaa&quot; недопустимый
+Пароль &quot;AAAAA&quot; недопустимый
+Пароль &quot;aAaaa&quot; недопустимый
+Пароль &quot;AaAAA&quot; недопустимый
+Пароль &quot;aaaaa1&quot; недопустимый
+Пароль &quot;1AAAAA&quot; недопустимый
+Пароль &quot;AA1AAA&quot; недопустимый
+Пароль &quot;1aAaaa&quot; допустимый
+Пароль &quot;Aa3AAA&quot; допустимый
+Пароль &quot;Aa3AAA2&quot; допустимый
+Пароль &quot;2aAa2aa&quot; допустимый
+Пароль &quot;Aa3AAA3&quot; допустимый
+&quot;&quot;&quot;</code></pre><p id="cd3a7518-dc6d-401a-ba38-a374004d2ea9" class="">Функция проверки ещё двух пунктов создана. Теперь применим в коде приложения. Для этого сделаем из неё функции валидации и применим к нашим формам:</p><pre id="49503266-7261-449f-9d24-5e209312471f" class="code code-wrap"><code>import re
+
+# Импортируем исключение ошибки валидацииfrom wtforms.validators import ValidationError
+
+# Наша функция валидации принимает форму и проверяемое полеdef password_check(form, field):
+    msg = &quot;Пароль должен содержать латинские сивмолы в верхнем и нижнем регистре и цифры&quot;
+    patern1 = re.compile(&#x27;[a-z]+&#x27;)
+    patern2 = re.compile(&#x27;[A-Z]+&#x27;)
+    patern3 = re.compile(&#x27;\\d+&#x27;)
+    # Проверяем данные поляif (not patern1.search(field.data) ornot patern2.search(field.data) ornot patern3.search(field.data)):
+        # Хоть одно правило не сработает, то вызываем исключениеraise ValidationError(msg)
+
+# Добавим нашу функцию валидации пароля в формыclass RegistrationForm(FlaskForm):
+...
+    password = PasswordField(
+        &quot;Пароль:&quot;,
+        validators=[
+            DataRequired(),
+            # Пароль не менее 8 символов
+            Length(min=8, message=&quot;Пароль должен быть не менее 8 символов&quot;),
+            EqualTo(&#x27;confirm_password&#x27;, message=&quot;Пароли не одинаковые&quot;),
+            password_check
+        ]
+    )
+...
+
+class ChangePasswordForm(FlaskForm):
+    password = PasswordField(
+        &quot;Пароль:&quot;,
+        validators=[
+            DataRequired(),
+            # Пароль не менее 8 символов
+            Length(min=8, message=&quot;Пароль должен быть не менее 8 символов&quot;),
+            EqualTo(&#x27;confirm_password&#x27;, message=&quot;Пароли не одинаковые&quot;),
+            password_check
+        ]
+    )
+...</code></pre><p id="46e402a6-2c9d-4457-a8ae-ecd29cf808aa" class="">Тестируем с разными значениями пароля. Убедились, что работает.</p><p id="6e606dd2-1d80-4482-9084-f37da93831aa" class="">Есть и более сложные способы для борьбы с подбором паролей. Обычно они основаны на регистрации нескольких неудачных попыток аутентификации, а далее можно:</p><ul id="f4282499-75de-43f5-89a9-2df684f569c0" class="bulleted-list"><li>Добавить капчу (CAPTCHA) в форму аутентификации.</li></ul><ul id="879f49d9-8ef1-49cd-93b7-dc1df6a2afa6" class="bulleted-list"><li>Игнорировать вообще все новые попытки аутентификации для проблемного аккаунта продолжительный период (например, пол часа или час).</li></ul><p id="246d8e0f-fde5-48d8-ba5e-015cd5373803" class="">Порой можно и нужно использовать несколько подходов.</p><h2 id="f220c1c0-5b20-43df-95bd-21637a90899a" class=""><strong>Резюме</strong></h2><p id="b3ca1c35-e14e-463c-91b6-9d67b09ea2fe" class="">Пароли безопасно хранить в виде хешей.</p><p id="f77a1a8e-6aa0-4e1f-8d61-0c17ab827335" class="">Алгоритм хеширования также должен применять &quot;соль&quot;.</p><p id="d7a80d41-3e77-460c-af20-bd5f9f8b861c" class="">Чтобы хешировать и проверять пароли в Flask можно использовать функции generate_password_hash и check_password_hash пакета Werkzeug.</p><p id="b43e7ae1-42a3-457e-9711-061633a2ee38" class="">Пользователь должен иметь возможность изменить пароль.</p><p id="291ac2a8-074f-4473-a331-869a4165dfc7" class="">Сложность пароля должна быть достаточной для защиты от перебора.</p><p id="9ff5b12e-0577-4baa-80bb-df5c8890991d" class="">Для проверки сложности пароля мы можем использовать регулярные выражения.</p><p id="f7b69d71-838b-432a-b1c8-82de4eb0a803" class="">
+</p></div></article></body></html>

@@ -1,0 +1,627 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>1.26 Проектное задание</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="f450b61f-2ff7-4559-94ec-70c96e7eb6bf" class="page sans"><header><h1 class="page-title">1.26 Проектное задание</h1></header><div class="page-body"><h3 id="63a49230-c01f-4665-bb82-fad5b9c08c90" class=""><strong>Проект – поиск туров</strong></h3><p id="fab20fb7-47a5-49db-b58f-81c2289bc926" class="">Посмотрите макеты проекта здесь: <a href="https://academy.stepik.org/flask-projects">https://academy.stepik.org/flask-projects</a>.</p><p id="e3cf1e40-36f7-47b9-a614-e8e0326c0a56" class="">Скачайте исходники верстки здесь:</p><p id="0af7868b-586b-4a06-b77c-f678b9ecfff0" class=""><a href="https://github.com/kushedow/flask-html/tree/master/Project%201/templates">https://github.com/kushedow/flask-html/tree/master/Project%201/templates</a></p><h2 id="2dd9692c-3da5-443e-a685-fcb8e24a24ad" class=""><strong>Шаги проекта:</strong></h2><p id="25703112-5ede-44a5-abfe-b8bcbd2ea92a" class=""><strong>0. Начните работу над проектом.</strong></p><p id="056db532-e6fa-4178-94d2-e5bb763c9fb5" class="">– Создайте в новой папке файл app.py.</p><p id="eac40785-ae07-40b5-926f-5f2ecb9a48ec" class="">– Установите Flask.</p><p id="6f42b6be-b27a-4a04-8ca1-2e0e412da69d" class=""><strong>1. Распишите роуты, выведите тексты: </strong>– главной /, (выведите здесь будет главная);– направления /departures/&lt;departure&gt;/ (выведите здесь будет направление);– тура /tours/&lt;id&gt;/ (выведите здесь будет тур).</p><p id="b18647f1-00c2-421b-af08-7901d954bf9e" class=""><strong>2. Скопируйте шаблоны в папку templates:</strong></p><p id="460bd286-9050-43d8-af78-a69746f0bf45" class="">– index.html главной;– departure.html направления;– tour.html тура.</p><p id="334d98b1-bcb4-47ac-b798-5ee6e1d38e1b" class=""><strong>3. Выведите нужный шаблон для каждого роута:</strong></p><p id="e73ddef0-5be1-4832-9ef8-233bf3f2577b" class="">– index.html для главной;– departure.html для направления;– tour.html для тура.</p><p id="cef7674d-0240-4535-9279-3a30c5a7086e" class="">Отлично! Теперь скопируйте код app.py в поле ниже.</p><p id="9e70c915-4b04-42a2-8539-6590ae327891" class="">(Вы также можете использовать Github для публикации своего кода, в таком случае скопируйте ссылку на репозиторий.)</p><h2 id="d2837117-7c0a-4f51-a0cd-ac23b5a89752" class=""><strong>Бонусная часть:</strong></h2><p id="e06e7093-c358-46e8-8ebc-f899e128b520" class=""><strong>Вы уже вывели шаблоны. Засовывание данных в шаблон - дело следующей главы, но мы можем подготовить сами данные, получив их из нашего списка туров и вывести их чистым HTML без стилей. Если вы готовы – давайте сделаем это! Какие данные нам понадобятся?</strong></p><p id="9def5e45-6349-4b4d-86a4-cdb2b61c54ed" class=""><strong>Во-первых – все туры</strong>, мы выведем их на страничке с адресом /data мы назвали ее так, поскольку это будет временная страничка для вывода данных.</p><p id="8ec7023f-f229-4694-9380-b977fe27963d" class=""><strong>Во-вторых – туры по направлению, </strong>мы выведем их на страничках типа /data/departures/&lt;названиенаправления&gt;, например, /data/departures/&lt;nsk&gt;, на этой страничке будут только туры из Новосибирска</p><p id="43e6ef7b-042d-4c5c-9fc0-8499c7d7ca56" class=""><strong>В-третьих – каждый конкретный тур, </strong>мы выведем его на страничках типа  <strong>/data/tours/</strong>&lt;номертура&gt;/, для каждого тура такая страничка получится своя</p><p id="063e9447-3e5b-4a07-9a07-cc3e2106e9a6" class=""><strong>Итак, задание:</strong><strong>1. Выведите на отдельной странице /data/ все туры.</strong></p><p id="93cebc66-56be-4da4-998b-e280bbe261e4" class=""><strong>Код вашей страницы должен выглядеть так:</strong></p><blockquote id="23cd00a3-a37a-4130-9a2e-751383841edd" class="">&lt;h1&gt;Все туры:&lt;/h1&gt;&lt;p&gt;Куба: &lt;a href=&quot;/data/tours/1/&quot;&gt;Marina Lake Hotel &amp; Spa 62000 4* &lt;/a&gt;&lt;/p&gt;&lt;p&gt;Вьетнам: &lt;a href=&quot;/data/tours/2/&quot;&gt;Baroque Hotel 85000 5* &lt;/a&gt;&lt;/p&gt;&lt;p&gt;Пакистан: &lt;a href=&quot;/data/tours/3/&quot;&gt;Voyager Resort 63000 3* &lt;/a&gt;&lt;/p&gt;...</blockquote><p id="558810ff-77aa-4ccc-b0b2-187d11168ac0" class="">Сама страница <strong>/data/ </strong>должна выглядеть так:</p><div id="c4f3f211-76d4-4ddf-bf76-d928a380eec2" class="column-list"><div id="79dd0c4b-8d83-41f5-b944-30a7d43b2879" style="width:100%" class="column"><p id="f50a75e8-299d-4852-a045-fdd64ddbddc0" class=""><strong>Все туры</strong></p><p id="5da7bc0f-9c71-4300-be03-9def419af686" class="">Куба: <span style="border-bottom:0.05em solid">Marina Lake Hotel &amp; Spa 62000 4*</span></p><p id="34d3140a-1606-4938-a516-5bf6abf2deeb" class="">Вьетнам: <span style="border-bottom:0.05em solid"><em>Baroque Hotel 85000 5*</em></span></p><p id="cf18c2b0-99f5-402f-8cae-31bb6139c23f" class="">Пакистан:<span style="border-bottom:0.05em solid"> Voyager Resort 63000 3*</span></p><p id="20c21ac2-4e61-4006-9c67-56163cc33888" class="">...</p></div></div><p id="a54f13f3-722a-409a-b77f-a27ab262039f" class=""><strong>2. Выведите на странице /data/departures/&lt;departure&gt;</strong></p><blockquote id="1bb245a8-57a0-475f-8c13-ad7d60452a7b" class="">&lt;h1&gt;Туры по направлению Новосибирск:&lt;/h1&gt;Куба: &lt;a href=&quot;/tours/1/&quot;&gt;Marina Lake Hotel &amp; Spa 62000 4* &lt;/a&gt;Пакистан: &lt;a href=&quot;/tours/3/&quot;&gt;Voyager Resort 63000 3* &lt;/a&gt;Индия: &lt;a href=&quot;/tours/9/&quot;&gt;Seascape Resort&lt;/a&gt;...</blockquote><div id="68be571e-7828-457a-b9bd-196f694d01cd" class="column-list"><div id="fb1931dd-b52e-4823-a02c-590b6579352c" style="width:100%" class="column"><p id="b953105a-2ca8-49e6-879e-bded7a7e11a8" class=""><strong>Туры по направлению Новосибирск:</strong></p><p id="f6342134-8351-484b-80a0-04157ba2ca90" class="">Куба: Marina Lake Hotel &amp; Spa 62000 4*Пакистан: Voyager Resort 63000 3* Индия: Seascape Resort</p></div></div><p id="0b69d1d2-75b4-4934-92ed-6bda3a7a824c" class=""><strong>3. Выведите на странице /data/tours/</strong>&lt;id&gt;/</p><blockquote id="6399baa7-8d5d-41c3-8bc0-3578a1901ae2" class="">&lt;h1&gt;Куба: Marina Lake Hotel &amp; Spa 62000:&lt;/h1&gt;&lt;p&gt;6 ночей&lt;/p&gt;&lt;p&gt;Стоимость: 62000 Р&lt;/p&gt;&lt;p&gt;Отель выглядит уютно. Он был построен из красного соснового дерева и украшен синими камнями. Высокие округлые окна добавляют общий стиль дома и были добавлены в дом в довольно симметричном образце.&lt;/p&gt;</blockquote><div id="bc53e0b6-add1-4964-a3f5-7b29ff1d3e59" class="column-list"><div id="3d3718a8-c4d4-4d11-9099-7e3e40e51d6c" style="width:100%" class="column"><p id="8df2b5af-63c7-464d-a64a-2d6344c53aff" class=""><strong>Куба: Marina Lake Hotel &amp; Spa 62000:</strong></p><p id="5caafc07-5653-491e-8398-4642c43bbafa" class="">6 ночейСтоимость: 62000 РОтель выглядит уютно. Он был построен из красного соснового дерева и украшен синими камнями. Высокие округлые окна добавляют общий стиль дома и были добавлены в дом в довольно симметричном образце.</p></div></div><p id="958522e7-1c0c-4a6d-8c35-b83b4e212804" class="">Получите данные здесь:</p><p id="38ce898d-37d0-4006-8fb9-6cc5661cf645" class=""><a href="https://github.com/kushedow/flask-html/blob/master/Project%201/data.py">https://github.com/kushedow/flask-html/blob/master/Project%201/data.py</a></p></div></article></body></html>
