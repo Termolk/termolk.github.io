@@ -1,0 +1,2189 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Тест: Подготовка к экзамену</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+:root, [data-theme="light"] {
+  --color-bg: #f7f6f2;
+  --color-surface: #f9f8f5;
+  --color-surface-2: #fbfbf9;
+  --color-surface-offset: #f3f0ec;
+  --color-divider: #dcd9d5;
+  --color-border: #d4d1ca;
+  --color-text: #28251d;
+  --color-text-muted: #7a7974;
+  --color-text-faint: #bab9b4;
+  --color-primary: #01696f;
+  --color-primary-hover: #0c4e54;
+  --color-primary-highlight: #cedcd8;
+  --color-success: #437a22;
+  --color-success-bg: #d4dfcc;
+  --color-error: #a12c7b;
+  --color-error-bg: #e0ced7;
+  --color-warning: #964219;
+  --color-warning-bg: #ddcfc6;
+  --shadow-md: 0 4px 12px rgba(40,37,29,0.08);
+  --shadow-lg: 0 12px 32px rgba(40,37,29,0.12);
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --font-body: 'Inter', sans-serif;
+}
+[data-theme="dark"] {
+  --color-bg: #171614;
+  --color-surface: #1c1b19;
+  --color-surface-2: #201f1d;
+  --color-surface-offset: #1d1c1a;
+  --color-divider: #262523;
+  --color-border: #393836;
+  --color-text: #cdccca;
+  --color-text-muted: #797876;
+  --color-text-faint: #5a5957;
+  --color-primary: #4f98a3;
+  --color-primary-hover: #227f8b;
+  --color-primary-highlight: #313b3b;
+  --color-success: #6daa45;
+  --color-success-bg: #3a4435;
+  --color-error: #d163a7;
+  --color-error-bg: #4c3d46;
+  --color-warning: #bb653b;
+  --color-warning-bg: #564942;
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.3);
+  --shadow-lg: 0 12px 32px rgba(0,0,0,0.4);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+body {
+  font-family: var(--font-body);
+  background: var(--color-bg);
+  color: var(--color-text);
+  min-height: 100dvh;
+  font-size: 1rem;
+  line-height: 1.6;
+  transition: background 200ms, color 200ms;
+}
+/* NAV */
+.app-nav {
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  padding: 0.75rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow-md);
+}
+.app-logo {
+  display: flex; align-items: center; gap: 0.6rem;
+  font-weight: 700; font-size: 1.05rem; color: var(--color-primary);
+  text-decoration: none;
+}
+.app-logo svg { flex-shrink: 0; }
+.theme-toggle {
+  background: none; border: 1px solid var(--color-border);
+  border-radius: var(--radius-md); padding: 0.35rem 0.6rem;
+  color: var(--color-text-muted); cursor: pointer;
+  display: flex; align-items: center; gap: 0.3rem;
+  font-size: 0.85rem;
+  transition: border-color 180ms, color 180ms, background 180ms;
+}
+.theme-toggle:hover { border-color: var(--color-primary); color: var(--color-primary); }
+
+/* SCREENS */
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* HOME */
+.home-hero {
+  padding: 3rem 1.25rem 2rem;
+  max-width: 780px; margin: 0 auto;
+}
+.home-hero h1 { font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 700; line-height: 1.2; margin-bottom: 0.5rem; }
+.home-hero p { color: var(--color-text-muted); font-size: 1rem; margin-bottom: 2rem; }
+
+.block-grid {
+  max-width: 780px; margin: 0 auto;
+  padding: 0 1.25rem 3rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(340px, 100%), 1fr));
+  gap: 1rem;
+}
+.block-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: 1.25rem 1.5rem;
+  box-shadow: var(--shadow-md);
+  transition: box-shadow 180ms, transform 180ms, border-color 180ms;
+  cursor: pointer;
+}
+.block-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); border-color: var(--color-primary); }
+.block-card.exam-card { border-color: var(--color-primary); background: var(--color-primary-highlight); }
+.block-card .block-num { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-primary); margin-bottom: 0.3rem; }
+.block-card .block-title { font-size: 1rem; font-weight: 600; margin-bottom: 0.3rem; }
+.block-card .block-meta { font-size: 0.82rem; color: var(--color-text-muted); }
+.block-card .block-progress { margin-top: 0.75rem; }
+.block-progress-bar { height: 5px; background: var(--color-divider); border-radius: 99px; overflow: hidden; }
+.block-progress-fill { height: 100%; background: var(--color-primary); border-radius: 99px; transition: width 400ms cubic-bezier(0.16,1,0.3,1); }
+.block-progress-label { font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.3rem; }
+
+.block-actions { display: flex; gap: 0.5rem; margin-top: 0.9rem; }
+.block-btn {
+  flex: 1; padding: 0.5rem 0.5rem; border-radius: var(--radius-md);
+  font-size: 0.8rem; font-weight: 600; cursor: pointer; text-align: center;
+  transition: background 180ms, border-color 180ms, color 180ms, transform 100ms;
+  border: 1.5px solid var(--color-border);
+  background: var(--color-surface-2); color: var(--color-text-muted);
+  line-height: 1.3;
+}
+.block-btn:hover { border-color: var(--color-primary); color: var(--color-primary); background: var(--color-primary-highlight); }
+.block-btn:active { transform: scale(0.97); }
+.block-btn.btn-all { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
+.block-btn.btn-all:hover { background: var(--color-primary-hover); border-color: var(--color-primary-hover); color: #fff; }
+
+/* QUIZ */
+.quiz-wrapper {
+  max-width: 720px; margin: 0 auto;
+  padding: 1.5rem 1.25rem 4rem;
+}
+.quiz-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1.5rem; flex-wrap: wrap;
+}
+.quiz-back-btn {
+  background: none; border: 1px solid var(--color-border);
+  border-radius: var(--radius-md); padding: 0.35rem 0.75rem;
+  color: var(--color-text-muted); cursor: pointer; font-size: 0.85rem;
+  display: flex; align-items: center; gap: 0.3rem;
+  transition: border-color 180ms, color 180ms;
+  white-space: nowrap;
+}
+.quiz-back-btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
+.quiz-title { font-weight: 700; font-size: 1.1rem; flex: 1; }
+.quiz-mode-badge {
+  font-size: 0.75rem; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.06em; padding: 0.25rem 0.65rem;
+  border-radius: 99px; background: var(--color-primary-highlight);
+  color: var(--color-primary);
+}
+.quiz-progress-wrap { margin-bottom: 1.25rem; }
+.quiz-progress-text {
+  display: flex; justify-content: space-between;
+  font-size: 0.82rem; color: var(--color-text-muted); margin-bottom: 0.35rem;
+}
+.quiz-progress-bar { height: 6px; background: var(--color-divider); border-radius: 99px; overflow: hidden; }
+.quiz-progress-fill { height: 100%; background: var(--color-primary); border-radius: 99px; transition: width 400ms cubic-bezier(0.16,1,0.3,1); }
+
+.question-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 1rem;
+}
+.question-topic { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-primary); margin-bottom: 0.5rem; }
+.question-text { font-size: 1rem; font-weight: 500; line-height: 1.5; margin-bottom: 1.25rem; }
+
+.options-list { display: flex; flex-direction: column; gap: 0.6rem; }
+.option-btn {
+  width: 100%; text-align: left;
+  background: var(--color-surface-2);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem; color: var(--color-text);
+  cursor: pointer; display: flex; align-items: flex-start; gap: 0.75rem;
+  transition: border-color 180ms, background 180ms, color 180ms;
+  line-height: 1.45;
+}
+.option-btn:hover:not(:disabled) { border-color: var(--color-primary); background: var(--color-primary-highlight); }
+.option-btn:disabled { cursor: default; }
+.option-letter {
+  flex-shrink: 0; width: 1.6rem; height: 1.6rem;
+  border-radius: 50%; background: var(--color-surface-offset);
+  border: 1.5px solid var(--color-border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.78rem; font-weight: 700; color: var(--color-text-muted);
+  transition: background 180ms, border-color 180ms, color 180ms;
+  margin-top: 1px;
+}
+.option-btn.correct { background: var(--color-success-bg); border-color: var(--color-success); }
+.option-btn.correct .option-letter { background: var(--color-success); border-color: var(--color-success); color: #fff; }
+.option-btn.wrong { background: var(--color-error-bg); border-color: var(--color-error); }
+.option-btn.wrong .option-letter { background: var(--color-error); border-color: var(--color-error); color: #fff; }
+.option-btn.selected-correct { background: var(--color-success-bg); border-color: var(--color-success); }
+.option-btn.selected-wrong { background: var(--color-error-bg); border-color: var(--color-error); }
+
+.feedback-box {
+  border-radius: var(--radius-md); padding: 0.75rem 1rem;
+  font-size: 0.9rem; margin-top: 1rem; display: none;
+  align-items: flex-start; gap: 0.5rem; line-height: 1.5;
+}
+.feedback-box.show { display: flex; }
+.feedback-box.correct { background: var(--color-success-bg); color: var(--color-success); border: 1px solid var(--color-success); }
+.feedback-box.wrong { background: var(--color-error-bg); color: var(--color-error); border: 1px solid var(--color-error); }
+.feedback-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 0.05rem; }
+
+.quiz-nav { display: flex; justify-content: flex-end; margin-top: 1.25rem; }
+.btn-next {
+  background: var(--color-primary); color: #fff;
+  border: none; border-radius: var(--radius-md);
+  padding: 0.65rem 1.5rem; font-size: 0.95rem; font-weight: 600;
+  cursor: pointer; display: none; align-items: center; gap: 0.4rem;
+  transition: background 180ms, transform 100ms;
+}
+.btn-next.show { display: flex; }
+.btn-next:hover { background: var(--color-primary-hover); }
+.btn-next:active { transform: scale(0.97); }
+
+/* RESULTS */
+.results-wrap {
+  max-width: 580px; margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+  text-align: center;
+}
+.results-emoji { font-size: 3.5rem; margin-bottom: 1rem; }
+.results-score { font-size: clamp(2.5rem, 8vw, 4rem); font-weight: 800; color: var(--color-primary); margin-bottom: 0.25rem; }
+.results-subtitle { color: var(--color-text-muted); font-size: 0.95rem; margin-bottom: 2rem; }
+.results-stats {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+.stat-card {
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg); padding: 0.9rem 0.5rem;
+}
+.stat-card .stat-val { font-size: 1.5rem; font-weight: 700; }
+.stat-card .stat-lbl { font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.15rem; }
+.stat-card.correct-stat .stat-val { color: var(--color-success); }
+.stat-card.wrong-stat .stat-val { color: var(--color-error); }
+.results-actions { display: flex; flex-direction: column; gap: 0.75rem; }
+.btn-primary {
+  background: var(--color-primary); color: #fff; border: none;
+  border-radius: var(--radius-md); padding: 0.75rem 1.5rem;
+  font-size: 0.95rem; font-weight: 600; cursor: pointer; width: 100%;
+  transition: background 180ms;
+}
+.btn-primary:hover { background: var(--color-primary-hover); }
+.btn-outline {
+  background: none; color: var(--color-text); border: 1px solid var(--color-border);
+  border-radius: var(--radius-md); padding: 0.75rem 1.5rem;
+  font-size: 0.95rem; font-weight: 500; cursor: pointer; width: 100%;
+  transition: border-color 180ms, color 180ms;
+}
+.btn-outline:hover { border-color: var(--color-primary); color: var(--color-primary); }
+
+/* REVIEW */
+.review-item {
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl); padding: 1.25rem;
+  margin-bottom: 0.75rem;
+}
+.review-item.was-correct { border-color: var(--color-success); }
+.review-item.was-wrong { border-color: var(--color-error); }
+.review-topic { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-muted); margin-bottom: 0.4rem; }
+.review-q { font-size: 0.95rem; font-weight: 500; margin-bottom: 0.75rem; }
+.review-answers { display: flex; flex-direction: column; gap: 0.4rem; }
+.review-opt {
+  padding: 0.5rem 0.75rem; border-radius: var(--radius-md);
+  font-size: 0.88rem; border: 1px solid var(--color-border);
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.review-opt.correct-ans { background: var(--color-success-bg); border-color: var(--color-success); }
+.review-opt.wrong-chosen { background: var(--color-error-bg); border-color: var(--color-error); }
+
+/* RESPONSIVE */
+@media (max-width: 575px) {
+  .quiz-wrapper { padding: 1rem 0.85rem 3rem; }
+  .home-hero { padding: 2rem 0.85rem 1.5rem; }
+  .block-grid { padding: 0 0.85rem 2rem; }
+  .question-card { padding: 1.1rem; }
+  .results-wrap { padding: 1.5rem 0.85rem 3rem; }
+  .results-stats { grid-template-columns: repeat(3,1fr); gap: 0.5rem; }
+}
+
+/* DARK MODE media fallback */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --color-bg: #171614; --color-surface: #1c1b19; --color-surface-2: #201f1d;
+    --color-surface-offset: #1d1c1a; --color-divider: #262523; --color-border: #393836;
+    --color-text: #cdccca; --color-text-muted: #797876; --color-text-faint: #5a5957;
+    --color-primary: #4f98a3; --color-primary-hover: #227f8b; --color-primary-highlight: #313b3b;
+    --color-success: #6daa45; --color-success-bg: #3a4435;
+    --color-error: #d163a7; --color-error-bg: #4c3d46;
+    --color-warning: #bb653b; --color-warning-bg: #564942;
+  }
+}
+
+/* Animations */
+@keyframes fadeInUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+.question-card { animation: fadeInUp 250ms cubic-bezier(0.16,1,0.3,1) both; }
+</style>
+</head>
+<body>
+
+<nav class="app-nav">
+  <a class="app-logo" href="#" onclick="showScreen('home'); return false;">
+    <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-label="Логотип">
+      <rect width="26" height="26" rx="6" fill="var(--color-primary)"/>
+      <rect x="5" y="6" width="10" height="2.5" rx="1.25" fill="white"/>
+      <rect x="5" y="10.5" width="16" height="2.5" rx="1.25" fill="white"/>
+      <rect x="5" y="15" width="12" height="2.5" rx="1.25" fill="white"/>
+      <circle cx="20" cy="19" r="4" fill="var(--color-bg)" stroke="white" stroke-width="1.5"/>
+      <path d="M18.5 19l1 1 2-2" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    ЭкзаменТест
+  </a>
+  <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn" aria-label="Сменить тему">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="themeIcon">
+      <circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+    </svg>
+    <span id="themeLabel">Светлая</span>
+  </button>
+</nav>
+
+<!-- HOME SCREEN -->
+<div id="screen-home" class="screen active">
+  <div class="home-hero">
+    <h1>Подготовка к экзамену</h1>
+    <p>Выберите блок для тренировки или запустите полный экзамен из всех 5 блоков.</p>
+  </div>
+  <div class="block-grid" id="blockGrid">
+    <!-- Cards injected by JS -->
+  </div>
+</div>
+
+<!-- QUIZ SCREEN -->
+<div id="screen-quiz" class="screen">
+  <div class="quiz-wrapper">
+    <div class="quiz-header">
+      <button class="quiz-back-btn" onclick="confirmBack()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+        Назад
+      </button>
+      <span class="quiz-title" id="quizTitle">Тест</span>
+      <span class="quiz-mode-badge" id="quizModeBadge">Тренировка</span>
+    </div>
+    <div class="quiz-progress-wrap">
+      <div class="quiz-progress-text">
+        <span>Вопрос <span id="qCurrent">1</span> из <span id="qTotal">10</span></span>
+        <span id="qScore">0 правильных</span>
+      </div>
+      <div class="quiz-progress-bar">
+        <div class="quiz-progress-fill" id="quizProgressFill" style="width:0%"></div>
+      </div>
+    </div>
+    <div id="questionArea"></div>
+  </div>
+</div>
+
+<!-- RESULTS SCREEN -->
+<div id="screen-results" class="screen">
+  <div class="results-wrap">
+    <div class="results-emoji" id="resultsEmoji">🎉</div>
+    <div class="results-score" id="resultsScore">0/0</div>
+    <div class="results-subtitle" id="resultsSubtitle">Результат теста</div>
+    <div class="results-stats">
+      <div class="stat-card correct-stat">
+        <div class="stat-val" id="statCorrect">0</div>
+        <div class="stat-lbl">Верно</div>
+      </div>
+      <div class="stat-card wrong-stat">
+        <div class="stat-val" id="statWrong">0</div>
+        <div class="stat-lbl">Ошибки</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val" id="statPct">0%</div>
+        <div class="stat-lbl">Результат</div>
+      </div>
+    </div>
+    <div class="results-actions">
+      <button class="btn-primary" onclick="retryQuiz()">🔄 Пройти снова</button>
+      <button class="btn-outline" id="btnReview" onclick="showReview()">📋 Разбор ошибок</button>
+      <button class="btn-outline" onclick="showScreen('home')">🏠 На главную</button>
+    </div>
+  </div>
+  <!-- Review section -->
+  <div id="reviewSection" style="display:none; max-width:720px; margin:0 auto; padding:0 1.25rem 4rem;">
+    <h2 style="font-size:1.1rem; font-weight:700; margin-bottom:1rem; color:var(--color-text);">Разбор вопросов</h2>
+    <div id="reviewList"></div>
+  </div>
+</div>
+
+<script>
+// =================== DATA ===================
+const BLOCKS = [
+  {
+    id: 1,
+    title: "Жизненный цикл и требования",
+    topics: ["Жизненный цикл", "Анализ требований", "Проектирование и реализация ПО",
+             "Тестирование ПО", "Качество и сложность ПО", "Прикладные программные системы",
+             "Оценка и планирование", "Управление проектом", "Реляционная модель данных", "Язык SQL"],
+    questions: [
+      // === Жизненный цикл ===
+      {
+        topic: "Жизненный цикл",
+        q: "Спиральная модель жизненного цикла используется для …",
+        correct: "небольших проектов",
+        wrong: ["крупных коммерческих систем с фиксированными требованиями", "проектов с заранее определёнными этапами без итераций", "автоматизации государственных информационных систем"]
+      },
+      {
+        topic: "Жизненный цикл",
+        q: "Возврат на предыдущий этап жизненного цикла предполагает…",
+        correct: "пересмотр и изменение выполненных работ, внедрение новых требований и дополнительные затраты",
+        wrong: ["автоматическую синхронизацию документации", "применение CASE-инструментов для рефакторинга", "переназначение ответственных исполнителей"]
+      },
+      {
+        topic: "Жизненный цикл",
+        q: "Процесс, который НЕ является этапом жизненного цикла, это …",
+        correct: "формирование проектной команды",
+        wrong: ["проектирование архитектуры системы", "тестирование программного обеспечения", "сопровождение и поддержка системы"]
+      },
+      {
+        topic: "Жизненный цикл",
+        q: "Недостаток инкрементной модели жизненного цикла — это …",
+        correct: "постоянные изменения нарушают структуру системы",
+        wrong: ["отсутствие возможности получать промежуточные результаты", "необходимость полной разработки системы перед тестированием", "высокая стоимость начального прототипа"]
+      },
+      // === Анализ требований ===
+      {
+        topic: "Анализ требований",
+        q: "Анализ требований необходим, если …",
+        correct: "есть большая начальная неопределённость",
+        wrong: ["проект уже имеет полную техническую документацию", "заказчик предоставил исчерпывающее техническое задание", "команда имеет опыт реализации аналогичных проектов"]
+      },
+      {
+        topic: "Анализ требований",
+        q: "Основной метод анализа требований — это …",
+        correct: "декомпозиция системы",
+        wrong: ["использование системы контроля версий", "формирование матрицы ответственности RACI", "построение диаграммы Ганта"]
+      },
+      {
+        topic: "Анализ требований",
+        q: "Документ, вырабатываемый в результате анализа требований предметной области — это …",
+        correct: "Техническое задание на создание программной системы",
+        wrong: ["Технический проект программной системы", "Руководство пользователя", "Протокол испытаний программного обеспечения"]
+      },
+      {
+        topic: "Анализ требований",
+        q: "SADT-диаграммы организованы как …",
+        correct: "иерархические деревья функций",
+        wrong: ["плоские списки прецедентов использования", "реляционные схемы базы данных", "параллельные цепочки операций без подчинения"]
+      },
+      {
+        topic: "Анализ требований",
+        q: "Методология SADT требует, чтобы количество блоков на диаграмме было …",
+        correct: "3–6",
+        wrong: ["1–2", "7–10", "не ограничено"]
+      },
+      // === Проектирование и реализация ===
+      {
+        topic: "Проектирование и реализация ПО",
+        q: "Проектирование программной системы НЕ включает …",
+        correct: "формирование пакета функциональных тестов",
+        wrong: ["разработку архитектуры программной системы", "проектирование базы данных", "определение интерфейсов между модулями"]
+      },
+      {
+        topic: "Проектирование и реализация ПО",
+        q: "Документ, вырабатываемый в результате этапа проектирования системы — это …",
+        correct: "технический проект программной системы",
+        wrong: ["техническое задание на создание программной системы", "акт приёмки программного обеспечения", "план-график выполнения работ"]
+      },
+      {
+        topic: "Проектирование и реализация ПО",
+        q: "Программная документация включает …",
+        correct: "описание программы",
+        wrong: ["договор на выполнение работ", "штатное расписание проектной группы", "бизнес-план организации"]
+      },
+      {
+        topic: "Проектирование и реализация ПО",
+        q: "Время на отладку программы составляет …",
+        correct: "70–90% времени создания программы",
+        wrong: ["10–20% времени создания программы", "30–50% времени создания программы", "менее 5% от общего времени разработки"]
+      },
+      // === Тестирование ===
+      {
+        topic: "Тестирование ПО",
+        q: "На этапе тестирования в жизненном цикле ПО используется …",
+        correct: "метод чёрного ящика",
+        wrong: ["метод формальных доказательств корректности", "метод структурного рефакторинга кода", "метод оптимизации алгоритмов"]
+      },
+      {
+        topic: "Тестирование ПО",
+        q: "Тестирование методом «чёрного ящика» НЕ проверяет …",
+        correct: "структуру базы данных",
+        wrong: ["корректность входных и выходных данных", "обработку граничных значений", "поведение системы при некорректном вводе"]
+      },
+      {
+        topic: "Тестирование ПО",
+        q: "Тестирование методом «белого ящика» проверяет …",
+        correct: "внутренние элементы программы и связи между ними",
+        wrong: ["только пользовательский интерфейс приложения", "соответствие требованиям технического задания без анализа кода", "производительность системы под нагрузкой"]
+      },
+      {
+        topic: "Тестирование ПО",
+        q: "Тестирование — задача, которую следует поручать …",
+        correct: "наиболее подготовленным специалистам",
+        wrong: ["исключительно самим разработчикам модулей", "стажёрам для получения практического опыта", "заказчику системы в ходе опытной эксплуатации"]
+      },
+      // === Качество и сложность ===
+      {
+        topic: "Качество и сложность ПО",
+        q: "К характеристикам качества ПО согласно стандарту 2014 года НЕ относится …",
+        correct: "модифицируемость",
+        wrong: ["функциональная пригодность", "надёжность", "удобство сопровождения"]
+      },
+      {
+        topic: "Качество и сложность ПО",
+        q: "На качество исходного кода в большей степени влияет …",
+        correct: "стиль программирования",
+        wrong: ["количество строк комментариев к коду", "выбор среды разработки (IDE)", "версия компилятора или интерпретатора"]
+      },
+      {
+        topic: "Качество и сложность ПО",
+        q: "Основной фактор, влияющий на надёжность программы — это …",
+        correct: "качество (безотказность, работоспособность, защищённость, безопасность)",
+        wrong: ["объём занимаемой оперативной памяти", "скорость выполнения алгоритмов", "количество пользовательских интерфейсов"]
+      },
+      {
+        topic: "Качество и сложность ПО",
+        q: "К характеристикам сложности ПО НЕ относится …",
+        correct: "стоимость, временны́е ограничения, требования к ресурсам, пользовательский интерфейс",
+        wrong: ["сложность алгоритмов", "сложность структуры системы", "сложность используемых технологий"]
+      },
+      // === Прикладные системы ===
+      {
+        topic: "Прикладные программные системы",
+        q: "Впервые в мире использовать информационные технологии на государственном уровне предложил …",
+        correct: "Глушков В.М.",
+        wrong: ["Норберт Винер", "Алан Тьюринг", "Билл Гейтс"]
+      },
+      {
+        topic: "Прикладные программные системы",
+        q: "Система управления ресурсами предприятия — это …",
+        correct: "PDM",
+        wrong: ["CRM", "SCM", "ECM"]
+      },
+      {
+        topic: "Прикладные программные системы",
+        q: "Система управления цепью поставок — это …",
+        correct: "прикладное ПО для автоматизации всех этапов снабжения предприятия и контроля товародвижения",
+        wrong: ["система электронного документооборота внутри компании", "платформа для управления проектами по методологии Agile", "инструмент для мониторинга работы серверной инфраструктуры"]
+      },
+      {
+        topic: "Прикладные программные системы",
+        q: "Модель быстрой разработки приложений (RAD) применима для …",
+        correct: "разработки различных типов приложений: веб, мобильных и десктопных",
+        wrong: ["исключительно встроенных систем реального времени", "только монолитных корпоративных приложений", "проектов с жёсткими требованиями безопасности без прототипирования"]
+      },
+      // === Оценка и планирование ===
+      {
+        topic: "Оценка и планирование",
+        q: "При планировании работ по созданию программной системы используется …",
+        correct: "сетевой график",
+        wrong: ["матрица компетенций команды", "диаграмма классов UML", "диаграмма состояний автомата"]
+      },
+      {
+        topic: "Оценка и планирование",
+        q: "Критический путь в сетевом графике показывает …",
+        correct: "минимальное время создания программной системы",
+        wrong: ["максимальное число параллельных задач", "оптимальный порядок найма сотрудников", "бюджетные ограничения проекта"]
+      },
+      {
+        topic: "Оценка и планирование",
+        q: "Размерно-ориентированные метрики оценки программного проекта учитывают …",
+        correct: "количество строк программ",
+        wrong: ["количество пользователей системы", "число таблиц в базе данных", "объём проектной документации в страницах"]
+      },
+      // === Управление проектом ===
+      {
+        topic: "Управление проектом",
+        q: "Наибольшая доля затрат при сопровождении ПО приходится на …",
+        correct: "модификацию",
+        wrong: ["исправление ошибок", "документирование", "обучение новых пользователей"]
+      },
+      {
+        topic: "Управление проектом",
+        q: "Цель анализа рисков — определение …",
+        correct: "скрытых трудностей при разработке ПО",
+        wrong: ["бюджета на тестирование", "количества итераций в спринте", "сроков выхода продукта на рынок"]
+      },
+      {
+        topic: "Управление проектом",
+        q: "Нештатная ситуация при правильном управлении программным проектом повлияет …",
+        correct: "либо позитивно, либо негативно",
+        wrong: ["всегда исключительно негативно", "только на сроки, но не на бюджет", "нейтрально при наличии плана управления рисками"]
+      },
+      // === Реляционная модель ===
+      {
+        topic: "Реляционная модель данных",
+        q: "Схема отношения в реляционной модели — это …",
+        correct: "множество имён атрибутов отношения",
+        wrong: ["таблица значений, хранимая в базе данных", "граф зависимостей между таблицами", "совокупность строк, удовлетворяющих условию выборки"]
+      },
+      {
+        topic: "Реляционная модель данных",
+        q: "Порядок операций реляционной алгебры «проекция» и «выбор» …",
+        correct: "не влияет на результат, но влияет на время выполнения",
+        wrong: ["всегда влияет и на результат, и на время", "не влияет ни на результат, ни на время выполнения", "определяется только оптимизатором СУБД и не поддаётся управлению"]
+      },
+      {
+        topic: "Реляционная модель данных",
+        q: "Операция реляционной алгебры «соединение» …",
+        correct: "коммутативна и ассоциативна",
+        wrong: ["ни коммутативна, ни ассоциативна", "только ассоциативна, но не коммутативна", "только коммутативна, но не ассоциативна"]
+      },
+      {
+        topic: "Реляционная модель данных",
+        q: "Упорядоченность строк выборки — следствие …",
+        correct: "задания режима выборки",
+        wrong: ["физического порядка хранения строк на диске", "первичного ключа таблицы", "алфавитного порядка имён атрибутов"]
+      },
+      {
+        topic: "Реляционная модель данных",
+        q: "Необходимое условие для отношения во 2НФ — отсутствие …",
+        correct: "частичной зависимости атрибутов от ключа",
+        wrong: ["транзитивной зависимости атрибутов", "многозначных зависимостей", "дублирующихся строк в таблице"]
+      },
+      {
+        topic: "Реляционная модель данных",
+        q: "Необходимое условие для отношения в 3НФ — отсутствие …",
+        correct: "транзитивной зависимости атрибутов",
+        wrong: ["частичной зависимости атрибутов от ключа", "повторяющихся групп значений", "NULL-значений в первичном ключе"]
+      },
+      // === SQL ===
+      {
+        topic: "Язык SQL",
+        q: "Пустое значение атрибута в SQL обозначается …",
+        correct: "NULL",
+        wrong: ["EMPTY", "0", "UNDEFINED"]
+      },
+      {
+        topic: "Язык SQL",
+        q: "Содержимое таблицы TBL выбирается командой SQL …",
+        correct: "SELECT * FROM TBL;",
+        wrong: ["GET ALL FROM TBL;", "FETCH TBL;", "SHOW TABLE TBL;"]
+      },
+      {
+        topic: "Язык SQL",
+        q: "Строки таблицы TBL, удовлетворяющие условию &lt;условие&gt;, выбираются командой SQL …",
+        correct: "SELECT * FROM TBL WHERE <условие>;",
+        wrong: ["SELECT TBL IF <условие>;", "FETCH FROM TBL FILTER <условие>;", "GET * FROM TBL HAVING <условие>;"]
+      },
+      {
+        topic: "Язык SQL",
+        q: "Таблица в SQL удаляется командой …",
+        correct: "DROP TABLE Название_таблицы;",
+        wrong: ["DELETE TABLE Название_таблицы;", "REMOVE TABLE Название_таблицы;", "ERASE TABLE Название_таблицы;"]
+      }
+    ]
+  },
+  {
+    id: 2,
+    title: "Pascal, PHP, HTML/CSS",
+    topics: [
+      "Типы данных", "Назначение и виды параметров", "Операторы условного перехода if",
+      "Операторы циклов", "Виды файлов", "Переменные в процедурах",
+      "Типизированные и нетипизированные файлы", "Циклы в языке Pascal",
+      "Обработка строк в Pascal", "Вложенные циклы в Pascal",
+      "Операторы инкремента и декремента в PHP", "Функции и классы в PHP",
+      "Работа с базами данных в PHP", "Основы HTML", "Основы CSS"
+    ],
+    questions: [
+      // === Типы данных ===
+      {
+        topic: "Типы данных",
+        q: "Целым типом данных в языке Pascal является …",
+        correct: "integer",
+        wrong: ["real", "char", "boolean"]
+      },
+      {
+        topic: "Типы данных",
+        q: "Символьным типом данных в языке Pascal является …",
+        correct: "char",
+        wrong: ["string", "byte", "integer"]
+      },
+      {
+        topic: "Типы данных",
+        q: "Логическим типом данных в языке Pascal является …",
+        correct: "boolean",
+        wrong: ["integer", "char", "real"]
+      },
+      {
+        topic: "Типы данных",
+        q: "Структурированные типы данных в языке Pascal — это …",
+        correct: "типы данных, значения которых имеют в своём составе данные других типов",
+        wrong: ["типы данных, не допускающие вложений", "простые целые типы данных", "только массивы и записи"]
+      },
+      // === Назначение и виды параметров ===
+      {
+        topic: "Назначение и виды параметров",
+        q: "В языке Pascal передаваемые в функцию по значению параметры после выполнения функции …",
+        correct: "не изменяются в вызывающем коде",
+        wrong: ["изменяются в вызывающем коде", "удаляются из памяти", "становятся глобальными"]
+      },
+      {
+        topic: "Назначение и виды параметров",
+        q: "В языке Pascal параметры в функцию могут передаваться …",
+        correct: "по значению",
+        wrong: ["только по ссылке", "только через глобальные переменные", "только через файловые переменные"]
+      },
+      {
+        topic: "Назначение и виды параметров",
+        q: "Параметры функции в языке Pascal служат для …",
+        correct: "передачи значений переменных в функцию",
+        wrong: ["хранения результата выполнения функции", "объявления типов данных", "управления циклами"]
+      },
+      {
+        topic: "Назначение и виды параметров",
+        q: "Процедуры в языке Pascal в отличие от функций …",
+        correct: "не возвращают значений переменных",
+        wrong: ["не могут принимать параметры", "обязательно возвращают тип boolean", "работают только с глобальными переменными"]
+      },
+      {
+        topic: "Назначение и виды параметров",
+        q: "Глобальными переменными в языке Pascal называются переменные, которые описаны в …",
+        correct: "самой программе и используются как в программе, так и в процедуре",
+        wrong: ["процедуре и используются только в ней", "модуле System и недоступны пользователю", "секции uses"]
+      },
+      {
+        topic: "Назначение и виды параметров",
+        q: "Локальными переменными в языке Pascal называются переменные, которые описаны в …",
+        correct: "процедуре и используются только в процедуре",
+        wrong: ["самой программе и доступны везде", "заголовочном файле", "секции initialization"]
+      },
+      // === Операторы условного перехода if ===
+      {
+        topic: "Операторы условного перехода if",
+        q: "При вводе числа 10 в результате выполнения программы на языке Pascal будет выведено:\nvar n:integer;\nbegin readln(n);\nif (n mod 2=0) and ((n<=10) or (n>=20)) then write(sqr(n))\nelse write(n);\nend.",
+        correct: "100",
+        wrong: ["10", "0", "20"]
+      },
+      {
+        topic: "Операторы условного перехода if",
+        q: "При вводе числа 12 в результате выполнения программы на языке Pascal будет выведено:\nvar n:integer;\nbegin readln(n);\nif (n mod 2=0) and ((n<=10) or (n>=20)) then write(sqr(n))\nelse write(n);\nend.",
+        correct: "12",
+        wrong: ["144", "0", "6"]
+      },
+      {
+        topic: "Операторы условного перехода if",
+        q: "При вводе чисел 3 и 4 в результате выполнения программы на языке Pascal будет выведено:\nvar a,b:integer;\nbegin readln(a,b);\nif a<b then write(a+b) else write(a-b);\nend.",
+        correct: "7",
+        wrong: ["−1", "12", "1"]
+      },
+      {
+        topic: "Операторы условного перехода if",
+        q: "При вводе чисел 4 и 3 в результате выполнения программы на языке Pascal будет выведено:\nvar a,b:integer;\nbegin readln(a,b);\nif a<b then write(a+b) else write(a-b);\nend.",
+        correct: "1",
+        wrong: ["7", "−1", "0"]
+      },
+      // === Операторы циклов ===
+      {
+        topic: "Операторы циклов",
+        q: "В результате выполнения фрагмента программы на языке Pascal\nvar s,p,i:integer;\nbegin s:=0; p:=1;\nfor i:=1 to 4 do begin p:=p*i; s:=s+p; end;\nwriteln(s); end.\nзначение s будет равно …",
+        correct: "33",
+        wrong: ["24", "10", "64"]
+      },
+      {
+        topic: "Операторы циклов",
+        q: "В результате выполнения фрагмента программы на языке Pascal\nvar p,q:integer;\nbegin p:=0; q:=40;\nwhile (p+q)<80 do begin q:=q-10; p:=p+30; end;\nwriteln(p); end.\nпеременная p будет иметь значение …",
+        correct: "60",
+        wrong: ["30", "90", "0"]
+      },
+      {
+        topic: "Операторы циклов",
+        q: "В результате выполнения программы на языке Pascal\nvar s,k,t:integer;\nbegin t:=15;\nfor k:=4 to 8 do t:=t+41;\nwrite(t); end.\nзначение переменной t будет равно …",
+        correct: "220",
+        wrong: ["205", "56", "41"]
+      },
+      {
+        topic: "Операторы циклов",
+        q: "После выполнения программы на языке Pascal\nvar i,s:integer;\nbegin s:=0;\nfor i:=1 to 12 do if(i mod 4=2) then s:=s+1;\nwrite(s) end.\nпеременная s будет иметь значение …",
+        correct: "3",
+        wrong: ["4", "2", "6"]
+      },
+      // === Виды файлов ===
+      {
+        topic: "Виды файлов",
+        q: "Язык Pascal поддерживает … файлы (бестиповые)",
+        correct: "нетипизированные (бестиповые)",
+        wrong: ["только типизированные", "только текстовые", "бинарные с фиксированным заголовком"]
+      },
+      {
+        topic: "Виды файлов",
+        q: "Язык Pascal поддерживает … файлы",
+        correct: "текстовые",
+        wrong: ["только нетипизированные", "XML-файлы", "JSON-файлы"]
+      },
+      {
+        topic: "Виды файлов",
+        q: "Процедура в языке Pascal, которая ставит в соответствие физическому файлу файловую переменную …",
+        correct: "Assign(ФайловаяПеременная, ИмяФайла)",
+        wrong: ["Open(ФайловаяПеременная, ИмяФайла)", "Bind(ФайловаяПеременная, ИмяФайла)", "Link(ФайловаяПеременная, ИмяФайла)"]
+      },
+      {
+        topic: "Виды файлов",
+        q: "Процедура в языке Pascal, которая открывает существующий файл на чтение …",
+        correct: "Reset(ФайловаяПеременная)",
+        wrong: ["Rewrite(ФайловаяПеременная)", "Read(ФайловаяПеременная)", "Open(ФайловаяПеременная)"]
+      },
+      {
+        topic: "Виды файлов",
+        q: "Процедура в языке Pascal, открывающая существующий файл для дозаписи …",
+        correct: "Append(ФайловаяПеременная)",
+        wrong: ["Reset(ФайловаяПеременная)", "Rewrite(ФайловаяПеременная)", "Write(ФайловаяПеременная)"]
+      },
+      // === Переменные в процедурах ===
+      {
+        topic: "Переменные в процедурах",
+        q: "В приведённом фрагменте кода на языке Pascal глобальными являются переменные:\nProgram Slon;\nvar x:Integer; b:Real;\nProcedure P(var a:Integer);\nvar i:byte;\nBegin … End;\nBegin … End.",
+        correct: "x, b",
+        wrong: ["i, a", "a, b", "x, i"]
+      },
+      {
+        topic: "Переменные в процедурах",
+        q: "В приведённом фрагменте кода на языке Pascal локальными являются переменные:\nProgram Slon;\nvar x:Integer; b:Real;\nProcedure P(var a:Integer);\nvar i:byte; z:real;\nBegin … End;\nBegin … End.",
+        correct: "i — тип Byte, z — тип Real",
+        wrong: ["x, b", "a, x", "b, z"]
+      },
+      {
+        topic: "Переменные в процедурах",
+        q: "В приведённом заголовке процедуры на языке Pascal параметры-значения:\nProcedure Sum(k, t:integer; var c, d:integer);",
+        correct: "k, t",
+        wrong: ["c, d", "k, c", "t, d"]
+      },
+      {
+        topic: "Переменные в процедурах",
+        q: "В приведённом заголовке процедуры на языке Pascal параметры-переменные:\nProcedure Sum(k, t:integer; var c, d:integer);",
+        correct: "c, d",
+        wrong: ["k, t", "k, d", "t, c"]
+      },
+      // === Типизированные и нетипизированные файлы / Динамическая память ===
+      {
+        topic: "Типизированные и нетипизированные файлы",
+        q: "Типизированный файл в языке Pascal — это файл …",
+        correct: "для которого определён конкретный тип записей; каждая запись имеет фиксированную структуру",
+        wrong: ["с произвольным форматом без объявления типа", "только текстовые файлы", "файл с расширением .typ"]
+      },
+      {
+        topic: "Типизированные и нетипизированные файлы",
+        q: "Для динамического выделения памяти в языке Pascal используется оператор …",
+        correct: "New",
+        wrong: ["Alloc", "GetMem", "Create"]
+      },
+      {
+        topic: "Типизированные и нетипизированные файлы",
+        q: "Для освобождения динамической памяти в языке Pascal используется оператор …",
+        correct: "Dispose",
+        wrong: ["Free", "Delete", "Release"]
+      },
+      {
+        topic: "Типизированные и нетипизированные файлы",
+        q: "Библиотеки, которые подключаются в ходе выполнения программы (как только программа затребовала функцию), называются …",
+        correct: "динамические",
+        wrong: ["статические", "встроенные", "системные"]
+      },
+      // === Циклы в языке Pascal ===
+      {
+        topic: "Циклы в языке Pascal",
+        q: "В результате выполнения фрагмента:\nvar s,k,t:integer;\nbegin t:=15;\nfor k:=4 to 8 do t:=t+41;\nwrite(t); end.\nбудет выведен результат …",
+        correct: "220",
+        wrong: ["205", "246", "56"]
+      },
+      {
+        topic: "Циклы в языке Pascal",
+        q: "В результате выполнения фрагмента (сумма a[i,i] для 5×5 матрицы a[i,j]=j*j):\nбудет выведен результат …",
+        correct: "55",
+        wrong: ["25", "30", "15"]
+      },
+      {
+        topic: "Циклы в языке Pascal",
+        q: "В результате выполнения фрагмента (цикл while с побитовыми операциями and/or):\ni:=1; k:=1; n:=0; m:=3;\nбудет выведен результат …",
+        correct: "17",
+        wrong: ["12", "9", "21"]
+      },
+      {
+        topic: "Циклы в языке Pascal",
+        q: "В результате выполнения фрагмента:\np:=1;\nfor i:=1 to 7 do p:=p*(i mod 4);\nwrite(p);\nбудет выведен результат …",
+        correct: "0",
+        wrong: ["24", "1", "6"]
+      },
+      // === Обработка строк ===
+      {
+        topic: "Обработка строк в Pascal",
+        q: "В результате выполнения фрагмента:\ns:='робот'; p:='';\nfor i:=1 to length(s) do p:=s[i]+p;\nwrite(p);\nбудет выведен результат …",
+        correct: "тобор",
+        wrong: ["робот", "ртобо", "оборт"]
+      },
+      {
+        topic: "Обработка строк в Pascal",
+        q: "В результате выполнения фрагмента (переставляет символы строки 'robot' наполовину):\nбудет выведен результат …",
+        correct: "тобот",
+        wrong: ["тобор", "robot", "robот"]
+      },
+      {
+        topic: "Обработка строк в Pascal",
+        q: "В результате выполнения фрагмента:\ns:='робот'; p:=''; j:=ord('a');\nfor i:=1 to length(s) do p:=chr(j+i)+s[i]+p;\nwrite(p);\nбудет выведен результат …",
+        correct: "етдогбвобр",
+        wrong: ["аробот", "тобор", "bробot"]
+      },
+      {
+        topic: "Обработка строк в Pascal",
+        q: "В результате выполнения фрагмента (вставляет пробелы в начало строки 'abc' до длины n=4):\nbудет выведен результат …",
+        correct: " abc",
+        wrong: ["abc ", "abc", " bc"]
+      },
+      // === Вложенные циклы ===
+      {
+        topic: "Вложенные циклы в Pascal",
+        q: "В результате выполнения фрагмента (суммирование a[i,j]=5 по условию j<=N, j+=2, i+=1):\nbудет выведен результат …",
+        correct: "10",
+        wrong: ["15", "5", "20"]
+      },
+      {
+        topic: "Вложенные циклы в Pascal",
+        q: "В результате выполнения фрагмента (N=4, K=3, a[i,j]=(i+j) div 2, S=сумма столбца K):\nwrite('S=',S);\nбудет выведен результат …",
+        correct: "S=10",
+        wrong: ["S=8", "S=12", "S=6"]
+      },
+      {
+        topic: "Вложенные циклы в Pascal",
+        q: "В результате выполнения фрагмента (N=8, a[i]=i+1, k=счётчик нечётных, s=их сумма, вывод k+s):\nбудет выведен результат …",
+        correct: "24",
+        wrong: ["20", "28", "16"]
+      },
+      {
+        topic: "Вложенные циклы в Pascal",
+        q: "В результате выполнения фрагмента (a[i]=i+5, S=1; S суммирует a[i] от 1 до 5, затем S+5*a[i] от 6 до 7):\nбудет выведен результат …",
+        correct: "156",
+        wrong: ["120", "95", "200"]
+      },
+      // === Инкремент/декремент PHP ===
+      {
+        topic: "Операторы инкремента и декремента в PHP",
+        q: "В результате выполнения кода в PHP:\n$a=12; $b=--$a;\necho \"a=$a b=$b\";\nбудет выведено …",
+        correct: "a = 11 b = 11",
+        wrong: ["a = 12 b = 11", "a = 11 b = 12", "a = 12 b = 12"]
+      },
+      {
+        topic: "Операторы инкремента и декремента в PHP",
+        q: "В результате выполнения кода в PHP:\n$a=8; $b=$a--;\necho \"a=$a b=$b\";\nбудет выведено …",
+        correct: "a = 7 b = 8",
+        wrong: ["a = 8 b = 7", "a = 7 b = 7", "a = 8 b = 8"]
+      },
+      {
+        topic: "Операторы инкремента и декремента в PHP",
+        q: "В результате выполнения кода в PHP:\n$a=4; $b=++$a;\necho \"a=$a b=$b\";\nбудет выведено …",
+        correct: "a = 5 b = 5",
+        wrong: ["a = 4 b = 5", "a = 5 b = 4", "a = 4 b = 4"]
+      },
+      {
+        topic: "Операторы инкремента и декремента в PHP",
+        q: "В результате выполнения кода в PHP:\n$a=10; $b=$a++;\necho \"a=$a b=$b\";\nбудет выведено …",
+        correct: "a = 11 b = 10",
+        wrong: ["a = 10 b = 11", "a = 11 b = 11", "a = 10 b = 10"]
+      },
+      // === Функции и классы PHP ===
+      {
+        topic: "Функции и классы в PHP",
+        q: "Для вывода всех элементов массива $name в PHP используется …",
+        correct: "функция print_r($name)",
+        wrong: ["функция echo($name)", "функция var($name)", "функция output($name)"]
+      },
+      {
+        topic: "Функции и классы в PHP",
+        q: "Создание объекта в PHP происходит путём …",
+        correct: "создания экземпляра класса",
+        wrong: ["объявления переменной без типа", "вызова функции create_object()", "подключения модуля через include"]
+      },
+      {
+        topic: "Функции и классы в PHP",
+        q: "Основными типами данных в PHP считаются …",
+        correct: "boolean, integer, string, float, object, array, resource, null",
+        wrong: ["int, char, real, pointer", "string, number, list, dict", "byte, word, longint, single"]
+      },
+      {
+        topic: "Функции и классы в PHP",
+        q: "Методы isset и unset используются в PHP для …",
+        correct: "перегрузки свойств",
+        wrong: ["сортировки массивов", "подключения внешних файлов", "работы с сессиями"]
+      },
+      // === Базы данных PHP ===
+      {
+        topic: "Работа с базами данных в PHP",
+        q: "Подключение к базе данных MySQL в PHP осуществляется …",
+        correct: "mysqli_connect(host, username, password, dbname)",
+        wrong: ["mysql_open(host, username, password)", "db_connect(host, dbname)", "PDO::connect(host, dbname)"]
+      },
+      {
+        topic: "Работа с базами данных в PHP",
+        q: "Для удаления таблицы из базы данных используется запрос …",
+        correct: "DROP TABLE [IF EXISTS] имя_таблицы",
+        wrong: ["DELETE TABLE имя_таблицы", "REMOVE TABLE имя_таблицы", "TRUNCATE TABLE имя_таблицы"]
+      },
+      {
+        topic: "Работа с базами данных в PHP",
+        q: "Для внесения новых данных в таблицу используется запрос …",
+        correct: "INSERT INTO",
+        wrong: ["ADD INTO", "UPDATE INTO", "PUT INTO"]
+      },
+      {
+        topic: "Работа с базами данных в PHP",
+        q: "Для извлечения всех записей, где значение поля 'field' начинается с 'abc', используется запрос …",
+        correct: "SELECT * FROM таблица WHERE field LIKE 'abc%'",
+        wrong: ["SELECT * FROM таблица WHERE field = 'abc'", "SELECT * FROM таблица WHERE field STARTS 'abc'", "SELECT * FROM таблица WHERE field CONTAINS 'abc'"]
+      },
+      // === Основы HTML ===
+      {
+        topic: "Основы HTML",
+        q: "Адрес ссылки «./pages/page2.html» является …",
+        correct: "относительным",
+        wrong: ["абсолютным", "динамическим", "серверным"]
+      },
+      {
+        topic: "Основы HTML",
+        q: "Текст с жирным начертанием в HTML оформляется в виде конструкции …",
+        correct: "<b></b>",
+        wrong: ["<strong></strong>", "<em></em>", "<i></i>"]
+      },
+      {
+        topic: "Основы HTML",
+        q: "Тег <title> необходим для того, чтобы указать …",
+        correct: "название страницы, которое также отображается в поисковых системах",
+        wrong: ["заголовок первого уровня на странице", "описание страницы в теге meta", "ключевые слова для поиска"]
+      },
+      {
+        topic: "Основы HTML",
+        q: "Правильный вариант оформления картинки с сайта в HTML имеет вид …",
+        correct: "<img src=\"URL_изображения\" alt=\"Описание изображения\">",
+        wrong: ["<image href=\"URL\" title=\"Описание\">", "<img link=\"URL\" desc=\"Описание\">", "<picture src=\"URL\">"]
+      },
+      // === Основы CSS ===
+      {
+        topic: "Основы CSS",
+        q: "Синтаксически корректное CSS правило имеет вид …",
+        correct: "div {font-size:2em}",
+        wrong: ["div | font-size:2em |", "div = {font-size:2em}", "div; font-size:2em;"]
+      },
+      {
+        topic: "Основы CSS",
+        q: "Селектор, позволяющий выбрать все элементы div с атрибутом id='wrap', имеет вид …",
+        correct: "div#wrap { /* стили */ }",
+        wrong: ["div.wrap { /* стили */ }", "div[wrap] { /* стили */ }", "#div wrap { /* стили */ }"]
+      },
+      {
+        topic: "Основы CSS",
+        q: "Для подключения к HTML-документу внешнего файла стилей используется тег …",
+        correct: "<link>",
+        wrong: ["<style>", "<script>", "<css>"]
+      },
+      {
+        topic: "Основы CSS",
+        q: "Псевдо-класс, позволяющий оформить ссылки, на которые наведён курсор мыши, имеет вид …",
+        correct: ":hover",
+        wrong: [":focus", ":active", ":visited"]
+      }
+    ]
+  },
+  {
+    id: 3,
+    title: "Педагогическая психология",
+    topics: [
+      "Правовые основы образования", "История педагогической психологии",
+      "Учебная деятельность и мотивация", "Теории научения",
+      "Обучение и развитие", "Методы и технологии обучения",
+      "Одарённость и способности", "Развивающее обучение",
+      "Педагогическая деятельность", "Методы исследования"
+    ],
+    questions: [
+      // === Правовые основы образования ===
+      {
+        topic: "Правовые основы образования",
+        q: "Право ребёнка на бесплатное и обязательное образование, способствующее общему культурному развитию, зафиксировано в …",
+        correct: "Декларации прав ребёнка ООН",
+        wrong: ["Конвенции ООН о правах ребёнка", "Конституции РФ", "Федеральном законе «Об образовании»"]
+      },
+      {
+        topic: "Правовые основы образования",
+        q: "Учебная деятельность является ведущей в ______ возрасте",
+        correct: "младшем школьном",
+        wrong: ["дошкольном", "подростковом", "юношеском"]
+      },
+      {
+        topic: "Правовые основы образования",
+        q: "Наиболее значимым социальным фактором развития одарённости ребёнка в дошкольном возрасте является …",
+        correct: "семья",
+        wrong: ["детский сад", "средства массовой информации", "группа сверстников"]
+      },
+      {
+        topic: "Правовые основы образования",
+        q: "Главным систематизирующим фактором в процессе обучения выступает …",
+        correct: "содержание образования",
+        wrong: ["форма организации обучения", "личность учителя", "методы контроля"]
+      },
+      // === История педагогической психологии ===
+      {
+        topic: "История педагогической психологии",
+        q: "Педагогическая психология возникла …",
+        correct: "во второй половине XIX века",
+        wrong: ["в начале XX века", "в первой половине XIX века", "в середине XVII века"]
+      },
+      {
+        topic: "История педагогической психологии",
+        q: "Основоположником русской педагогической психологии является …",
+        correct: "П.Ф. Каптерев",
+        wrong: ["К.Д. Ушинский", "В.М. Бехтерев", "А.Ф. Лазурский"]
+      },
+      {
+        topic: "История педагогической психологии",
+        q: "Идея программированного обучения принадлежит …",
+        correct: "Б.Ф. Скиннеру",
+        wrong: ["Дж. Брунеру", "Ж. Пиаже", "Л.С. Выготскому"]
+      },
+      {
+        topic: "История педагогической психологии",
+        q: "Основы классно-урочной системы заложены …",
+        correct: "Я.А. Коменским",
+        wrong: ["И.Г. Песталоцци", "Ж.-Ж. Руссо", "И.Ф. Гербартом"]
+      },
+      // === Учебная деятельность и мотивация ===
+      {
+        topic: "Учебная деятельность и мотивация",
+        q: "В структуру педагогической психологии НЕ ВХОДИТ психология …",
+        correct: "психология развития",
+        wrong: ["психология обучения", "психология воспитания", "психология педагогической деятельности"]
+      },
+      {
+        topic: "Учебная деятельность и мотивация",
+        q: "В сферу задач, решаемых педагогической психологией, попадает(ют) …",
+        correct: "выявление закономерностей усвоения знаний и изучение психологических основ деятельности обучаемого",
+        wrong: ["разработка учебных программ по математике", "организация школьного расписания", "управление финансами образовательного учреждения"]
+      },
+      {
+        topic: "Учебная деятельность и мотивация",
+        q: "Проблема учебной мотивации рассматривается в работах …",
+        correct: "В.В. Давыдова, В.В. Рубцова",
+        wrong: ["А.Н. Леонтьева, С.Л. Рубинштейна", "Б.Г. Ананьева, А.А. Смирнова", "П.И. Зинченко, Г.С. Костюка"]
+      },
+      {
+        topic: "Учебная деятельность и мотивация",
+        q: "Мотивы самообразования — это ______ мотивов",
+        correct: "уровень познавательных",
+        wrong: ["вид социальных", "форма внешних", "тип прагматических"]
+      },
+      {
+        topic: "Учебная деятельность и мотивация",
+        q: "Мотив учения, характеризующийся направленностью учащегося на овладение новыми знаниями, называется ______ мотивом",
+        correct: "широким познавательным",
+        wrong: ["узкопрагматическим", "социальным", "позиционным"]
+      },
+      {
+        topic: "Учебная деятельность и мотивация",
+        q: "Обращение к учителю за дополнительными сведениями является формой проявления …",
+        correct: "широких познавательных мотивов",
+        wrong: ["социальных мотивов", "прагматических мотивов", "избегания неудачи"]
+      },
+      // === Теории научения ===
+      {
+        topic: "Теории научения",
+        q: "Видом интеллектуального когнитивного научения НЕ ЯВЛЯЕТСЯ научение …",
+        correct: "условнорефлекторное реагирование",
+        wrong: ["понятиям", "мышлению", "умениям"]
+      },
+      {
+        topic: "Теории научения",
+        q: "В теории бихевиоризма НЕ ВЫДЕЛЯЕТСЯ закон …",
+        correct: "притяжения противоположностей",
+        wrong: ["закон эффекта", "закон упражнения", "закон готовности"]
+      },
+      {
+        topic: "Теории научения",
+        q: "Теорией научения в зарубежной психологии НЕ ЯВЛЯЕТСЯ теория …",
+        correct: "теория зоны ближайшего развития",
+        wrong: ["теория классического обусловливания Павлова", "теория оперантного обусловливания Скиннера", "теория социального научения Бандуры"]
+      },
+      {
+        topic: "Теории научения",
+        q: "Оказание помощи товарищам является видом …",
+        correct: "взаимопомощи",
+        wrong: ["альтруистического поведения", "просоциальной мотивации", "коллективного учения"]
+      },
+      // === Обучение и развитие ===
+      {
+        topic: "Обучение и развитие",
+        q: "Учёный, который рассматривал умственное развитие ребёнка как спонтанный, относительно независимый от обучения процесс …",
+        correct: "Ж. Пиаже",
+        wrong: ["Л.С. Выготский", "Д.Б. Эльконин", "П.Я. Гальперин"]
+      },
+      {
+        topic: "Обучение и развитие",
+        q: "Принцип «Обучение не плетётся в хвосте развития, а ведёт его за собой» сформулировал …",
+        correct: "Л.С. Выготский",
+        wrong: ["Ж. Пиаже", "Д.Б. Эльконин", "А.Н. Леонтьев"]
+      },
+      {
+        topic: "Обучение и развитие",
+        q: "Проблемы взаимосвязи обучения и развития относятся к исследованиям …",
+        correct: "фундаментальным",
+        wrong: ["прикладным", "методическим", "диагностическим"]
+      },
+      {
+        topic: "Обучение и развитие",
+        q: "Обучение свою ведущую роль в умственном развитии осуществляет прежде всего через ______ (по Д.Б. Эльконину)",
+        correct: "содержание усваиваемых знаний",
+        wrong: ["методы организации деятельности", "личность учителя", "систему оценивания"]
+      },
+      // === Методы и технологии обучения ===
+      {
+        topic: "Методы и технологии обучения",
+        q: "Проблемы интенсификации процесса обучения с позиций его принципов изучаются в ______ подходе",
+        correct: "дидактическом",
+        wrong: ["психофизиологическом", "системном", "деятельностном"]
+      },
+      {
+        topic: "Методы и технологии обучения",
+        q: "Разработка и применение методов активного обучения (деловых игр, анализа ситуаций, разыгрывания ролей) соответствует ______ подходу к интенсификации обучения",
+        correct: "психофизиологическому",
+        wrong: ["дидактическому", "технологическому", "информационному"]
+      },
+      {
+        topic: "Методы и технологии обучения",
+        q: "К педагогическим технологиям, построенным на основе эффективности организации и управления процессом обучения, относится ______ обучение",
+        correct: "программированное",
+        wrong: ["проблемное", "контекстное", "дистанционное"]
+      },
+      {
+        topic: "Методы и технологии обучения",
+        q: "Для развития мышления наиболее эффективен такой метод обучения, как …",
+        correct: "дискуссия",
+        wrong: ["лекция", "демонстрация", "репродуктивное упражнение"]
+      },
+      {
+        topic: "Методы и технологии обучения",
+        q: "Классно-урочная система обучения — это … обучения",
+        correct: "организационная форма",
+        wrong: ["метод", "принцип", "технология"]
+      },
+      {
+        topic: "Методы и технологии обучения",
+        q: "В наибольшей степени учитываются данные психологии о взаимосвязи обучения и мышления при ______ обучении",
+        correct: "проблемном",
+        wrong: ["программированном", "репродуктивном", "объяснительно-иллюстративном"]
+      },
+      {
+        topic: "Методы и технологии обучения",
+        q: "Для проблемного обучения характерно то, что …",
+        correct: "обучение направлено на самостоятельный поиск обучаемым новых понятий и способов действий",
+        wrong: ["учитель передаёт готовые знания в систематизированном виде", "обучение строится строго по алгоритму", "оценка знаний проводится только тестовыми методами"]
+      },
+      // === Одарённость и способности ===
+      {
+        topic: "Одарённость и способности",
+        q: "Одарённость как качественно своеобразное сочетание способностей рассматривается в концепции …",
+        correct: "Б.М. Теплова",
+        wrong: ["Л.С. Выготского", "А.Н. Леонтьева", "В.Д. Шадрикова"]
+      },
+      {
+        topic: "Одарённость и способности",
+        q: "По утверждению Юнга: «Именно для одарённых ______ образование имеет величайшее значение в качестве психогигиенического мероприятия»",
+        correct: "сбалансированное",
+        wrong: ["специализированное", "углублённое", "дополнительное"]
+      },
+      // === Развивающее обучение ===
+      {
+        topic: "Развивающее обучение",
+        q: "Авторами теории содержательного обобщения являются …",
+        correct: "Д.Б. Эльконин, В.В. Давыдов",
+        wrong: ["Л.С. Выготский, А.Н. Леонтьев", "П.Я. Гальперин, Н.Ф. Талызина", "З.И. Калмыкова, И.С. Якиманская"]
+      },
+      {
+        topic: "Развивающее обучение",
+        q: "Формирование теоретического сознания и мышления составляет суть целевых установок …",
+        correct: "системы развивающего обучения Д.Б. Эльконина — В.В. Давыдова",
+        wrong: ["системы Л.В. Занкова", "традиционной системы обучения", "системы программированного обучения"]
+      },
+      {
+        topic: "Развивающее обучение",
+        q: "Основные различия эмпирического и теоретического знания выделил …",
+        correct: "В.В. Давыдов",
+        wrong: ["Д.Б. Эльконин", "Л.С. Выготский", "П.Я. Гальперин"]
+      },
+      {
+        topic: "Развивающее обучение",
+        q: "На достижение единства части и целого при овладении содержанием изучаемого нацеливает принцип …",
+        correct: "систематичности",
+        wrong: ["наглядности", "доступности", "сознательности"]
+      },
+      {
+        topic: "Развивающее обучение",
+        q: "Организацию педагогического процесса на основе новейших достижений психологии и педагогики предполагает принцип …",
+        correct: "научности",
+        wrong: ["доступности", "систематичности", "наглядности"]
+      },
+      // === Педагогическая деятельность ===
+      {
+        topic: "Педагогическая деятельность",
+        q: "Учёный, выделивший пять уровней продуктивности педагогической деятельности …",
+        correct: "Н.В. Кузьмина",
+        wrong: ["А.К. Маркова", "В.А. Кан-Калик", "Ю.Н. Кулюткин"]
+      },
+      {
+        topic: "Педагогическая деятельность",
+        q: "Проблемы интенсификации процесса обучения с позиций учебной деятельности изучаются в …",
+        correct: "дидактическом подходе",
+        wrong: ["психофизиологическом подходе", "кибернетическом подходе", "бихевиористском подходе"]
+      },
+      // === Методы исследования ===
+      {
+        topic: "Методы исследования",
+        q: "Метод познания, который ограничивается регистрацией выявленных фактов в психолого-педагогических исследованиях, называется …",
+        correct: "эмпирическим",
+        wrong: ["теоретическим", "экспериментальным", "герменевтическим"]
+      },
+      {
+        topic: "Методы исследования",
+        q: "Метод прослеживания изменений психики ребёнка в процессе активного воздействия исследователя на испытуемого — это ______ эксперимент",
+        correct: "формирующий",
+        wrong: ["констатирующий", "лабораторный", "естественный"]
+      },
+      {
+        topic: "Методы исследования",
+        q: "Классификацию методов психолого-педагогического исследования предложил …",
+        correct: "Б.Г. Ананьев",
+        wrong: ["С.Л. Рубинштейн", "А.Н. Леонтьев", "Б.Ф. Ломов"]
+      }
+    ]
+  },
+  {
+    id: 4,
+    title: "Психометрика и тестирование",
+    topics: [
+      "Информация и данные", "История психологических измерений",
+      "Типы и назначение тестов", "Теория вероятностей",
+      "Психометрический тест", "Валидность теста",
+      "Статистика и корреляция", "Конструктная валидность",
+      "Разработка тестов", "Шкалирование", "Модель Раша и IRT"
+    ],
+    questions: [
+      // === Информация и данные ===
+      {
+        topic: "Информация и данные",
+        q: "Информация появляется …",
+        correct: "в результате интерпретации данных",
+        wrong: ["в результате сбора сырых данных", "при вводе данных в компьютер", "при наблюдении за объектом"]
+      },
+      {
+        topic: "Информация и данные",
+        q: "Информацию можно определить как …",
+        correct: "организованный тип данных, которые были обработаны и стали пригодными для использования",
+        wrong: ["любой набор символов, сохранённых на носителе", "последовательность чисел, полученных в эксперименте", "совокупность необработанных результатов измерения"]
+      },
+      {
+        topic: "Информация и данные",
+        q: "Информация относится к значению, как __ относится к __",
+        correct: "почва — растение",
+        wrong: ["вопрос — ответ", "причина — следствие", "форма — содержание"]
+      },
+      // === История психологических измерений ===
+      {
+        topic: "История психологических измерений",
+        q: "Значение теста А. Бине на интеллект состоит в том, что он стал катализатором …",
+        correct: "первоначального развития психологических измерений",
+        wrong: ["создания нейронных сетей", "разработки факторного анализа", "появления клинической психологии"]
+      },
+      {
+        topic: "История психологических измерений",
+        q: "Психономика как психологическая наука изучает …",
+        correct: "законы и закономерности психической деятельности и поведения человека",
+        wrong: ["экономические аспекты психологических услуг", "нейрофизиологические основы восприятия", "методы психотерапии"]
+      },
+      {
+        topic: "История психологических измерений",
+        q: "Психодиагностика — это наука, изучающая …",
+        correct: "закономерности, методы и приёмы психологической оценки, а также практику их применения",
+        wrong: ["методы лечения психических расстройств", "закономерности развития личности в онтогенезе", "способы управления поведением человека"]
+      },
+      // === Типы и назначение тестов ===
+      {
+        topic: "Типы и назначение тестов",
+        q: "Клинические тесты используются для …",
+        correct: "индивидуального тестирования",
+        wrong: ["массовых опросов населения", "отбора персонала в организациях", "стандартизации учебных программ"]
+      },
+      {
+        topic: "Типы и назначение тестов",
+        q: "При оценке персонала психологические тесты в первую очередь используются в интересах …",
+        correct: "организации (работодателя)",
+        wrong: ["самого испытуемого", "государственных органов", "профсоюзных организаций"]
+      },
+      {
+        topic: "Типы и назначение тестов",
+        q: "Психологические тесты могут отличаться в отношении …",
+        correct: "особенностей тестовых заданий, формы обследования, направленности и наличия временны́х ограничений",
+        wrong: ["только наличия или отсутствия временны́х ограничений", "только формы бланка и языка инструкции", "только количества вопросов и длительности"]
+      },
+      {
+        topic: "Типы и назначение тестов",
+        q: "Правильный объективный тест …",
+        correct: "содержит задания с однозначно правильными ответами",
+        wrong: ["предполагает субъективное оценивание эксперта", "допускает несколько равнозначных ответов", "основан только на самооценке испытуемого"]
+      },
+      // === Теория вероятностей ===
+      {
+        topic: "Теория вероятностей",
+        q: "Вероятность любого особенного события равна отношению количества способов … к числу …",
+        correct: "возможности его появления — всех возможных событий",
+        wrong: ["благоприятных исходов — нежелательных исходов", "наблюдаемых событий — теоретических событий", "успехов — неудач в эксперименте"]
+      },
+      {
+        topic: "Теория вероятностей",
+        q: "Условная вероятность P(A|B) появляется, когда …",
+        correct: "мы хотим знать P(A) при условии, что событие B уже произошло: P(A|B) = P(A,B) / P(B)",
+        wrong: ["события A и B независимы и P(A|B) = P(A)", "события A и B взаимоисключают друг друга", "оба события имеют одинаковую вероятность"]
+      },
+      {
+        topic: "Теория вероятностей",
+        q: "Условную вероятность можно рассчитать, используя …",
+        correct: "здравый смысл, таблицы вероятностей или теорему Байеса",
+        wrong: ["только формулу нормального распределения", "только метод Монте-Карло", "только регрессионный анализ"]
+      },
+      // === Психометрический тест ===
+      {
+        topic: "Психометрический тест",
+        q: "Психометрический тест — это стандартизированная процедура для …",
+        correct: "отбора образцов поведения и его описания",
+        wrong: ["постановки психиатрического диагноза", "измерения физиологических реакций", "коррекции нежелательного поведения"]
+      },
+      {
+        topic: "Психометрический тест",
+        q: "Сложность вопросов теста определяется как …",
+        correct: "процент правильных ответов на вопрос",
+        wrong: ["среднее время ответа на вопрос", "количество слов в формулировке вопроса", "число вариантов ответа"]
+      },
+      {
+        topic: "Психометрический тест",
+        q: "Полную информацию по тесту и истории его разработки можно найти в …",
+        correct: "руководстве (мануале/паспорте) к тесту",
+        wrong: ["аннотации к тесту", "сборнике тестовых заданий", "базе данных результатов тестирования"]
+      },
+      {
+        topic: "Психометрический тест",
+        q: "Психометрия — это …",
+        correct: "наука, изучающая теорию и методы измерения психических свойств и явлений человека",
+        wrong: ["раздел медицины, изучающий психосоматические расстройства", "метод измерения биоэлектрической активности мозга", "дисциплина о методах математического моделирования"]
+      },
+      // === Валидность теста ===
+      {
+        topic: "Валидность теста",
+        q: "Валидность теста определяется тем …",
+        correct: "что тест измеряет и насколько хорошо он это делает (по А. Анастази)",
+        wrong: ["насколько стабильны результаты при повторном измерении", "сколько пунктов содержит тест", "насколько тест прост в администрировании"]
+      },
+      {
+        topic: "Валидность теста",
+        q: "Коэффициент валидности — это …",
+        correct: "коэффициент корреляции между результатами теста и показателями внешнего критерия (обычно 0.2–0.6)",
+        wrong: ["доля дисперсии, объяснённой тестом", "стандартная ошибка измерения теста", "процент правильных ответов от максимально возможного"]
+      },
+      {
+        topic: "Валидность теста",
+        q: "Критический показатель диагностического теста можно представить как …",
+        correct: "условная вероятность: P(диагноз | результат теста)",
+        wrong: ["абсолютный балл испытуемого", "разница между наблюдаемым и ожидаемым баллом", "отношение числа правильных ответов к числу позиций"]
+      },
+      // === Статистика и корреляция ===
+      {
+        topic: "Статистика и корреляция",
+        q: "Факторный анализ — это …",
+        correct: "статистический метод, выявляющий скрытые (латентные) факторы, объясняющие взаимосвязи между наблюдаемыми переменными",
+        wrong: ["метод сравнения средних значений двух групп", "процедура проверки нормальности распределения", "способ вычисления доверительных интервалов"]
+      },
+      {
+        topic: "Статистика и корреляция",
+        q: "Коэффициент корреляции равный «−0.98» означает, что возможно существует …",
+        correct: "очень сильная обратная связь: рост одного показателя сопровождается падением другого",
+        wrong: ["слабая прямая связь между переменными", "отсутствие связи между переменными", "умеренная прямая связь между переменными"]
+      },
+      {
+        topic: "Статистика и корреляция",
+        q: "Надёжность, определяемая путём корреляции оценок одной выборки при двух разных выполнениях одного теста, называется надёжностью …",
+        correct: "повторяемости (тест-ретест)",
+        wrong: ["внутренней согласованности", "параллельных форм", "межэкспертной согласованности"]
+      },
+      {
+        topic: "Статистика и корреляция",
+        q: "Совершенная корреляция соответствует значению(ям) коэффициента корреляции …",
+        correct: "+1 и −1",
+        wrong: ["0 и 1", "только +1", "0.9 и выше"]
+      },
+      // === Конструктная валидность ===
+      {
+        topic: "Конструктная валидность",
+        q: "Определить конструкт — это значит представить …",
+        correct: "каким закономерностям он подчиняется и задать конструкцию номологической сети",
+        wrong: ["операциональное определение через единственный тест", "физически наблюдаемую переменную без латентной составляющей", "набор заданий с известной трудностью"]
+      },
+      {
+        topic: "Конструктная валидность",
+        q: "Номологическая сеть — это сеть …",
+        correct: "взаимосвязанных между собой конструктов и их наблюдаемых проявлений",
+        wrong: ["нейронных элементов в модели глубокого обучения", "стандартов психологических измерений", "статистических гипотез о структуре данных"]
+      },
+      {
+        topic: "Конструктная валидность",
+        q: "Конвергентная валидность конструктов предполагает, что корреляции измерения …",
+        correct: "одного и того же конструкта разными методами должны быть достаточно высокими",
+        wrong: ["разных конструктов одним методом должны быть высокими", "одного конструкта одним методом в разное время должны быть нулевыми", "любых конструктов должны стремиться к нулю"]
+      },
+      {
+        topic: "Конструктная валидность",
+        q: "Дивергентная валидность конструктов предполагает, что корреляции измерения …",
+        correct: "двух разных конструктов одним и тем же методом должны быть достаточно маленькими",
+        wrong: ["одного конструкта разными методами должны быть маленькими", "любых конструктов должны быть высокими", "одного конструкта в разных выборках должны совпадать"]
+      },
+      // === Разработка тестов ===
+      {
+        topic: "Разработка тестов",
+        q: "Формальную систему составляют следующие части …",
+        correct: "предположения, символы, правила и методы",
+        wrong: ["вопросы, ответы, баллы и нормы", "стимул, реакция, подкрепление и угасание", "ввод, обработка, вывод и хранение"]
+      },
+      {
+        topic: "Разработка тестов",
+        q: "Хороший тестовый вопрос характеризуется тем, что …",
+        correct: "вопрос позволяет дифференцировать высокие оценки от низких",
+        wrong: ["вопрос понятен абсолютно всем испытуемым без исключения", "на вопрос отвечают правильно менее 10% испытуемых", "вопрос имеет несколько равнозначных правильных ответов"]
+      },
+      {
+        topic: "Разработка тестов",
+        q: "Наличие большого количества тестовых вопросов на этапе разработки классического теста является …",
+        correct: "необходимым условием, поскольку позволяет отобрать наиболее валидные и дискриминативные пункты",
+        wrong: ["лишним, так как усложняет процедуру стандартизации", "нежелательным, так как увеличивает нагрузку на испытуемого", "достаточным для обеспечения надёжности без дополнительного анализа"]
+      },
+      // === Шкалирование ===
+      {
+        topic: "Шкалирование",
+        q: "В основе метода шкалирования лежит предположение о том, что качества и особенности …",
+        correct: "относительно стабильны и могут быть выражены количественно",
+        wrong: ["абсолютно уникальны и не поддаются сравнению", "изменяются настолько быстро, что их нельзя измерить", "существуют только в виде качественных категорий"]
+      },
+      {
+        topic: "Шкалирование",
+        q: "Основные типы шкал (номинальная, порядковая, интервалов и отношений) характеризуются тем, что по мере роста мощности шкалы …",
+        correct: "качественные измерения сменяются количественными, расширяются возможности арифметических операций и статистических методов",
+        wrong: ["уменьшается точность измерения", "сокращается число допустимых статистических операций", "исчезает возможность сравнения объектов между собой"]
+      },
+      {
+        topic: "Шкалирование",
+        q: "Из четырёх типов шкал метрическими являются …",
+        correct: "шкалы интервалов и отношений",
+        wrong: ["номинальная и порядковая шкалы", "только шкала отношений", "номинальная и шкала интервалов"]
+      },
+      // === Модель Раша и IRT ===
+      {
+        topic: "Модель Раша и IRT",
+        q: "Принцип особой объективности Г. Раша предполагает измерение одноразмерных свойств индивида …",
+        correct: "безотносительно других свойств, других людей и особенностей инструмента измерения",
+        wrong: ["с обязательным учётом культурного контекста испытуемого", "только при условии нормального распределения показателей", "в сравнении с эталонной нормативной группой"]
+      },
+      {
+        topic: "Модель Раша и IRT",
+        q: "Разделение Г. Раша определяется как …",
+        correct: "отношение стандартной девиации латентного качества к стандартной девиации ошибки",
+        wrong: ["разность максимального и минимального балла выборки", "коэффициент корреляции между двумя формами теста", "отношение дисперсии истинных оценок к общей дисперсии"]
+      },
+      {
+        topic: "Модель Раша и IRT",
+        q: "В стандартных моделях IRT процедура совместного шкалирования стимулов и людей осуществляется с использованием …",
+        correct: "логистической (логит) функции, объединяющей подготовленность испытуемых и трудность заданий в единую шкалу",
+        wrong: ["линейной регрессии между сырыми баллами и нормами", "метода главных компонент без вращения", "дисперсионного анализа повторных измерений"]
+      },
+      {
+        topic: "Модель Раша и IRT",
+        q: "Возможность кластеризации взаимосвязей измеряемых переменных характеризует следующую модель латентных измерений …",
+        correct: "сетевая модель латентных измерений",
+        wrong: ["одномерная модель IRT", "модель конфирматорного факторного анализа", "классическая теория тестов (CTT)"]
+      }
+    ]
+  },
+  {
+    id: 5,
+    title: "Нейронные сети и анализ данных",
+    topics: [
+      "Нейронные сети", "Генетические алгоритмы и кластеризация",
+      "Спектральный анализ и вейвлеты", "Математическое моделирование",
+      "Метод главных компонент", "Факторный анализ",
+      "Лонгитюдные исследования", "Статистические гипотезы",
+      "Байесовский подход и дискриминантный анализ", "Идентификация моделей"
+    ],
+    questions: [
+      // === Нейронные сети ===
+      {
+        topic: "Нейронные сети",
+        q: "Теорема Хехт-Нильсена доказывает представимость функции многих переменных с помощью …",
+        correct: "двухслойной нейронной сети с N входами, 2N+1 нейронами скрытого слоя и M нейронами выходного слоя",
+        wrong: ["однослойного персептрона с линейной функцией активации", "рекуррентной сети без скрытых слоёв", "трёхслойной сети с произвольным числом нейронов"]
+      },
+      {
+        topic: "Нейронные сети",
+        q: "Величина, характеризующая синапс — это синаптический …",
+        correct: "вес",
+        wrong: ["порог", "потенциал", "импульс"]
+      },
+      {
+        topic: "Нейронные сети",
+        q: "По принимаемому значению на выходе нейрона нейронные сети делятся на …",
+        correct: "бинарные и аналоговые",
+        wrong: ["прямые и рекуррентные", "однослойные и многослойные", "детерминированные и стохастические"]
+      },
+      {
+        topic: "Нейронные сети",
+        q: "Функция активации радиального элемента имеет ______ в центре и ______ к краям",
+        correct: "максимум — понижение",
+        wrong: ["минимум — возрастание", "константу — скачок", "ноль — максимум"]
+      },
+      {
+        topic: "Нейронные сети",
+        q: "Сеть Кохонена включает …",
+        correct: "входной и выходной слой",
+        wrong: ["входной, скрытый и выходной слой", "только выходной слой", "два скрытых слоя и выходной"]
+      },
+      {
+        topic: "Нейронные сети",
+        q: "Число запоминаемых образов в сети Хопфилда не должно превышать примерно …, где n — число нейронов",
+        correct: "0.15n",
+        wrong: ["0.5n", "n²", "2n"]
+      },
+      {
+        topic: "Нейронные сети",
+        q: "Когда на выходе релаксационной сети достаточно получать не образец, а его номер, можно использовать ______, которая характеризуется меньшими запросами на память",
+        correct: "сеть Хемминга",
+        wrong: ["сеть Кохонена", "сеть Хопфилда", "многослойный персептрон"]
+      },
+      // === Генетические алгоритмы и кластеризация ===
+      {
+        topic: "Генетические алгоритмы и кластеризация",
+        q: "Генетический алгоритм был предложен …",
+        correct: "Д. Холландом",
+        wrong: ["Дж. Нейманом", "К. Шенноном", "Н. Вирнером"]
+      },
+      {
+        topic: "Генетические алгоритмы и кластеризация",
+        q: "Этапом многомерного шкалирования НЕ ЯВЛЯЕТСЯ …",
+        correct: "проведение эксперимента",
+        wrong: ["вычисление матрицы расстояний", "нахождение конфигурации точек", "оценка качества представления"]
+      },
+      {
+        topic: "Генетические алгоритмы и кластеризация",
+        q: "К итерационному методу кластеризации относится …",
+        correct: "метод K-средних",
+        wrong: ["иерархический агломеративный метод", "метод главных компонент", "метод ближайшего соседа"]
+      },
+      {
+        topic: "Генетические алгоритмы и кластеризация",
+        q: "В методе K-средних объекты рассматриваются как …",
+        correct: "точки многомерного пространства",
+        wrong: ["векторы вероятностей", "бинарные строки фиксированной длины", "узлы ориентированного графа"]
+      },
+      // === Спектральный анализ и вейвлеты ===
+      {
+        topic: "Спектральный анализ и вейвлеты",
+        q: "Искажения спектра, обусловленные малой длиной реализации, приводят к тому, что колебания с близкими частотами становятся ______ в спектре",
+        correct: "неразличимыми",
+        wrong: ["усиленными", "сдвинутыми по фазе", "удвоенными по амплитуде"]
+      },
+      {
+        topic: "Спектральный анализ и вейвлеты",
+        q: "При необходимости уменьшить рост дисперсии оценок быстрые преобразования Фурье могут выполняться по ______ отрезкам",
+        correct: "пересекающимся",
+        wrong: ["непересекающимся равным", "случайно выбранным", "логарифмически масштабированным"]
+      },
+      {
+        topic: "Спектральный анализ и вейвлеты",
+        q: "Термин «вейвлет» ввели Гроссман и Морле в …",
+        correct: "80-х годах XX века",
+        wrong: ["60-х годах XX века", "начале XXI века", "50-х годах XX века"]
+      },
+      {
+        topic: "Спектральный анализ и вейвлеты",
+        q: "К типам вейвлетов НЕ ОТНОСЯТСЯ …",
+        correct: "стохастические",
+        wrong: ["вейвлеты Хаара", "вейвлеты Добеши", "мексиканская шляпа"]
+      },
+      // === Математическое моделирование ===
+      {
+        topic: "Математическое моделирование",
+        q: "Определение «Параметры исследуемой модели известны, изучается её поведение в различных условиях» относится к ______ типу задач",
+        correct: "прямому",
+        wrong: ["обратному", "идентификационному", "оптимизационному"]
+      },
+      {
+        topic: "Математическое моделирование",
+        q: "К этапу построения модели НЕ ОТНОСИТСЯ …",
+        correct: "создание программы",
+        wrong: ["выбор типа модели", "параметризация модели", "определение переменных состояния"]
+      },
+      {
+        topic: "Математическое моделирование",
+        q: "Математическая модель — это …",
+        correct: "приближённое описание класса явлений, выраженное с помощью математической символики",
+        wrong: ["точная копия реального объекта в цифровом виде", "набор экспериментальных данных об объекте", "алгоритм управления физическим процессом"]
+      },
+      // === Метод главных компонент ===
+      {
+        topic: "Метод главных компонент",
+        q: "В методе главных компонент в базисе собственных векторов ковариационной матрицы определяется …",
+        correct: "собственное подпространство небольшой размерности",
+        wrong: ["множество всех собственных значений матрицы", "максимальная дисперсия исходных переменных", "нулевое пространство матрицы преобразования"]
+      },
+      {
+        topic: "Метод главных компонент",
+        q: "Для того чтобы описать объект измерения всесторонне и компактно, нужно использовать ______ анализ",
+        correct: "факторный",
+        wrong: ["регрессионный", "дискриминантный", "кластерный"]
+      },
+      // === Факторный анализ ===
+      {
+        topic: "Факторный анализ",
+        q: "Цель факторного анализа — выявить небольшое число гипотетических ______, объясняющих изменчивость наблюдений",
+        correct: "латентных переменных",
+        wrong: ["наблюдаемых показателей", "регрессионных коэффициентов", "ковариационных матриц"]
+      },
+      {
+        topic: "Факторный анализ",
+        q: "К конфирматорному факторному анализу НЕ ПРИМЕНИМО высказывание …",
+        correct: "не допускаются корреляции между ошибками измерения",
+        wrong: ["структура факторных нагрузок задаётся заранее", "проверяется соответствие модели данным", "число факторов фиксируется до анализа"]
+      },
+      {
+        topic: "Факторный анализ",
+        q: "Критерий Акаике используется для сравнения моделей с ______ числом параметров при выборе оптимального набора латентных переменных",
+        correct: "разным",
+        wrong: ["одинаковым", "заранее фиксированным", "минимально возможным"]
+      },
+      // === Лонгитюдные исследования ===
+      {
+        topic: "Лонгитюдные исследования",
+        q: "Часто наибольшие корреляции в лонгитюдных исследованиях имеют место для смежных временных точек, причём значения корреляций ______ с ______ расстояния между точками",
+        correct: "уменьшаются — увеличением",
+        wrong: ["возрастают — уменьшением", "не изменяются — изменением", "возрастают — увеличением"]
+      },
+      // === Статистические гипотезы ===
+      {
+        topic: "Статистические гипотезы",
+        q: "При проверке статистических гипотез ошибка 1-го рода ______ верную нулевую гипотезу, а ошибка 2-го рода ______ неверную",
+        correct: "отвергает — принимает",
+        wrong: ["принимает — отвергает", "подтверждает — опровергает", "игнорирует — принимает"]
+      },
+      {
+        topic: "Статистические гипотезы",
+        q: "Мощность теста — это прогнозируемый процент выборок, при котором мы не совершаем ошибку …",
+        correct: "2-го рода",
+        wrong: ["1-го рода", "3-го рода", "нулевой гипотезы"]
+      },
+      // === Байесовский подход и дискриминантный анализ ===
+      {
+        topic: "Байесовский подход и дискриминантный анализ",
+        q: "Вероятности принадлежности наблюдений к классам, оцениваемые на основе апостериорной информации, используются в …",
+        correct: "байесовском подходе",
+        wrong: ["методе опорных векторов", "методе k-ближайших соседей", "линейном дискриминантном анализе Фишера"]
+      },
+      {
+        topic: "Байесовский подход и дискриминантный анализ",
+        q: "Значения лямбда-статистики Уилкса лежат в интервале …",
+        correct: "[0; 1]",
+        wrong: ["[−1; 1]", "[0; ∞)", "[−∞; +∞)"]
+      },
+      // === Идентификация моделей ===
+      {
+        topic: "Идентификация моделей",
+        q: "Численный метод, используемый для идентификации моделей — это …",
+        correct: "метод Ньютона",
+        wrong: ["метод Гаусса–Зейделя", "метод Рунге–Кутты", "метод конечных элементов"]
+      }
+    ]
+  }
+];
+
+// =================== STATE ===================
+let currentQuiz = null; // { questions, mode, blockId, current, score, answers, shuffled }
+
+// =================== LOCALSTORAGE ===================
+function getProgress() {
+  try { return JSON.parse(localStorage.getItem('exam_progress') || '{}'); } catch(e) { return {}; }
+}
+function saveProgress(blockId, score, total) {
+  const p = getProgress();
+  const key = 'b' + blockId;
+  if (!p[key]) p[key] = { attempts: 0, best: 0, total };
+  p[key].attempts++;
+  if (score > p[key].best) p[key].best = score;
+  p[key].total = total;
+  localStorage.setItem('exam_progress', JSON.stringify(p));
+}
+
+// =================== UTILS ===================
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function shuffleOptions(q) {
+  const opts = shuffle([q.correct, ...q.wrong]);
+  return { opts, correctIdx: opts.indexOf(q.correct) };
+}
+
+function getBlockQuestions(blockId) {
+  const block = BLOCKS.find(b => b.id === blockId);
+  if (!block || block.questions.length === 0) return [];
+  // One question per topic, shuffled within block
+  const byTopic = {};
+  block.questions.forEach(q => {
+    if (!byTopic[q.topic]) byTopic[q.topic] = [];
+    byTopic[q.topic].push(q);
+  });
+  const picked = Object.values(byTopic).map(qs => qs[Math.floor(Math.random() * qs.length)]);
+  return shuffle(picked);
+}
+
+// =================== SCREENS ===================
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// =================== HOME ===================
+function renderHome() {
+  const progress = getProgress();
+  const grid = document.getElementById('blockGrid');
+  grid.innerHTML = '';
+
+  // Exam card
+  const allQ = BLOCKS.flatMap(b => b.questions);
+  const examCard = document.createElement('div');
+  examCard.className = 'block-card exam-card';
+  examCard.onclick = () => startExam();
+  examCard.innerHTML = `
+    <div class="block-num">🎓 Экзамен</div>
+    <div class="block-title">Все 5 блоков</div>
+    <div class="block-meta">По одному вопросу из каждой темы</div>
+  `;
+  grid.appendChild(examCard);
+
+  BLOCKS.forEach(b => {
+    const card = document.createElement('div');
+    card.className = 'block-card';
+    const key = 'b' + b.id;
+    const p = progress[key];
+    const isEmpty = b.questions.length === 0;
+    if (isEmpty) card.style.opacity = '0.5';
+
+    let progressHTML = '';
+    if (p && !isEmpty) {
+      const pct = Math.round((p.best / p.total) * 100);
+      progressHTML = `
+        <div class="block-progress">
+          <div class="block-progress-bar"><div class="block-progress-fill" style="width:${pct}%"></div></div>
+          <div class="block-progress-label">Лучший: ${p.best}/${p.total} (${pct}%)</div>
+        </div>`;
+    }
+
+    const topicCount = b.topics.length || [...new Set(b.questions.map(q=>q.topic))].length;
+    const actionsHTML = isEmpty ? '' : `
+      <div class="block-actions">
+        <button class="block-btn" onclick="event.stopPropagation(); startBlock(${b.id})">
+          1 вопрос<br>на тему
+        </button>
+        <button class="block-btn btn-all" onclick="event.stopPropagation(); startBlockAll(${b.id})">
+          Все вопросы<br>(${b.questions.length})
+        </button>
+      </div>`;
+
+    card.innerHTML = `
+      <div class="block-num">Блок ${b.id}</div>
+      <div class="block-title">${b.title}</div>
+      <div class="block-meta">${isEmpty ? 'Вопросы ещё не добавлены' : b.questions.length + ' вопросов · ' + topicCount + ' тем'}</div>
+      ${progressHTML}
+      ${actionsHTML}
+    `;
+    grid.appendChild(card);
+  });
+}
+
+// =================== START QUIZ ===================
+function startBlock(blockId) {
+  const qs = getBlockQuestions(blockId);
+  if (!qs.length) return;
+  const block = BLOCKS.find(b => b.id === blockId);
+  currentQuiz = {
+    questions: qs,
+    mode: 'train',
+    blockId,
+    blockTitle: 'Блок ' + blockId + ': ' + block.title,
+    current: 0,
+    score: 0,
+    answers: []
+  };
+  document.getElementById('quizTitle').textContent = 'Блок ' + blockId;
+  const badge1 = document.getElementById('quizModeBadge');
+  badge1.textContent = 'Тренировка';
+  badge1.style.background = '';
+  badge1.style.color = '';
+  showScreen('quiz');
+  renderQuestion();
+}
+
+function startBlockAll(blockId) {
+  const block = BLOCKS.find(b => b.id === blockId);
+  if (!block || !block.questions.length) return;
+  const qs = shuffle([...block.questions]);
+  currentQuiz = {
+    questions: qs,
+    mode: 'train-all',
+    blockId,
+    blockTitle: 'Блок ' + blockId + ': ' + block.title,
+    current: 0,
+    score: 0,
+    answers: []
+  };
+  document.getElementById('quizTitle').textContent = 'Блок ' + blockId + ' · Все вопросы';
+  const badge = document.getElementById('quizModeBadge');
+  badge.textContent = 'Все вопросы';
+  badge.style.background = 'var(--color-primary)';
+  badge.style.color = '#fff';
+  showScreen('quiz');
+  renderQuestion();
+}
+
+function startExam() {
+  // Gather one question per topic from all blocks
+  let allQuestions = [];
+  BLOCKS.forEach(b => {
+    const qs = getBlockQuestions(b.id);
+    allQuestions = allQuestions.concat(qs);
+  });
+  allQuestions = shuffle(allQuestions);
+  currentQuiz = {
+    questions: allQuestions,
+    mode: 'exam',
+    blockId: 'all',
+    blockTitle: 'Экзамен',
+    current: 0,
+    score: 0,
+    answers: []
+  };
+  document.getElementById('quizTitle').textContent = 'Экзамен';
+  const badge2 = document.getElementById('quizModeBadge');
+  badge2.textContent = 'Экзамен';
+  badge2.style.background = '';
+  badge2.style.color = '';
+  showScreen('quiz');
+  renderQuestion();
+}
+
+// =================== RENDER QUESTION ===================
+function renderQuestion() {
+  const q = currentQuiz;
+  const total = q.questions.length;
+  const idx = q.current;
+  const item = q.questions[idx];
+
+  // Progress
+  document.getElementById('qCurrent').textContent = idx + 1;
+  document.getElementById('qTotal').textContent = total;
+  document.getElementById('qScore').textContent = q.score + ' правильных';
+  const pct = (idx / total) * 100;
+  document.getElementById('quizProgressFill').style.width = pct + '%';
+
+  // Build card
+  const { opts, correctIdx } = shuffleOptions(item);
+  const letters = ['А', 'Б', 'В', 'Г'];
+
+  let optHTML = opts.map((o, i) => `
+    <button class="option-btn" onclick="selectAnswer(${i}, ${correctIdx})" id="opt-${i}">
+      <span class="option-letter">${letters[i]}</span>
+      <span>${o}</span>
+    </button>`).join('');
+
+  const area = document.getElementById('questionArea');
+  area.innerHTML = `
+    <div class="question-card">
+      <div class="question-topic">${item.topic}</div>
+      <div class="question-text">${item.q}</div>
+      <div class="options-list">${optHTML}</div>
+      <div class="feedback-box" id="feedbackBox">
+        <span class="feedback-icon" id="feedbackIcon"></span>
+        <span id="feedbackText"></span>
+      </div>
+    </div>
+    <div class="quiz-nav">
+      <button class="btn-next" id="btnNext" onclick="nextQuestion()">
+        ${idx + 1 < total ? 'Следующий' : 'Завершить'}
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+  `;
+}
+
+function selectAnswer(chosenIdx, correctIdx) {
+  // Disable all buttons
+  document.querySelectorAll('.option-btn').forEach((b, i) => {
+    b.disabled = true;
+    if (i === correctIdx) b.classList.add('correct');
+    if (i === chosenIdx && chosenIdx !== correctIdx) b.classList.add('wrong');
+  });
+
+  const isCorrect = chosenIdx === correctIdx;
+  if (isCorrect) currentQuiz.score++;
+
+  // Record answer
+  const item = currentQuiz.questions[currentQuiz.current];
+  currentQuiz.answers.push({
+    item,
+    chosen: document.querySelectorAll('.option-btn')[chosenIdx].querySelector('span:last-child').textContent,
+    correct: item.correct,
+    isCorrect
+  });
+
+  // Feedback
+  const fb = document.getElementById('feedbackBox');
+  const fbIcon = document.getElementById('feedbackIcon');
+  const fbText = document.getElementById('feedbackText');
+  fb.classList.add('show');
+  if (isCorrect) {
+    fb.className = 'feedback-box show correct';
+    fbIcon.textContent = '✓';
+    fbText.textContent = 'Верно!';
+  } else {
+    fb.className = 'feedback-box show wrong';
+    fbIcon.textContent = '✗';
+    fbText.innerHTML = 'Неверно. Правильный ответ: <strong>' + item.correct + '</strong>';
+  }
+
+  // Show next btn
+  const btnNext = document.getElementById('btnNext');
+  btnNext.classList.add('show');
+}
+
+function nextQuestion() {
+  currentQuiz.current++;
+  if (currentQuiz.current >= currentQuiz.questions.length) {
+    finishQuiz();
+  } else {
+    renderQuestion();
+  }
+}
+
+function finishQuiz() {
+  const q = currentQuiz;
+  const total = q.questions.length;
+  const score = q.score;
+  const pct = Math.round((score / total) * 100);
+
+  // Save progress per block
+  if (q.blockId !== 'all') {
+    saveProgress(q.blockId, score, total);
+  } else {
+    // Save to all blocks roughly
+    saveProgress('all', score, total);
+  }
+
+  // Emoji
+  let emoji = '😔';
+  if (pct >= 90) emoji = '🏆';
+  else if (pct >= 70) emoji = '🎉';
+  else if (pct >= 50) emoji = '👍';
+
+  document.getElementById('resultsEmoji').textContent = emoji;
+  document.getElementById('resultsScore').textContent = score + '/' + total;
+  document.getElementById('resultsSubtitle').textContent =
+    q.mode === 'exam' ? 'Результат экзамена' : 'Результат тренировки — ' + q.blockTitle;
+  document.getElementById('statCorrect').textContent = score;
+  document.getElementById('statWrong').textContent = total - score;
+  document.getElementById('statPct').textContent = pct + '%';
+
+  // Update final progress bar
+  document.getElementById('quizProgressFill').style.width = '100%';
+
+  document.getElementById('reviewSection').style.display = 'none';
+  document.getElementById('btnReview').style.display =
+    q.answers.some(a => !a.isCorrect) ? '' : 'none';
+
+  showScreen('results');
+  renderHome(); // refresh progress bars
+}
+
+function retryQuiz() {
+  if (currentQuiz.blockId === 'all') startExam();
+  else if (currentQuiz.mode === 'train-all') startBlockAll(currentQuiz.blockId);
+  else startBlock(currentQuiz.blockId);
+}
+
+function showReview() {
+  const section = document.getElementById('reviewSection');
+  section.style.display = 'block';
+  const list = document.getElementById('reviewList');
+  const wrong = currentQuiz.answers.filter(a => !a.isCorrect);
+  list.innerHTML = wrong.map(a => `
+    <div class="review-item was-wrong">
+      <div class="review-topic">${a.item.topic}</div>
+      <div class="review-q">${a.item.q}</div>
+      <div class="review-answers">
+        <div class="review-opt wrong-chosen">✗ Ваш ответ: ${a.chosen}</div>
+        <div class="review-opt correct-ans">✓ Верный ответ: ${a.correct}</div>
+      </div>
+    </div>
+  `).join('');
+  section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function confirmBack() {
+  if (confirm('Прервать тест? Прогресс текущей сессии не сохранится.')) {
+    showScreen('home');
+  }
+}
+
+// =================== THEME ===================
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme') || 'light';
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  updateThemeBtn(next);
+}
+function updateThemeBtn(theme) {
+  const icon = document.getElementById('themeIcon');
+  const label = document.getElementById('themeLabel');
+  if (theme === 'dark') {
+    icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+    label.textContent = 'Тёмная';
+  } else {
+    icon.innerHTML = '<circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>';
+    label.textContent = 'Светлая';
+  }
+}
+
+// =================== INIT ===================
+(function() {
+  const sys = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', sys);
+  updateThemeBtn(sys);
+  renderHome();
+})();
+</script>
+</body>
+</html>
