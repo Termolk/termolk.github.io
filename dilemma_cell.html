@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Дилемма заключённых — Камера №7</title>
+<style>
+:root{--ink:#e9e1ce;--dim:#918b7e;--red:#ba382f;--green:#6e9b73;--gold:#b6975c;--panel:rgba(10,11,11,.84)}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#050606;color:var(--ink);font-family:Georgia,"Times New Roman",serif}body{user-select:none}
+canvas{position:fixed;inset:0;width:100%;height:100%;cursor:crosshair;background:#080a0a}
+#grain{position:fixed;inset:0;pointer-events:none;opacity:.12;mix-blend-mode:screen;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E")}
+#vignette{position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at 50% 47%,transparent 35%,rgba(0,0,0,.33) 72%,rgba(0,0,0,.82) 112%)}
+.hud{position:fixed;inset:0;pointer-events:none}.top{position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:flex-start;padding:22px 26px;background:linear-gradient(#050606cc,transparent)}
+.brand{letter-spacing:.24em;font-size:12px;color:var(--dim)}.brand b{display:block;font-size:20px;color:var(--ink);letter-spacing:.08em;margin-top:5px;font-weight:normal}
+.score{text-align:right;font-family:ui-monospace,monospace;font-size:12px;color:var(--dim)}.score strong{font-size:22px;color:var(--ink);font-weight:500}.score .bot{color:#c58178}
+.centerMsg{position:absolute;top:16%;left:50%;transform:translateX(-50%);text-align:center;text-shadow:0 2px 15px #000;transition:.25s;min-width:320px}.centerMsg h1{margin:0;font-weight:normal;font-size:clamp(25px,3.2vw,46px);letter-spacing:.06em}.centerMsg p{margin:8px 0;color:#aaa497;font-style:italic;font-size:14px}
+.bottom{position:absolute;left:50%;bottom:max(22px,env(safe-area-inset-bottom));transform:translateX(-50%);width:min(760px,calc(100% - 28px));pointer-events:auto}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:12px}.choice{position:relative;min-height:82px;padding:14px 18px;border:1px solid #797365;background:linear-gradient(150deg,rgba(42,42,38,.94),rgba(12,13,13,.96));color:var(--ink);font:inherit;text-align:left;cursor:pointer;transition:.15s;box-shadow:0 12px 34px #0009;overflow:hidden}.choice:before{content:"";position:absolute;inset:4px;border:1px solid #ffffff0c;pointer-events:none}.choice:hover:not(:disabled){transform:translateY(-3px);border-color:#c4b893;background:linear-gradient(150deg,rgba(61,58,48,.97),rgba(15,16,16,.97))}.choice:active:not(:disabled){transform:translateY(1px)}.choice:disabled{cursor:default;opacity:.48}.choice strong{display:block;font-size:20px;font-weight:normal;letter-spacing:.05em}.choice small{display:block;margin-top:7px;color:#969084;font:11px ui-monospace,monospace;letter-spacing:.05em}.choice.betray strong{color:#df8e82}.choice.silent strong{color:#a8caaa}
+.tools{display:flex;justify-content:center;gap:9px;margin-top:10px}.tool{pointer-events:auto;border:1px solid #504e48;background:#0a0b0bd9;color:#aaa498;padding:7px 12px;font:11px ui-monospace,monospace;cursor:pointer}.tool:hover{color:#fff;border-color:#918979}
+#history{position:absolute;left:22px;top:112px;width:190px;padding:12px;background:#080909a8;border-left:2px solid #4e4a42;font:11px ui-monospace,monospace;color:#8f8b82}.histTitle{color:#d3cbbc;margin-bottom:8px;letter-spacing:.12em}.row{display:grid;grid-template-columns:24px 1fr 1fr;gap:5px;padding:4px 0;border-top:1px solid #ffffff0c}.red{color:#ce746a}.green{color:#88b58d}
+.overlay{position:fixed;inset:0;z-index:5;display:grid;place-items:center;background:#020303cc;backdrop-filter:blur(7px);padding:18px;transition:.3s}.overlay.hidden{opacity:0;visibility:hidden}.paper{width:min(690px,100%);background:#d5cbb4;color:#1f201d;padding:clamp(22px,5vw,45px);box-shadow:0 25px 90px #000;transform:rotate(-.35deg);position:relative}.paper:after{content:"";position:absolute;inset:9px;border:1px solid #37372f33;pointer-events:none}.paper h2{font-weight:normal;font-size:clamp(25px,4vw,39px);margin:0 0 10px;letter-spacing:.06em}.paper p{line-height:1.55}.matrix{width:100%;border-collapse:collapse;margin:19px 0;font-size:14px}.matrix th,.matrix td{border:1px solid #57574e;padding:10px;text-align:center}.matrix th{font:11px ui-monospace,monospace;text-transform:uppercase}.paper button{border:1px solid #262720;background:#252720;color:#e8dfcc;padding:11px 19px;font:13px ui-monospace,monospace;cursor:pointer}.paper button:hover{background:#3c3e34}.stamp{position:absolute;right:38px;bottom:28px;border:3px double #9d332d;color:#9d332d;padding:8px 12px;transform:rotate(-8deg);font:bold 13px ui-monospace,monospace;opacity:.7}
+#result .paper{text-align:center}.verdict{font-size:58px;margin:10px 0;color:#80332e}.finalStats{font:14px ui-monospace,monospace;line-height:1.9;margin:18px 0}.finalActions{display:flex;justify-content:center;gap:9px;flex-wrap:wrap}
+.key{border:1px solid #666159;padding:1px 5px;font:10px ui-monospace,monospace}@media(max-width:720px){#history{display:none}.top{padding:14px}.centerMsg{top:14%}.choices{gap:7px}.choice{min-height:74px;padding:11px}.choice strong{font-size:16px}.brand b{font-size:16px}.score strong{font-size:17px}}
+</style>
+</head>
+<body>
+<canvas id="game"></canvas><div id="grain"></div><div id="vignette"></div>
+<div class="hud">
+ <div class="top"><div class="brand">ИСПРАВИТЕЛЬНЫЙ БЛОК<b>КАМЕРА № 7</b></div><div class="score">СРОК<br><strong id="youScore">0</strong> ВЫ &nbsp;·&nbsp; <strong class="bot" id="botScore">0</strong> БОТ</div></div>
+ <div class="centerMsg" id="message"><h1>Решение за вами</h1><p>Он уже сделал свой выбор.</p></div>
+ <div id="history"><div class="histTitle">ПРОТОКОЛ ДОПРОСА</div><div id="historyRows">Записей пока нет.</div></div>
+ <div class="bottom">
+  <div class="choices">
+   <button class="choice silent" id="silent"><strong>МОЛЧАТЬ</strong><small><span class="key">1</span> НЕ СДАВАТЬ ЗАКЛЮЧЁННОГО</small></button>
+   <button class="choice betray" id="betray"><strong>СДАТЬ ЕГО</strong><small><span class="key">2</span> ДАТЬ ПОКАЗАНИЯ</small></button>
+  </div>
+  <div class="tools"><button class="tool" id="rulesBtn">ТАБЛИЦА СРОКОВ</button><button class="tool" id="soundBtn">ЗВУК: ВКЛ</button><button class="tool" id="resetBtn">ЗАНОВО</button></div>
+ </div>
+</div>
+<div class="overlay" id="intro"><div class="paper"><h2>Дилемма заключённых</h2><p>Пять допросов. Вы и заключённый напротив выбираете одновременно: молчать или сдать друг друга. Ваша цель — получить как можно меньший суммарный срок.</p><table class="matrix"><tr><th>Вы / Бот</th><th>Молчит</th><th>Сдаёт</th></tr><tr><th>Молчите</th><td>1 / 1 год</td><td>3 / 0 лет</td></tr><tr><th>Сдаёте</th><td>0 / 3 года</td><td>2 / 2 года</td></tr></table><p>Бот наблюдает за вами и меняет поведение. <span class="key">1</span> — молчать, <span class="key">2</span> — сдать.</p><button id="startBtn">НАЧАТЬ ДОПРОС</button><span class="stamp">ДЕЛО 19-Б</span></div></div>
+<div class="overlay hidden" id="rules"><div class="paper"><h2>Таблица сроков</h2><table class="matrix"><tr><th>Вы / Бот</th><th>Молчит</th><th>Сдаёт</th></tr><tr><th>Молчите</th><td>1 / 1 год</td><td>3 / 0 лет</td></tr><tr><th>Сдаёте</th><td>0 / 3 года</td><td>2 / 2 года</td></tr></table><p>Число слева — ваш срок. Побеждает тот, у кого после пяти раундов меньше лет.</p><button id="closeRules">ЗАКРЫТЬ</button></div></div>
+<div class="overlay hidden" id="result"><div class="paper"><h2 id="finalTitle">Допрос окончен</h2><div class="verdict" id="verdict">—</div><div class="finalStats" id="finalStats"></div><div class="finalActions"><button id="againBtn">ЕЩЁ ОДНО ДЕЛО</button></div></div></div>
+<script>
+(()=>{
+'use strict';
+const canvas=document.getElementById('game'),ctx=canvas.getContext('2d');
+let W=0,H=0,D=1,time=0,shake=0,flash=0,mouseX=0,mouseY=0;
+const state={round:1,max:5,you:0,bot:0,history:[],locked:false,started:false,sound:true};
+const C={bg:'#090c0c',wall:'#161a19',line:'#343a37',steel:'#555c59',table:'#332a21',edge:'#6d5b45',skin:'#857266',cloth:'#242a2b',red:'#8e302b',paper:'#c8bfa8'};
+function resize(){D=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;canvas.width=W*D;canvas.height=H*D;canvas.style.width=W+'px';canvas.style.height=H+'px';ctx.setTransform(D,0,0,D,0,0)}addEventListener('resize',resize);resize();
+const V=(x,y,z)=>({x,y,z}), cam={x:0,y:2.9,z:7.3};
+function proj(p){let yaw=mouseX*.000035,pitch=-.075+mouseY*.000025;let x=p.x-cam.x,y=p.y-cam.y,z=p.z-cam.z;let cy=Math.cos(yaw),sy=Math.sin(yaw),x1=x*cy-z*sy,z1=x*sy+z*cy;let cp=Math.cos(pitch),sp=Math.sin(pitch),y1=y*cp-z1*sp,z2=y*sp+z1*cp;let f=Math.min(W,H)*.86,zz=-z2;if(zz<.15)return null;return{x:W/2+x1*f/zz+(Math.random()-.5)*shake,y:H*.52-y1*f/zz+(Math.random()-.5)*shake,s:f/zz,z:zz}}
+function poly(points,fill,stroke=C.line,lw=1){let ps=points.map(proj);if(ps.some(p=>!p))return;ctx.beginPath();ctx.moveTo(ps[0].x,ps[0].y);for(let i=1;i<ps.length;i++)ctx.lineTo(ps[i].x,ps[i].y);ctx.closePath();if(fill){ctx.fillStyle=fill;ctx.fill()}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=lw;ctx.stroke()}}
+function line(a,b,color=C.line,lw=1){let A=proj(a),B=proj(b);if(!A||!B)return;ctx.beginPath();ctx.moveTo(A.x,A.y);ctx.lineTo(B.x,B.y);ctx.strokeStyle=color;ctx.lineWidth=lw;ctx.stroke()}
+function box(x,y,z,w,h,d,fill,edge=C.line){poly([V(x-w/2,y-h/2,z-d/2),V(x+w/2,y-h/2,z-d/2),V(x+w/2,y+h/2,z-d/2),V(x-w/2,y+h/2,z-d/2)],fill,edge);poly([V(x-w/2,y+h/2,z-d/2),V(x+w/2,y+h/2,z-d/2),V(x+w/2,y+h/2,z+d/2),V(x-w/2,y+h/2,z+d/2)],light(fill,13),edge);poly([V(x+w/2,y-h/2,z-d/2),V(x+w/2,y-h/2,z+d/2),V(x+w/2,y+h/2,z+d/2),V(x+w/2,y+h/2,z-d/2)],light(fill,-12),edge)}
+function light(hex,n){let m=hex.match(/[0-9a-f]{2}/gi);if(!m)return hex;return'#'+m.map(v=>Math.max(0,Math.min(255,parseInt(v,16)+n)).toString(16).padStart(2,'0')).join('')}
+function ellipse3(p,rx,ry,fill,stroke){let P=proj(p);if(!P)return;ctx.beginPath();ctx.ellipse(P.x,P.y,rx*P.s,ry*P.s,0,0,Math.PI*2);ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.stroke()}}
+function room(){ctx.fillStyle=C.bg;ctx.fillRect(0,0,W,H);poly([V(-7,-1,-5),V(7,-1,-5),V(7,6,-5),V(-7,6,-5)],C.wall,'#242928');poly([V(-7,-1,5),V(-7,-1,-5),V(-7,6,-5),V(-7,6,5)],'#111514');poly([V(7,-1,5),V(7,-1,-5),V(7,6,-5),V(7,6,5)],'#0d1110');poly([V(-7,-1,5),V(7,-1,5),V(7,-1,-5),V(-7,-1,-5)],'#101312');for(let x=-6;x<7;x+=1)line(V(x,-1,-5),V(x,-1,5),'#222724');for(let z=-5;z<6;z+=1)line(V(-7,-1,z),V(7,-1,z),'#222724');for(let y=0;y<6;y+=1.1)line(V(-7,y,-4.99),V(7,y,-4.99),'#202624');
+// cold ceiling light
+poly([V(-1.5,5.75,-1),V(1.5,5.75,-1),V(1.5,5.75,1),V(-1.5,5.75,1)],'#8f927e','#a8aa91');}
+function prisoner(){let sway=Math.sin(time*.8)*.025; // chair and bot
+box(0,.25,-3.65,1.55,.15,1.2,'#24221e');box(-.63,-.15,-3.65,.11,1.1,.11,'#25231f');box(.63,-.15,-3.65,.11,1.1,.11,'#25231f');
+// torso
+poly([V(-.72,.05,-3.5),V(.72,.05,-3.5),V(.52,1.72,-3.6),V(-.5,1.72,-3.6)],C.cloth,'#424947');
+// neck head
+box(0,1.75,-3.56,.28,.35,.3,C.skin);ellipse3(V(sway,2.28,-3.55),.46,.56,C.skin,'#3a302b');
+// hair / shadow
+poly([V(-.43,2.47,-3.48),V(-.25,2.78,-3.56),V(.3,2.75,-3.56),V(.45,2.43,-3.48)],'#171918',null);
+// eyes
+ellipse3(V(-.17,2.35,-3.06),.035,.018,'#050505');ellipse3(V(.17,2.35,-3.06),.035,.018,'#050505');line(V(-.2,2.05,-3.06),V(.18,2.05,-3.06),'#493f39',1);
+// arms reaching table
+box(-.83,1.02,-2.78,.28,.28,1.65,C.cloth);box(.83,1.02,-2.78,.28,.28,1.65,C.cloth);ellipse3(V(-.83,1.06,-1.91),.19,.12,C.skin);ellipse3(V(.83,1.06,-1.91),.19,.12,C.skin)}
+function table(){box(0,.5,.15,5.5,.34,5.1,C.table,C.edge);for(const x of[-2.35,2.35])for(const z of[-1.85,1.85])box(x,-.45,z,.24,1.75,.24,'#251e18'); // center divider scratch
+line(V(0,.69,-2.4),V(0,.69,2.65),'#76624b',1);for(let i=0;i<13;i++){let x=-2.4+Math.random()*4.8,z=-2.1+Math.random()*4.3;line(V(x,.69,z),V(x+.15,.69,z+.05),'#493a2d',.5)}
+// bot sealed card
+box(0,.77,-1.25,1.3,.045,.75,'#1a1b19','#615d52');let p=proj(V(0,.84,-1.25));if(p){ctx.fillStyle='#aaa394';ctx.font=`${Math.max(9,p.s*.13)}px ui-monospace`;ctx.textAlign='center';ctx.fillText('ВЫБОР СДЕЛАН',p.x,p.y)}
+// foreground hands
+ellipse3(V(-1.55,.91,2.34),.34,.17,C.skin,'#3b312d');ellipse3(V(1.55,.91,2.34),.34,.17,C.skin,'#3b312d')}
+function bars(){ // bars between players, opening over table
+for(let x=-3.8;x<=3.8;x+=.55){box(x,2.95,-1.9,.065,4.6,.065,'#424846','#69706c')}box(0,.74,-1.9,7.9,.1,.1,'#4a504d');box(0,5.15,-1.9,7.9,.12,.12,'#4a504d');}
+function particles(){ctx.fillStyle='#c3bd9b';for(let i=0;i<28;i++){let x=(i*173+time*(2+i%3))%W,y=(i*97+Math.sin(time+i)*13)%H;ctx.globalAlpha=.05+(i%4)*.015;ctx.fillRect(x,y,1,1)}ctx.globalAlpha=1}
+function render(t){time=t/1000;ctx.save();room();prisoner();table();bars();particles();if(flash>0){ctx.fillStyle=`rgba(180,40,30,${flash*.12})`;ctx.fillRect(0,0,W,H);flash*=.91}shake*=.86;ctx.restore();requestAnimationFrame(render)}requestAnimationFrame(render);
+canvas.addEventListener('mousemove',e=>{mouseX=e.clientX-W/2;mouseY=e.clientY-H/2});canvas.addEventListener('mouseleave',()=>{mouseX=mouseY=0});
+let audio=null;function tone(freq,dur=.1,type='sine',gain=.04,delay=0){if(!state.sound)return;audio=audio||new (window.AudioContext||window.webkitAudioContext)();let o=audio.createOscillator(),g=audio.createGain();o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(0,audio.currentTime+delay);g.gain.linearRampToValueAtTime(gain,audio.currentTime+delay+.01);g.gain.exponentialRampToValueAtTime(.0001,audio.currentTime+delay+dur);o.connect(g).connect(audio.destination);o.start(audio.currentTime+delay);o.stop(audio.currentTime+delay+dur)}
+function botChoice(){if(!state.history.length)return Math.random()<.44?'betray':'silent';let last=state.history.at(-1).you;let betrayals=state.history.filter(x=>x.you==='betray').length;let p=.18+(last==='betray'?.47:-.04)+(betrayals/state.history.length)*.22;return Math.random()<Math.min(.9,p)?'betray':'silent'}
+const payoff={silent:{silent:[1,1],betray:[3,0]},betray:{silent:[0,3],betray:[2,2]}};
+function choose(you){if(!state.started||state.locked||state.round>state.max)return;state.locked=true;buttons(true);let bot=botChoice();document.querySelector('#message h1').textContent='Ответ запечатан';document.querySelector('#message p').textContent='Конвоир вскрывает конверты…';tone(85,.22,'sawtooth',.035);setTimeout(()=>{let [a,b]=payoff[you][bot];state.you+=a;state.bot+=b;state.history.push({round:state.round,you,bot,a,b});flash=(you==='betray'||bot==='betray')?1:.25;shake=you==='betray'?7:3;tone(you==='betray'?64:130,.25,'square',.035);tone(bot==='betray'?72:155,.32,'sawtooth',.025,.09);update();let yh=you==='betray'?'вы дали показания':'вы промолчали',bh=bot==='betray'?'он вас сдал':'он промолчал';document.querySelector('#message h1').textContent=`${a} ${years(a)} вам · ${b} ${years(b)} ему`;document.querySelector('#message p').textContent=`${cap(yh)}, ${bh}.`;setTimeout(()=>{state.round++;if(state.round>state.max)finish();else{state.locked=false;buttons(false);document.querySelector('#message h1').textContent=`Допрос ${state.round} из ${state.max}`;document.querySelector('#message p').textContent='Он запоминает каждое ваше решение.'}},1750)},850)}
+function cap(s){return s[0].toUpperCase()+s.slice(1)}function years(n){return n===1?'год':(n>=2&&n<=4?'года':'лет')}function buttons(v){silent.disabled=betray.disabled=v}
+function update(){youScore.textContent=state.you;botScore.textContent=state.bot;historyRows.innerHTML=state.history.map(r=>`<div class="row"><span>${r.round}.</span><span class="${r.you==='betray'?'red':'green'}">${r.you==='betray'?'СДАЛ':'МОЛЧ.'} +${r.a}</span><span class="${r.bot==='betray'?'red':'green'}">${r.bot==='betray'?'СДАЛ':'МОЛЧ.'} +${r.b}</span></div>`).join('')||'Записей пока нет.'}
+function finish(){buttons(true);let diff=state.you-state.bot,title,mark;if(diff<0){title='Вы вышли раньше';mark='ПОБЕДА'}else if(diff>0){title='Он вышел раньше';mark='ПОРАЖЕНИЕ'}else{title='Одинаковый приговор';mark='НИЧЬЯ'}finalTitle.textContent=title;verdict.textContent=mark;finalStats.innerHTML=`ВАШ СРОК: ${state.you} ${years(state.you)}<br>СРОК БОТА: ${state.bot} ${years(state.bot)}<br>ВЫ СДАЛИ ЕГО: ${state.history.filter(x=>x.you==='betray').length} ИЗ ${state.max}`;setTimeout(()=>result.classList.remove('hidden'),650)}
+function reset(){Object.assign(state,{round:1,you:0,bot:0,history:[],locked:false,started:true});result.classList.add('hidden');update();buttons(false);document.querySelector('#message h1').textContent='Допрос 1 из 5';document.querySelector('#message p').textContent='Он уже сделал свой выбор.';tone(110,.15,'triangle',.03)}
+startBtn.onclick=()=>{intro.classList.add('hidden');state.started=true;reset()};silent.onclick=()=>choose('silent');betray.onclick=()=>choose('betray');againBtn.onclick=reset;resetBtn.onclick=reset;rulesBtn.onclick=()=>rules.classList.remove('hidden');closeRules.onclick=()=>rules.classList.add('hidden');soundBtn.onclick=()=>{state.sound=!state.sound;soundBtn.textContent='ЗВУК: '+(state.sound?'ВКЛ':'ВЫКЛ');if(state.sound)tone(180,.08)};addEventListener('keydown',e=>{if(e.key==='1')choose('silent');if(e.key==='2')choose('betray');if(e.key==='Escape')rules.classList.add('hidden')});
+})();
+</script>
+</body>
+</html>
